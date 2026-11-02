@@ -1,9 +1,14 @@
-# DUNGEON CONQUEST BATTLE HISTORY
-# date_time           | player_id | username | enemy_id | enemy_name            | result  | turns | gold | score
-  2026-11-02 20:06:34 | PLY-004   | jeo      | ENM-001  | Gravefang Rat         | Victory | 4     | 25   | 40
-  2026-11-02 20:08:39 | PLY-004   | jeo      | ENM-002  | Hollowbone Goblin     | Victory | 5     | 30   | 60
-  2026-11-02 20:10:23 | PLY-004   | jeo      | ENM-003  | Ashen Ghoul           | Victory | 6     | 80   | 80
-  2026-11-02 20:28:22 | PLY-004   | jeo      | ENM-004  | Ironjaw Reaver        | Victory | 3     | 50   | 100
-  2026-11-02 20:29:49 | PLY-004   | jeo      | ENM-005  | Boneguard Executioner | Victory | 4     | 60   | 120
-  2026-11-02 20:30:53 | PLY-004   | jeo      | ENM-006  | Hellchain Marauder    | Victory | 6     | 150  | 140
-  2026-11-02 22:40:45 | PLY-005   | angel    | ENM-003  | Ashen Ghoul           | Victory | 5     | 75   | 80
+# DREADVEIL: THE LAST GATE BATTLE HISTORY
+# date_time           | player_id | username | enemy_id | enemy_name              | result          | turns | gold | score
+  2026-11-02 20:06:34 | PLY-004   | jeo      | ENM-001  | Gravefang Rat           | Victory         | 4     | 25   | 40
+  2026-11-02 20:08:39 | PLY-004   | jeo      | ENM-002  | Hollowbone Goblin       | Victory         | 5     | 30   | 60
+  2026-11-02 20:10:23 | PLY-004   | jeo      | ENM-003  | Ashen Ghoul             | Victory         | 6     | 80   | 80
+  2026-11-02 20:28:22 | PLY-004   | jeo      | ENM-004  | Ironjaw Reaver          | Victory         | 3     | 50   | 100
+  2026-11-02 20:29:49 | PLY-004   | jeo      | ENM-005  | Boneguard Executioner   | Victory         | 4     | 60   | 120
+  2026-11-02 20:30:53 | PLY-004   | jeo      | ENM-006  | Hellchain Marauder      | Victory         | 6     | 150  | 140
+  2026-11-02 22:40:45 | PLY-005   | angel    | ENM-003  | Ashen Ghoul             | Victory         | 5     | 75   | 80
+  2026-11-03 01:01:45 | PLY-012   | marie    | ENM-010  | Vharok, the World Eater | Victory         | 7     | 300  | 600
+  2026-11-03 01:02:23 | PLY-012   | marie    | N/A      | Dungeon Exit            | Escaped Dungeon | 0     | 0    | 500
+  2026-11-03 01:12:14 | PLY-005   | angel    | ENM-004  | Ironjaw Reaver          | Victory         | 4     | 50   | 100
+  2026-11-03 01:12:42 | PLY-005   | angel    | ENM-005  | Boneguard Executioner   | Victory         | 5     | 60   | 120
+  2026-11-03 01:13:00 | PLY-005   | angel    | ENM-006  | Hellchain Marauder      | Defeat          | 2     | -65  | 0

@@ -24,7 +24,7 @@ REPORT_FOLDER = "reports"
 # GAME BALANCE
 # ---------------------------------------------------------------
 
-# Stats given to every new (or reset) player
+# Starting attributes for newly registered players
 STARTING_STATS = {"hp": 100, "max_hp": 100, "atk": 14, "gold": 60}
 STARTING_ITEMS = {"ITM-001": 1}
 
@@ -82,13 +82,14 @@ LEVEL_ORDER = ["Weak", "Intermediate", "Strong", "Boss"]
 PLAYER_STATUSES = ["Active", "In Battle", "Defeated", "Retreated", "Victorious"]
 
 # ---------------------------------------------------------------
-# EQUIPMENT (SWORD, SHIELD AND ARMOR ACROSS FOUR DIFFICULTY LEVELS)
+# EQUIPMENT (Sword, Shield, Armor in three progression tiers)
 # ---------------------------------------------------------------
 
 EQUIPMENT_SLOTS = ["sword", "shield", "armor"]
 
-# Each unlocked level provides a free sword, shield and armor set.
-# The shop offers two optional upgrades for each slot at the active level.
+# A new level is unlocked after clearing the previous level. Each unlocked
+# level grants three FREE pieces; the shop sells only optional CURRENT-level
+# alternatives (two upgrade choices per slot).
 TIER_UNLOCK_REQUIREMENT = {
     "Weak": None, "Intermediate": "Weak", "Strong": "Intermediate",
     "Boss": "Strong"
@@ -101,9 +102,9 @@ SLOT_STAT_TEXT = {
     "armor": "DEF: -{b} per hit"
 }
 
-# Equipment IDs identify each item and link it to saved player ownership.
+# Purchasable equipment is grouped by difficulty and equipment slot.
 # Fields: id, name, slot, tier, bonus, price, description, speed.
-# Sword speed increases attack accuracy and critical-hit chance.
+# Sword speed affects accuracy and critical-hit chance.
 DEFAULT_EQUIPMENT = [
     ("EQP-001", "Rusty Sword +1", "sword", "Weak", 4, 40,
      "A nimble sewer blade; a first taste of faster strikes.", 2),
@@ -155,8 +156,7 @@ DEFAULT_EQUIPMENT = [
      "Ancient armor that softens devastating strikes.", 0)
 ]
 
-# Name aliases used when loading equipment records from other formats.
-# Matching records retain their IDs, stats and saved ownership.
+# Equipment name mappings keep saved item IDs linked to their catalog entries.
 PRIOR_SHOP_EQUIPMENT_NAMES = {
     "EQP-001": 'Rustfang Blade',
     "EQP-002": 'Gravesteel Sword',
@@ -184,8 +184,7 @@ PRIOR_SHOP_EQUIPMENT_NAMES = {
     "EQP-024": 'Eternal Bastion Plate',
 }
 
-# The standard equipment catalog contains 24 items.
-# Customized equipment catalogs are not replaced.
+# Identifies the basic nine-item catalog when loading equipment records.
 PRIOR_DEFAULT_EQUIPMENT_SIGNATURE = {
     ("EQP-001", "Rustfang Blade", "sword", "Weak", 6, 60),
     ("EQP-002", "Gravesteel Sword", "sword", "Intermediate", 10, 130),
@@ -209,9 +208,9 @@ LEGACY_EQUIPMENT_SIGNATURE = {
     ("EQP-009", "Blackiron Plate Armor", "armor", "Strong", 5, 200)
 }
 
-# Free equipment depends on the highest unlocked difficulty level.
-# Shop purchases remain owned when a different tier becomes active.
-# Tuples: name, combat bonus, sword speed (zero for shield and armor).
+# Each unlocked level supplies a standard equipment set.
+# Purchased equipment stays in the player's inventory when the tier changes.
+# Tuples: name, combat bonus, sword speed (0 for shield and armor).
 STANDARD_EQUIPMENT = {
     "sword": [
         ("Rusty Sword", 2, 0), ("Bloodstone Sword", 6, 4),
@@ -229,7 +228,7 @@ STANDARD_EQUIPMENT = {
 STANDARD_UPGRADE_LEVELS = ["Weak", "Intermediate", "Strong"]
 
 # ---------------------------------------------------------------
-# GOLD ECONOMY (ADDITIONAL TREASURE REWARDS)
+# GOLD ECONOMY (battle rewards, level rewards, and treasure chests)
 # ---------------------------------------------------------------
 
 # One treasure chest per fighting room, opened once after the room is
@@ -258,75 +257,91 @@ ITEM_EFFECTS = {
 # ---------------------------------------------------------------
 
 STORY_INTRO = [
-    "While playing Dungeon Conquest online, you find a mysterious "
-    "treasure chest. Its lid creaks open and a voice whispers: "
-    "\"Can you find and kill me?\"",
-    "You accept the challenge. The screen swallows you whole and you "
-    "wake up trapped inside a real dungeon.",
-    "To escape you must fight through the Weak, Intermediate and Strong "
-    "halls, destroy the World Eater, and then walk out of the final exit."
+    "While playing Dreadveil: The Last Gate, you discover a mysterious "
+    "treasure chest glowing beneath a veil of black mist. From inside, "
+    "a voice whispers: \"Can you find and kill me?\"",
+    "You accept the challenge. The screen darkens, the world disappears, "
+    "and you awaken inside the cursed dungeon known as Dreadveil.",
+    "Vharok, the World Eater, holds the Last Gate shut. Defeat the "
+    "guardians of the Weak, Intermediate and Strong halls, face him "
+    "in the Throne of Ruin, and cross the final gate to return home."
 ]
 
 ROOM_STORY = {
     "ROOM-000": [
-        "A cold stone gate groans shut behind you. Torches flicker along "
-        "a stairway that leads down into the dark.",
-        "Beyond the Rusted Grate, the Rotting Sewers wait."
+        "A cold stone gate slams shut behind you. Torches flicker beneath "
+        "a curtain of black mist: the veil that gives Dreadveil its name.",
+        "Beyond the Rusted Grate lie the Rotting Sewers. Your only path "
+        "forward leads deeper into the curse."
     ],
     "ROOM-001": [
-        "The stench of the sewers hits you. Claws scratch in the dark. "
-        "The weakest guardians of the dungeon live here.",
-        "Learn to attack, defend and use potions. Clear every enemy to "
-        "open the Crimson Gate."
+        "Rotting water echoes through the sewers. Claws scrape stone "
+        "while the first guardians emerge from the dark.",
+        "Learn to attack, defend and use potions. Defeat every Weak "
+        "guardian to unseal the Crimson Gate."
     ],
     "ROOM-002": [
-        "Red crystals pulse inside the walls of the Bloodstone Hall. "
-        "These guardians are tougher and carry status tricks.",
-        "Defense and good timing will matter now."
+        "Bloodstone crystals glow through the walls like trapped stars. "
+        "Dreadveil's mist coils between their crimson reflections.",
+        "The guardians here strike harder. Use careful defense and "
+        "timing to earn passage beyond the Iron Drawbridge."
     ],
     "ROOM-003": [
-        "Broken shields of a forgotten army litter the catacombs. "
-        "The strongest guardians stand between you and the throne.",
-        "Use everything you have learned. Rest, shop and plan."
+        "Broken shields cover the War-Torn Catacombs. The veil grows "
+        "heavier, and the strongest guardians bar the road to Vharok.",
+        "Prepare your equipment, recover your strength and clear "
+        "the final hall before the Throne Gate."
     ],
     "ROOM-004": [
-        "A vast door of black iron swings open. The Throne of Ruin "
-        "stretches before you and the air itself feels heavy.",
-        "There is no way around the creature on the throne."
+        "The Throne Gate groans open. Black mist circles the Throne "
+        "of Ruin, where Vharok, the World Eater, awaits.",
+        "He is the voice from the treasure chest and the keeper of "
+        "the Last Gate. There is no way past him without a fight."
     ],
     "ROOM-005": [
-        "Cold air rushes across your face. Beyond the Sealed Exit Door "
-        "a thin line of daylight cuts through the dark.",
-        "The dungeon exit is finally open. Step through to escape."
+        "The Sealed Exit Door stands open at last. Beyond it, a narrow "
+        "beam of daylight cuts through the fading veil.",
+        "This is the Last Gate. One final step will break the curse "
+        "and carry you out of Dreadveil."
     ]
 }
 
 ENCOUNTER_TEXT = {
-    "Weak": "A weak guardian lunges out of the shadows!",
-    "Intermediate": "A hardened guardian blocks your path, growling.",
-    "Strong": "A powerful guardian steps forward. The floor trembles.",
-    "Boss": "The World Eater rises from the Throne of Ruin."
+    "Weak": "A guardian rises from Dreadveil's shadows!",
+    "Intermediate": "A Bloodstone guardian blocks the passage through the veil!",
+    "Strong": "A fierce guardian steps from the mist before the Throne Gate!",
+    "Boss": "Vharok rises as the darkness gathers around the Throne of Ruin."
 }
 
 BOSS_INTRO = [
-    "Vharok, the World Eater, opens a thousand-year-old eye.",
-    "\"So you are the one who answered the chest. Come, little hero. "
-    "Let us see whether you can find and kill me.\"",
-    "The World Eater towers above you as the battle begins."
+    "Vharok, the World Eater, opens a thousand-year-old eye. "
+    "Dreadveil's black mist gathers at his feet.",
+    "\"You answered the whisper from my chest, little hero. "
+    "Now you have found me. Will you break my veil, or be lost within it?\"",
+    "Behind his throne waits the Last Gate, sealed by his power. "
+    "The final battle begins."
 ]
 
 BOSS_DEFEAT = [
-    "Vharok shrieks and crumbles into black ash. The dungeon shakes as "
-    "its power fades.",
-    "Behind the throne, the Sealed Exit Door grinds open. The Last Room "
-    "is now unlocked."
+    "Vharok lets out a final roar and crumbles to ash. The black "
+    "mist surrounding the throne begins to unravel.",
+    "Dreadveil's curse is breaking. Behind the throne, the Sealed "
+    "Exit Door opens, revealing the path to the Last Gate."
 ]
 
 ENDING_TEXT = [
-    "You step through the exit and sunlight floods your eyes.",
-    "The dungeon fades behind you. The treasure chest sits closed and "
-    "silent, its challenge answered.",
-    "YOU ESCAPED THE DUNGEON!"
+    "You take one final step through the Last Gate. Behind you, the "
+    "Throne of Ruin trembles as Dreadveil's black mist breaks apart. "
+    "Vharok's curse can no longer hold you.",
+    "The cold stone beneath your feet vanishes. A flash of light fills "
+    "your eyes, and you wake up in front of your own screen. You are "
+    "back in the world where the adventure began.",
+    "On the screen, the mysterious treasure chest closes for the "
+    "last time. The voice that once asked, 'Can you find and kill me?' "
+    "is silent. In its place, a final message appears:",
+    "YOU FOUND ME. YOU DEFEATED ME. YOU ARE FREE.",
+    "The Last Gate fades from view. Dreadveil is behind you now, "
+    "and your journey is complete."
 ]
 
 # ---------------------------------------------------------------
@@ -391,9 +406,9 @@ DEFAULT_CONNECTIONS = [
     ("ROOM-004", "ROOM-005", "Sealed Exit Door")
 ]
 
-# Each enemy is assigned one challenge question.
-# Bonus damage increases from Weak through Boss difficulty.
-# QST-010 is assigned only to the final boss.
+# Each enemy has its own challenge question. Bonuses become stronger as the
+# dungeon advances: Weak < Intermediate < Strong < Boss.
+# The final boss uses question QST-010.
 BOSS_CHALLENGE_ID = "QST-010"
 DEFAULT_QUESTIONS = [
     # id, question, choices, correct answer, attack bonus, assigned enemy
@@ -419,8 +434,13 @@ DEFAULT_QUESTIONS = [
      ["Oo", "Yes", "Syempre", "God is good!"], 4, 50, "ENM-010")
 ]
 
-# The question catalog uses six fields, including the assigned enemy ID.
-# Question files must match these ten enemy assignments.
+# Standard bonus values for recognizing saved challenge question records.
+LEGACY_QUESTION_BONUSES = {
+    "QST-001": 10, "QST-002": 10, "QST-003": 15,
+    "QST-004": 15, "QST-005": 15, "QST-006": 15,
+    "QST-007": 20, "QST-008": 20, "QST-009": 50
+}
+DEFAULT_QUESTION_BY_ID = {record[0]: record for record in DEFAULT_QUESTIONS}
 
 
 # ---------------------------------------------------------------
@@ -441,7 +461,7 @@ room_records = {}
 room_connections = []
 question_records = []
 
-# Indicates that room records were initialized with the six-room layout
+# Tracks changes to the saved dungeon room layout
 ROOMS_RESET = False
 
 # QUEUE: enemies of the current room, in the order chosen by the player
@@ -1067,7 +1087,7 @@ def parse_account_row(parts):
 
 
 def parse_legacy_account_row(parts):
-    # Parse the fixed-column inventory format for compatible save records.
+    # Reads player records with fixed inventory columns
     data = new_account_data(parts[1], parts[2])
     data.update({
         "hp": int(parts[3]),
@@ -1112,7 +1132,7 @@ def load_accounts():
         if username and username not in account_records:
             account_records[username] = data
 
-    # Remove unsupported item IDs from player inventories.
+    # Remove inventory entries that have no matching item record.
     legacy_data_cleaned = False
     for data in account_records.values():
         inventory = data.get("inventory", {})
@@ -1131,7 +1151,7 @@ def load_accounts():
         create_default_accounts()
         return
 
-    # Ensure at least one administrator account is available.
+    # Ensure an administrator account is available
     if not any(d["role"] == "Admin" for d in account_records.values()):
         if "admin" not in account_records:
             account_records["admin"] = new_account_data(
@@ -1162,7 +1182,7 @@ def save_all_accounts():
 
     write_record_rows(
         ACCOUNT_FILE,
-        "DUNGEON CONQUEST PLAYER ACCOUNTS",
+        "DREADVEIL: THE LAST GATE PLAYER ACCOUNTS",
         "username|player_id|password|role|hp|max_hp|atk|gold|score|wins|"
         "losses|status|defeated_enemy_ids|completed_levels|inventory|"
         "encounter_queue|wounded_enemy_hp|owned_equipment|equipped|"
@@ -1233,7 +1253,7 @@ def load_enemies():
 def save_enemies():
     write_record_rows(
         ENEMY_FILE,
-        "DUNGEON CONQUEST ENEMY RECORDS",
+        "DREADVEIL: THE LAST GATE ENEMY RECORDS",
         "enemy_id|name|difficulty|max_hp|atk|gold_reward|score_reward|room_id",
         [
             [m["id"], m["name"], m["type"], m["max_hp"], m["atk"],
@@ -1289,7 +1309,7 @@ def load_items():
 def save_items():
     write_record_rows(
         ITEM_FILE,
-        "DUNGEON CONQUEST ITEM RECORDS",
+        "DREADVEIL: THE LAST GATE ITEM RECORDS",
         "item_id|name|effect|power|price|max_carry|description",
         [
             [i["id"], i["name"], i["effect"], i["power"], i["price"],
@@ -1327,7 +1347,7 @@ def load_equipment():
         except ValueError:
             continue
 
-    # Recognize the standard nine-item equipment catalog.
+    # Load the full equipment catalog if the saved shop has only basic gear
     saved_signature = {
         (e["id"], e["name"], e["slot"], e["tier"], e["bonus"], e["price"])
         for e in equipment_records.values()
@@ -1358,8 +1378,7 @@ def load_equipment():
             }
         save_equipment()
 
-    # Match recognized equipment names without changing record IDs,
-    # combat statistics, ownership or customized names.
+    # Apply standard item names without changing IDs, ownership, or custom gear.
     current_defaults = {eq[0]: eq for eq in DEFAULT_EQUIPMENT}
     names_updated = False
     for eid, old_name in PRIOR_SHOP_EQUIPMENT_NAMES.items():
@@ -1377,7 +1396,7 @@ def load_equipment():
 def save_equipment():
     write_record_rows(
         EQUIPMENT_FILE,
-        "DUNGEON CONQUEST EQUIPMENT RECORDS",
+        "DREADVEIL: THE LAST GATE EQUIPMENT RECORDS",
         "equipment_id|name|slot|tier|bonus|price|description|speed",
         [
             [e["id"], e["name"], e["slot"], e["tier"], e["bonus"],
@@ -1390,8 +1409,7 @@ def save_equipment():
 # ----- Rooms and connections (graph) -----
 
 def load_rooms():
-    # Use the six-room layout defined in ROOM_ORDER.
-    # Initialize room records when the stored layout differs.
+    # Verify that saved rooms match the required six-room dungeon layout.
     global ROOMS_RESET
 
     room_records.clear()
@@ -1425,7 +1443,7 @@ def load_rooms():
 def save_rooms():
     write_record_rows(
         ROOM_FILE,
-        "DUNGEON CONQUEST ROOM RECORDS (GRAPH VERTICES)",
+        "DREADVEIL: THE LAST GATE ROOM RECORDS (GRAPH VERTICES)",
         "room_id|name|description",
         [[r["id"], r["name"], r["description"]]
          for r in room_records.values()]
@@ -1462,7 +1480,7 @@ def load_connections():
 def save_connections():
     write_record_rows(
         CONNECTION_FILE,
-        "DUNGEON CONQUEST ROOM CONNECTIONS (GRAPH EDGES, TWO-WAY)",
+        "DREADVEIL: THE LAST GATE ROOM CONNECTIONS (GRAPH EDGES, TWO-WAY)",
         "room_a|room_b|passage_name",
         [[c["a"], c["b"], c["label"]] for c in room_connections]
     )
@@ -1484,74 +1502,91 @@ def question_for_enemy(mob):
 
 
 def load_questions():
-    """Load exactly one challenge per enemy using the final 10-question format.
-
-    Valid administrator edits to non-boss questions are kept. Missing,
-    duplicate, older-format, or incorrectly assigned records are repaired
-    using DEFAULT_QUESTIONS. The boss question is fixed and always last.
-    """
+    """Load challenge questions and match them to their enemies."""
     question_records.clear()
-    saved_rows = read_record_rows(QUESTION_FILE)
-    valid_records = {}
+    changed = False
 
-    for parts in saved_rows:
-        # Each question record has six columns, including enemy_id.
-        if len(parts) != 6:
+    for parts in read_record_rows(QUESTION_FILE):
+        if len(parts) not in (5, 6):
             continue
-
-        question_id, prompt, raw_choices, answer_text, bonus_text, enemy_id = parts
-        definition = next((q for q in DEFAULT_QUESTIONS if q[0] == question_id), None)
-        if definition is None or question_id in valid_records:
-            continue
-
-        # Match each question ID to its assigned enemy.
-        # Only ENM-010 can receive the boss question.
-        if enemy_id != definition[5]:
-            continue
-
-        choices = [choice.strip() for choice in raw_choices.split(';') if choice.strip()]
+        choices = [c.strip() for c in parts[2].split(";") if c.strip()]
         try:
-            answer = int(answer_text)
-            bonus = int(bonus_text)
+            answer = int(parts[3])
+            bonus = int(parts[4])
         except ValueError:
             continue
-        if len(choices) != 4 or not 1 <= answer <= 4 or bonus < 0:
+        if len(choices) < 2 or not 1 <= answer <= len(choices):
+            continue
+        if any(q["id"] == parts[0] for q in question_records):
             continue
 
-        if question_id == BOSS_CHALLENGE_ID:
-            # Reserve the designated boss question for ENM-010.
-            if (prompt != definition[1] or choices != definition[2]
-                    or answer != definition[3] or bonus != definition[4]):
-                continue
-        elif prompt == DEFAULT_QUESTIONS[-1][1]:
-            # Reject duplicate assignments of the boss question.
-            continue
+        default = DEFAULT_QUESTION_BY_ID.get(parts[0])
+        enemy_id = (parts[5].strip() if len(parts) == 6 else
+                    default[5] if default else "")
+        if len(parts) == 5:
+            changed = True
 
-        valid_records[question_id] = {
-            "id": question_id, "question": prompt, "choices": choices,
+        # Apply standard bonuses only to matching question records.
+        # Customized questions and bonus values remain unchanged.
+        if (default and len(parts) == 5
+                and parts[1] == default[1]
+                and choices == default[2] and answer == default[3]
+                and bonus == LEGACY_QUESTION_BONUSES.get(parts[0])):
+            bonus = default[4]
+
+        if parts[0] == BOSS_CHALLENGE_ID and enemy_id != "ENM-010":
+            enemy_id = "ENM-010"
+            changed = True
+        elif parts[0] != BOSS_CHALLENGE_ID and enemy_id == "ENM-010":
+            enemy_id = ""  # Only the final question belongs to the Boss
+            changed = True
+
+        question_records.append({
+            "id": parts[0], "question": parts[1], "choices": choices,
             "answer": answer, "bonus": bonus, "enemy_id": enemy_id
-        }
+        })
 
-    for question_id, prompt, choices, answer, bonus, enemy_id in DEFAULT_QUESTIONS:
-        question_records.append(valid_records.get(question_id, {
-            "id": question_id, "question": prompt, "choices": list(choices),
-            "answer": answer, "bonus": bonus, "enemy_id": enemy_id
-        }))
+    # Supply the complete question set when records are missing.
+    if not question_records:
+        for qid, prompt, choices, answer, bonus, enemy_id in DEFAULT_QUESTIONS:
+            question_records.append({
+                "id": qid, "question": prompt, "choices": list(choices),
+                "answer": answer, "bonus": bonus, "enemy_id": enemy_id
+            })
+        changed = True
+    else:
+        if not any(q["id"] == BOSS_CHALLENGE_ID for q in question_records):
+            default = DEFAULT_QUESTION_BY_ID[BOSS_CHALLENGE_ID]
+            question_records.append({
+                "id": default[0], "question": default[1],
+                "choices": list(default[2]), "answer": default[3],
+                "bonus": default[4], "enemy_id": default[5]
+            })
+            changed = True
+        if not any(q.get("enemy_id") == "ENM-009" for q in question_records):
+            default = DEFAULT_QUESTION_BY_ID["QST-010"]
+            ids = {q["id"] for q in question_records}
+            qid = (default[0] if default[0] not in ids else
+                   next_record_id("QST", ids))
+            question_records.append({
+                "id": qid, "question": default[1],
+                "choices": list(default[2]), "answer": default[3],
+                "bonus": default[4], "enemy_id": default[5]
+            })
+            changed = True
 
-    # Save the normalized question catalog when records require correction.
-    canonical_rows = [
-        [q["id"], q["question"], ";".join(q["choices"]),
-         str(q["answer"]), str(q["bonus"]), q["enemy_id"]]
-        for q in question_records
-    ]
-    if saved_rows != canonical_rows:
+    # Keep the questions in enemy progression order (Boss question last).
+    enemy_order = {e["id"]: i for i, e in enumerate(mob_list)}
+    question_records.sort(key=lambda q: (
+        enemy_order.get(q.get("enemy_id"), 999), q["id"]))
+    if changed:
         save_questions()
 
 
 def save_questions():
     write_record_rows(
         QUESTION_FILE,
-        "DUNGEON CONQUEST CHALLENGE QUESTIONS",
+        "DREADVEIL: THE LAST GATE CHALLENGE QUESTIONS",
         "question_id|question|choices_separated_by_semicolon|"
         "correct_choice_number|bonus_damage|enemy_id",
         [[q["id"], q["question"], ";".join(q["choices"]), q["answer"],
@@ -1578,7 +1613,7 @@ def record_battle_result(mob, result, gold_change, score_change, turns=0):
 
     write_record_rows(
         BATTLE_HISTORY_FILE,
-        "DUNGEON CONQUEST BATTLE HISTORY",
+        "DREADVEIL: THE LAST GATE BATTLE HISTORY",
         "date_time|player_id|username|enemy_id|enemy_name|result|turns|"
         "gold|score",
         rows
@@ -1853,8 +1888,7 @@ def standard_piece(slot, level=None):
 
 
 def equipped_piece(slot):
-    # Equip purchases from the active tier only.
-    # Purchases from other tiers remain in the inventory.
+    # Gear from cleared levels remains owned but cannot replace current-tier gear.
     eid = player.get("equipped", {}).get(slot)
     rec = equipment_records.get(eid)
     if (rec is not None and rec["slot"] == slot
@@ -1989,7 +2023,7 @@ def is_level_complete(difficulty):
 
 
 def sync_completed_levels_without_rewards():
-    # Apply each level-completion reward only once per account.
+    # Prevents a completed level from granting its bonus more than once
     for difficulty in LEVEL_ORDER:
         if (
             is_level_complete(difficulty)
@@ -2030,8 +2064,8 @@ def process_level_completion(difficulty, enemy):
 
     push_battle_action("Level Complete", description, enemy=enemy)
 
-    # Equip the free sword, shield and armor upon unlocking a level.
-    # Purchased equipment remains owned and Gold stays unchanged.
+    # Equip the standard gear set whenever the next difficulty is unlocked.
+    # Previous purchases remain in inventory, with no additional charges.
     gear_notes = []
     gear_changes = []
     if current_equipment_tier() != old_tier:
@@ -2097,10 +2131,10 @@ def show_level_completion_rewards(reward, old_rank, new_rank):
         print(f"Next Level: {reward['next_tier']}")
         print(f"New Shop Upgrades: {reward['next_tier']} equipment is now available.")
         print("Next Step: Choose Travel to Room and explore the next area.")
-        print("A stronger armory awaits beyond the next gate...")
+        print("Beyond the next gate, the veil hides stronger steel...")
     else:
-        print("The World Eater has fallen! The final exit is now open.")
-        print("Next Step: Travel to the Last Gate to finish your journey.")
+        print("Vharok has fallen! Dreadveil\'s seal on the Last Gate is broken.")
+        print("Next Step: Travel to the Last Gate and leave the curse behind.")
 
 
 def show_progress_summary():
@@ -2146,12 +2180,12 @@ def get_room_enemies(room_id):
 
 
 def is_room_cleared(room_id, cleared_ids):
-    # A room is cleared when all its enemies appear in cleared_ids.
+    # A room is cleared when every enemy inside it is in cleared_ids
     return all(mob["id"] in cleared_ids for mob in get_room_enemies(room_id))
 
 
 def player_cleared_ids():
-    # Count only confirmed enemy victories toward room completion.
+    # Only enemies the player really defeated count as cleared
     return set(player.get("defeated_ids", []))
 
 
@@ -2640,7 +2674,7 @@ def register_new_account(username, password):
 def login_screen():
     # Main screen before entering the game
     while True:
-        header("Dungeon Conquest")
+        header("Dreadveil: The Last Gate")
 
         print("[1] Login")
         print("[2] Create New Account")
@@ -2673,8 +2707,12 @@ def login_screen():
                     admin_menu()
                 else:
                     print("Your saved progress has been loaded.")
-                    print(f"You are standing in: "
-                          f"{room_name(current_room_id())}")
+                    if player["status"] == "Victorious":
+                        print("Your journey is complete. You have escaped "
+                              "Dreadveil through the Last Gate.")
+                    else:
+                        print(f"You are standing in: "
+                              f"{room_name(current_room_id())}")
 
                     if encounter_lineup:
                         print(
@@ -2700,7 +2738,7 @@ def login_screen():
             signup_screen()
 
         elif choice == "0":
-            print("\nThank you for playing Dungeon Conquest!")
+            print("\nThank you for playing Dreadveil: The Last Gate!")
             print("Goodbye.")
             break
 
@@ -2757,7 +2795,7 @@ def signup_screen():
 def open_adventure_menu():
     # Main menu after a player logs in
     while True:
-        header("Dungeon Conquest")
+        header("Dreadveil: The Last Gate")
 
         rank = get_player_rank_info()
 
@@ -2767,12 +2805,16 @@ def open_adventure_menu():
             f"Gold: {player['gold']} | Rank: {rank['rank']} | "
             f"Status: {player['status']}"
         )
-        print(f"Location: {room_name(current_room_id())}")
+        if player["status"] == "Victorious":
+            print("Journey: Complete - Escaped through the Last Gate")
+        else:
+            print(f"Location: {room_name(current_room_id())}")
 
         if encounter_lineup:
             print(f"Enemies waiting in your queue: {len(encounter_lineup)}")
 
-        print("\n[1] Enter Dungeon")
+        print("\n[1] " + ("View Completed Journey" if player["status"]
+                          == "Victorious" else "Enter Dungeon"))
         print("[2] View Player Statistics")
         print("[3] Dungeon Map and Routes")
         print("[4] Enemy Information")
@@ -2782,7 +2824,14 @@ def open_adventure_menu():
         choice = input("\nEnter choice [0-5]: ").strip()
 
         if choice == "1":
-            dungeon_menu()
+            if player["status"] == "Victorious":
+                story_panel("Dreadveil: Journey Complete", ENDING_TEXT, "green")
+                print(f"Final Score: {player['score']}")
+                pause()
+            elif dungeon_menu():
+                reset_session_state()
+                print("\nYour journey has ended. Returning to the main menu...")
+                break
         elif choice == "2":
             view_stats()
         elif choice == "3":
@@ -2882,7 +2931,8 @@ def view_inventory(pause_after=True, show_header=True):
 
 def view_enemy_records(pause_after=True, only_available=False,
                        show_header=True):
-    # Display enemy information using the current menu's heading.
+    # Shows information about all enemies. When another screen already
+    # printed the main title, only a sub-heading is shown.
     if show_header:
         header("Enemy Information")
     else:
@@ -3045,7 +3095,8 @@ def show_instructions():
 # ---------------------------------------------------------------
 
 def display_encounter_lineup(pause_after=False, show_header=True):
-    # Display the encounter queue from front to rear.
+    # Shows the enemies from front to rear. Screens that already show a
+    # main title (Add Enemy, Start Battle) get a sub-heading instead.
     if show_header:
         header("Dungeon Encounter Queue")
     else:
@@ -3325,11 +3376,11 @@ def remove_latest_log_entry():
 
 # ---------------------------------------------------------------
 # UNDO SYSTEM (STACK, LIFO)
-# Store a state snapshot before each reversible action (LIFO).
+# A snapshot is PUSHED before each reversible action and POPPED by Undo.
 # ---------------------------------------------------------------
 
 def snapshot_state(label):
-    # Capture the game state needed for an undo operation.
+    # Saves everything an undo has to restore
     mob = get_current_enemy()
 
     return {
@@ -3530,11 +3581,11 @@ def start_battle_with_next_enemy():
     current_enemy_id = mob["id"]
     mob["engaged"] = True
     reset_battle_effects()
-    undo_stack.clear()  # Camp actions are excluded from battle undo history.
+    undo_stack.clear()  # camp actions cannot be undone inside a battle
     set_player_status("In Battle")
 
     if mob["type"] == "Boss":
-        story_panel("The Final Boss", BOSS_INTRO, "red")
+        story_panel("Vharok - Keeper of the Last Gate", BOSS_INTRO, "red")
     else:
         print(f"\n{color(ENCOUNTER_TEXT[mob['type']], 'yellow')}")
 
@@ -3560,7 +3611,8 @@ def start_battle_with_next_enemy():
 
 
 def estimate_battle(mob):
-    # Estimate required attacks and incoming damage for normal combat.
+    # Rough forecast if the player only attacks: how many attacks it
+    # takes to win and how much damage the enemy deals meanwhile
     average_hit = (
         total_atk()
         * (100 - player_miss_chance()) / 100
@@ -4085,7 +4137,7 @@ def answer_challenge_question():
 
 
 def retreat_from_battle():
-    # Retreat interrupts combat without awarding a victory.
+    # Free retreat: the battle is interrupted, never "won"
     mob = get_current_enemy()
 
     if mob is None:
@@ -4218,11 +4270,11 @@ def resolve_enemy_victory(mob):
         print(f"Rank Up: {old_rank['rank']} -> {new_rank['rank']}. "
               f"You can now fight {new_rank['max_difficulty']} enemies.")
 
-    # The Boss is only "defeated" when the battle logic really confirmed it
+    # Unlock the path to the Last Gate after the final boss is defeated
     if mob["type"] == "Boss" and mob["id"] in player["defeated_ids"]:
-        story_panel("The World Eater Has Fallen", BOSS_DEFEAT, "green")
-        print("The Last Room is unlocked. Use Travel to Connected Room to "
-              "reach the Dungeon Exit.")
+        story_panel("Dreadveil\'s Curse Is Broken", BOSS_DEFEAT, "green")
+        print("The path to the Last Gate is open. Use Travel to Connected "
+              "Room to reach the exit.")
 
     save_current_player_account()
 
@@ -4248,11 +4300,11 @@ def resolve_player_defeat(mob):
     print(f"{mob['name']} defeated you. "
           f"You dropped {gold_lost} Gold. Losses: {player['losses']}")
 
-    # The expedition ends, so the whole queue is cleared
+    # Empty the encounter queue after the player is defeated
     encounter_lineup.clear()
-    print("Your expedition is over. The Encounter Queue was cleared.")
+    print("Dreadveil pushes you back. Your Encounter Queue was cleared.")
 
-    # Restore a portion of enemy HP while retaining remaining damage.
+    # Restore part of the enemy's health while keeping its remaining wounds
     mob["hp"] = min(
         mob["max_hp"],
         mob["hp"] + mob["max_hp"] * ENEMY_REGEN_PERCENT // 100
@@ -4266,10 +4318,10 @@ def resolve_player_defeat(mob):
     else:
         player["wounds"].pop(mob["id"], None)
 
-    # Restore partial HP and return the player to the entrance.
+    # Return the player to the entrance with partially restored health
     player["hp"] = max(1, player["max_hp"] * DEFEAT_REVIVE_PERCENT // 100)
     player["location"] = ENTRANCE_ROOM_ID
-    print(f"You wake up at the entrance with {player['hp']} HP.")
+    print(f"You awaken at Dreadveil's entrance with {player['hp']} HP.")
 
     end_current_battle()
     record_battle_result(mob, "Defeat", -gold_lost, 0, turns)
@@ -4313,7 +4365,7 @@ def shop_entry(number, name, price, tag, detail):
 
 
 def dungeon_shop():
-    # Process supply and equipment purchases between battles.
+    # The player can buy items and equipment here between battles
     if current_enemy_id is not None:
         print("\nYou cannot shop during a battle.")
         pause()
@@ -4427,7 +4479,7 @@ def equipment_shop():
         print_table(["Slot", "Currently Worn", "Combat Stats", "Origin"],
                     rows, max_width=29)
 
-        # Display purchase options from the currently unlocked tier only.
+        # List only the purchasable upgrades for the current equipment tier.
         available = [e for e in equipment_records.values()
                      if e["tier"] == tier]
         available.sort(key=lambda e: (EQUIPMENT_SLOTS.index(e["slot"]),
@@ -4461,11 +4513,11 @@ def equipment_shop():
 
         section("A WHISPER FROM THE ARMORY")
         if tier != "Boss":
-            print("\"Deeper halls hide stronger steel... Clear this level, and")
-            print(" the next set of weapons, shields and armor will awaken.\"")
+            print("\"The veil hides stronger steel beyond each gate. Clear this")
+            print(" hall, and the next armory will answer your call.\"")
         else:
-            print("\"The final chamber is open. Choose your gear wisely;")
-            print(" only the throne knows what awaits.\"")
+            print("\"Vharok awaits beyond the throne. Choose your gear wisely;")
+            print(" the Last Gate will open only when he falls.\"")
 
         if not choices:
             print("\nYou own every upgrade available at this level.")
@@ -4774,7 +4826,7 @@ def travel_to_room():
         print("\nThe enemies waiting in your queue stay behind.")
 
     encounter_lineup.clear()
-    undo_stack.clear()  # Room movement is not reversible through the battle undo stack.
+    undo_stack.clear()  # moving to a new room cannot be undone
     player["location"] = destination
 
     push_battle_action("Travel", f"Player traveled to {room_name(destination)}"
@@ -4784,7 +4836,7 @@ def travel_to_room():
     announce_room(destination)
 
     if destination == EXIT_ROOM_ID:
-        offer_exit()
+        return offer_exit()
     else:
         pause()
 
@@ -4808,15 +4860,16 @@ def offer_exit():
     print()
 
     if ask_yes_no("Step through the exit now? (Y/N): "):
-        escape_dungeon()
+        return escape_dungeon()
     else:
-        print("\nThe exit waits. Choose 'Escape Dungeon' when you are ready.")
+        print("\nThe Last Gate awaits. Choose 'Escape Dungeon' when ready.")
         pause()
+    return False
 
 
 def escape_dungeon():
     # Wins the game. Only possible in the Last Room after the Boss falls.
-    header("Escape the Dungeon")
+    header("The Last Gate")
 
     if current_enemy_id is not None:
         print("Finish the current battle first.")
@@ -4824,18 +4877,18 @@ def escape_dungeon():
         return False
 
     if player["status"] == "Victorious":
-        print("You have already escaped the dungeon. Well done!")
+        print("You have already crossed the Last Gate. You are free!")
         pause()
         return False
 
     if not all_bosses_defeated(player["defeated_ids"]):
-        print("The exit is sealed by the World Eater's power.")
+        print("The Last Gate remains sealed by Vharok's power.")
         print("Defeat the Boss in the Throne of Ruin to open it.")
         pause()
         return False
 
     if current_room_id() != EXIT_ROOM_ID:
-        print("The exit is open, but you are not there yet.")
+        print("The Last Gate is open, but you have not reached it yet.")
         print(f"Travel to {room_name(EXIT_ROOM_ID)} to leave the dungeon.")
         pause()
         return False
@@ -4851,10 +4904,12 @@ def escape_dungeon():
     record_battle_result(None, "Escaped Dungeon", 0, ESCAPE_SCORE_BONUS)
     save_current_player_account()
 
-    story_panel("Escape", ENDING_TEXT, "green")
+    story_panel("Beyond the Last Gate", ENDING_TEXT, "green")
+    animate_banner("DREADVEIL CONQUERED - YOU ESCAPED!", "green")
     print(f"Escape bonus: +{ESCAPE_SCORE_BONUS} Score")
     print(f"Final Score: {player['score']}")
     print(f"Wins / Losses: {player['wins']} / {player['losses']}")
+    print("Your victory has been saved. Press Enter to return to the main menu.")
     pause()
     return True
 
@@ -4869,7 +4924,7 @@ def save_game_transaction():
         now = now_text()
 
         with open(GAME_RECORD_FILE, "w", encoding="utf-8") as game_file:
-            game_file.write("DUNGEON CONQUEST - SAVED GAME\n")
+            game_file.write("DREADVEIL: THE LAST GATE - SAVED GAME\n")
             game_file.write(f"Saved At: {now}\n\n")
 
             game_file.write("PLAYER INFORMATION\n")
@@ -5051,7 +5106,7 @@ def show_live_panel():
 
     if battle_history:
         top = battle_history[-1]
-        # Abbreviate the status preview; full entries remain in Action History.
+        # Keep the live HUD readable; the full text stays in Action History.
         preview = textwrap.shorten(
             f"{top['action_type']}: {top['description']}",
             width=62, placeholder="..."
@@ -5129,10 +5184,10 @@ def dungeon_menu():
     restore_player_for_new_transaction()
     notice = ""
 
-    # Display the introduction once per play session.
+    # Show the opening scene once at the start of the adventure
     if not intro_shown and player["wins"] == 0 \
             and current_room_id() == ENTRANCE_ROOM_ID:
-        story_panel("Dungeon Conquest", STORY_INTRO, "magenta")
+        story_panel("Dreadveil: The Last Gate", STORY_INTRO, "magenta")
         announce_room(ENTRANCE_ROOM_ID)
         pause()
 
@@ -5140,7 +5195,7 @@ def dungeon_menu():
 
     while True:
         clear_screen()
-        header("Dungeon Expedition - Camp")
+        header("Dreadveil - Expedition Camp")
         show_live_panel()
 
         rank = get_player_rank_info()
@@ -5182,7 +5237,8 @@ def dungeon_menu():
         elif choice == "5":
             open_treasure_chest()
         elif choice == "6":
-            travel_to_room()
+            if travel_to_room():
+                return True
         elif choice == "7":
             dungeon_shop()
         elif choice == "8":
@@ -5202,14 +5258,14 @@ def dungeon_menu():
         elif choice == "15":
             save_game_transaction()
         elif choice == "16":
-            # The queue is kept so the expedition can continue later
+            # Save the encounter queue with the current player progress
             save_current_player_account()
 
             print("\nGame saved. Your Encounter Queue is saved. See you next time!")
             break
         elif choice == "17":
             if escape_dungeon():
-                break
+                return True
         else:
             notice = INVALID_CHOICE_TEXT
 
@@ -5219,7 +5275,7 @@ def dungeon_menu():
 # ---------------------------------------------------------------
 
 def player_accounts():
-    # Include player accounts only in gameplay statistics.
+    # Only player accounts (admins are excluded from game reports)
     return {
         username: data
         for username, data in account_records.items()
@@ -5823,7 +5879,7 @@ def update_item_record():
     print("Press Enter to keep the current value.\n")
     item.update(ask_item_fields(item))
 
-    # Keep item quantities within the configured carrying limits.
+    # Adjust stored item quantities to the allowed carrying limit
     for data in account_records.values():
         if data["inventory"].get(item["id"], 0) > item["max_carry"]:
             data["inventory"][item["id"]] = item["max_carry"]
@@ -5976,7 +6032,7 @@ def update_equipment_record():
     old_slot = eq["slot"]
     eq.update(ask_equipment_fields(eq))
 
-    # Unequip items whose equipment slot is updated.
+    # A changed slot would break equipped pieces, so they are unequipped
     if eq["slot"] != old_slot:
         for data in account_records.values():
             data["equipped"] = {
@@ -6052,7 +6108,7 @@ def find_room_record():
 
 
 def add_room_record():
-    # The dungeon route contains six predefined rooms.
+    # The dungeon is fixed at exactly six rooms
     header("Add Room")
 
     print("The dungeon has exactly six rooms:")
@@ -6734,8 +6790,8 @@ def report_equipment():
 
 
 def report_gold_economy():
-    # Challenge bonuses modify attack damage, not Gold.
-    # Include only actual Gold rewards in this report.
+    # Challenge answers grant attack damage only, never Gold.
+    # This report includes only the game's real Gold sources.
     shop_cost = {
         tier: sum(e["price"] for e in equipment_records.values()
                   if e["tier"] == tier)
@@ -6923,7 +6979,7 @@ def report_menu():
 
 
 def admin_menu():
-    # Entry point for administrator functions.
+    # Main menu for administrators
     while True:
         header("Admin Menu")
 
@@ -6954,6 +7010,6 @@ def admin_menu():
 
 
 if __name__ == "__main__":
-    # Load saved records first, then show the login screen
+    # Load game records before opening the login menu
     load_all_records()
     login_screen()

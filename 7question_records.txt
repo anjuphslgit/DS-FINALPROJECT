@@ -1,4 +1,4 @@
-# DUNGEON CONQUEST CHALLENGE QUESTIONS
+# DREADVEIL: THE LAST GATE CHALLENGE QUESTIONS
 # question_id | question                                                  | choices_separated_by_semicolon         | correct_choice_number | bonus_damage | enemy_id
   QST-001     | Which data structure follows First-In, First-Out (FIFO)?  | Stack;Queue;Tree;Graph                 | 2                     | 10           | ENM-001
   QST-002     | Which data structure follows Last-In, First-Out (LIFO)?   | Queue;Array;Stack;Graph                | 3                     | 12           | ENM-002

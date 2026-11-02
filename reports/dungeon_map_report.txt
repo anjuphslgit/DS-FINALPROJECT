@@ -1,53 +1,41 @@
 DUNGEON MAP REPORT
-Generated: 2026-10-31 18:55:29
+Generated: 2026-11-03 01:28:13
 
 MAP DRAWING
-                   +-----------------------------+
-                   | [E] Dungeon Entrance        |
-                   | Start here                  |
-                   +-----------------------------+
-                            /           \
-                       /                     \
-  +-----------------------------+   +-----------------------------+
-  | [O] Rotting Sewers          |   | [O] Forsaken Tunnel         |
-  | Gravefang Rat (W)           |   | Hollowbone Goblin (W)       |
-  +-----------------------------+   +-----------------------------+
-                       \                     /
-                            \           /
-                   +-----------------------------+
-                   | [L] Burial Chambers         |
-                   | Ashen Ghoul (W)             |
-                   +-----------------------------+
-                            /           \
-                       /                     \
-  +-----------------------------+   +-----------------------------+
-  | [L] Bloodstone Hall         |   | [L] Execution Pit           |
-  | Ironjaw Reaver (I)          |   | Boneguard Executioner (I)   |
-  +-----------------------------+   +-----------------------------+
-                       \                     /
-                            \           /
-                   +-----------------------------+
-                   | [L] Infernal Prison         |
-                   | Hellchain Marauder (I)      |
-                   +-----------------------------+
-                            /           \
-                       /                     \
-  +-----------------------------+   +-----------------------------+
-  | [L] War-Torn Catacombs      |   | [L] Black Iron Citadel      |
-  | Dreadfang Berserker (S)     |   | Abyssal Death Knight (S)    |
-  +-----------------------------+   +-----------------------------+
-                       \                     /
-                            \           /
-                   +-----------------------------+
-                   | [L] Hall of Lost Souls      |
-                   | Soulreaper Wraith (S)       |
-                   +-----------------------------+
-                                  |
-                                  |
-                   +-----------------------------+
-                   | [L] Throne of Ruin          |
-                   | Vharok, the World Eater (B) |
-                   +-----------------------------+
+  +-----------------------------+
+  | [E] Dungeon Entrance        |
+  | Start here                  |
+  +-----------------------------+
+                 |
+                 |
+  +-----------------------------+
+  | [O] Rotting Sewers          |
+  | Gravefang Rat +2 (W)        |
+  +-----------------------------+
+                 |
+                 |
+  +-----------------------------+
+  | [L] Bloodstone Hall         |
+  | Ironjaw Reaver +2 (I)       |
+  +-----------------------------+
+                 |
+                 |
+  +-----------------------------+
+  | [L] War-Torn Catacombs      |
+  | Dreadfang Berserker +2 (S)  |
+  +-----------------------------+
+                 |
+                 |
+  +-----------------------------+
+  | [L] Throne of Ruin          |
+  | Vharok, the World Eater (B) |
+  +-----------------------------+
+                 |
+                 |
+  +-----------------------------+
+  | [L] The Last Gate           |
+  | DUNGEON EXIT                |
+  +-----------------------------+
 
 Rooms  : [E] Entrance  [O] Open  [C] Cleared  [L] Locked
 Enemies: (W)eak (I)ntermediate (S)trong (B)oss (Q) In Queue (x) Defeated
@@ -57,61 +45,35 @@ Legend: [E] Entrance  [O] Open  [C] Cleared  [L] Locked
 
 [E] ROOM-000 Dungeon Entrance (Entrance)
       Link  : <-> ROOM-001 Rotting Sewers via Rusted Grate
-      Link  : <-> ROOM-002 Forsaken Tunnel via Collapsed Stairway
 [O] ROOM-001 Rotting Sewers (Open)
       Enemy : ENM-001 Gravefang Rat (Weak, Active)
-      Link  : <-> ROOM-000 Dungeon Entrance via Rusted Grate
-      Link  : <-> ROOM-003 Burial Chambers via Flooded Passage
-[O] ROOM-002 Forsaken Tunnel (Open)
       Enemy : ENM-002 Hollowbone Goblin (Weak, Active)
-      Link  : <-> ROOM-000 Dungeon Entrance via Collapsed Stairway
-      Link  : <-> ROOM-003 Burial Chambers via Bone-Lined Corridor
-[L] ROOM-003 Burial Chambers (Locked)
       Enemy : ENM-003 Ashen Ghoul (Weak, Active)
-      Link  : <-> ROOM-001 Rotting Sewers via Flooded Passage
-      Link  : <-> ROOM-002 Forsaken Tunnel via Bone-Lined Corridor
-      Link  : <-> ROOM-004 Bloodstone Hall via Crimson Gate
-      Link  : <-> ROOM-005 Execution Pit via Hangman's Path
-[L] ROOM-004 Bloodstone Hall (Locked)
+      Link  : <-> ROOM-000 Dungeon Entrance via Rusted Grate
+      Link  : <-> ROOM-002 Bloodstone Hall via Crimson Gate
+[L] ROOM-002 Bloodstone Hall (Locked)
       Enemy : ENM-004 Ironjaw Reaver (Intermediate, Active)
-      Link  : <-> ROOM-003 Burial Chambers via Crimson Gate
-      Link  : <-> ROOM-006 Infernal Prison via Chain Bridge
-[L] ROOM-005 Execution Pit (Locked)
       Enemy : ENM-005 Boneguard Executioner (Intermediate, Active)
-      Link  : <-> ROOM-003 Burial Chambers via Hangman's Path
-      Link  : <-> ROOM-006 Infernal Prison via Cell Block Door
-[L] ROOM-006 Infernal Prison (Locked)
       Enemy : ENM-006 Hellchain Marauder (Intermediate, Active)
-      Link  : <-> ROOM-004 Bloodstone Hall via Chain Bridge
-      Link  : <-> ROOM-005 Execution Pit via Cell Block Door
-      Link  : <-> ROOM-007 War-Torn Catacombs via Scorched Tunnel
-      Link  : <-> ROOM-008 Black Iron Citadel via Iron Drawbridge
-[L] ROOM-007 War-Torn Catacombs (Locked)
+      Link  : <-> ROOM-001 Rotting Sewers via Crimson Gate
+      Link  : <-> ROOM-003 War-Torn Catacombs via Iron Drawbridge
+[L] ROOM-003 War-Torn Catacombs (Locked)
       Enemy : ENM-007 Dreadfang Berserker (Strong, Active)
-      Link  : <-> ROOM-006 Infernal Prison via Scorched Tunnel
-      Link  : <-> ROOM-009 Hall of Lost Souls via Whispering Stair
-[L] ROOM-008 Black Iron Citadel (Locked)
       Enemy : ENM-008 Abyssal Death Knight (Strong, Active)
-      Link  : <-> ROOM-006 Infernal Prison via Iron Drawbridge
-      Link  : <-> ROOM-009 Hall of Lost Souls via Shadow Archway
-[L] ROOM-009 Hall of Lost Souls (Locked)
       Enemy : ENM-009 Soulreaper Wraith (Strong, Active)
-      Link  : <-> ROOM-007 War-Torn Catacombs via Whispering Stair
-      Link  : <-> ROOM-008 Black Iron Citadel via Shadow Archway
-      Link  : <-> ROOM-010 Throne of Ruin via Throne Gate
-[L] ROOM-010 Throne of Ruin (Locked)
+      Link  : <-> ROOM-002 Bloodstone Hall via Iron Drawbridge
+      Link  : <-> ROOM-004 Throne of Ruin via Throne Gate
+[L] ROOM-004 Throne of Ruin (Locked)
       Enemy : ENM-010 Vharok, the World Eater (Boss, Active)
-      Link  : <-> ROOM-009 Hall of Lost Souls via Throne Gate
+      Link  : <-> ROOM-003 War-Torn Catacombs via Throne Gate
+      Link  : <-> ROOM-005 The Last Gate via Sealed Exit Door
+[L] ROOM-005 The Last Gate (Locked)
+      Link  : <-> ROOM-004 Throne of Ruin via Sealed Exit Door
 
 EXPLORATION ORDER FROM THE ENTRANCE (DFS)
   1. Dungeon Entrance
   2. Rotting Sewers
-  3. Burial Chambers
-  4. Forsaken Tunnel
-  5. Bloodstone Hall
-  6. Infernal Prison
-  7. Execution Pit
-  8. War-Torn Catacombs
-  9. Hall of Lost Souls
-  10. Black Iron Citadel
-  11. Throne of Ruin
+  3. Bloodstone Hall
+  4. War-Torn Catacombs
+  5. Throne of Ruin
+  6. The Last Gate

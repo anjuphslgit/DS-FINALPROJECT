@@ -1,35 +1,21 @@
 BATTLE HISTORY REPORT
-Generated: 2026-10-31 18:55:20
+Generated: 2026-11-03 01:27:37
 
 +---------------------+--------+-------------------------+-----------------+-------+------+-------+
 | Date/Time           | Player | Enemy                   | Result          | Turns | Gold | Score |
 +=====================+========+=========================+=================+=======+======+=======+
-| 2026-10-29 02:24:19 | player | Gravefang Rat           | Victory         |     4 |   25 |    40 |
-| 2026-10-29 02:27:08 | player | Hollowbone Goblin       | Victory         |     6 |   30 |    60 |
-| 2026-10-29 02:28:51 | player | Ashen Ghoul             | Victory         |     6 |   75 |    80 |
-| 2026-10-29 02:30:57 | player | Ironjaw Reaver          | Escaped         |     1 |    0 |     0 |
-| 2026-10-29 02:32:53 | player | Ironjaw Reaver          | Victory         |     7 |   50 |   100 |
-| 2026-10-29 02:34:30 | player | Boneguard Executioner   | Victory         |     5 |   60 |   120 |
-| 2026-10-29 02:36:11 | player | Hellchain Marauder      | Defeat          |     5 |   -5 |     0 |
-| 2026-10-29 02:37:29 | player | Hellchain Marauder      | Victory         |     4 |  150 |   140 |
-| 2026-10-29 02:40:02 | player | Dreadfang Berserker     | Victory         |     8 |   85 |   180 |
-| 2026-10-29 02:42:28 | player | Abyssal Death Knight    | Victory         |     7 |   95 |   200 |
-| 2026-10-29 02:44:16 | player | Soulreaper Wraith       | Defeat          |     2 |   -6 |     0 |
-| 2026-10-31 17:00:41 | anj    | Gravefang Rat           | Victory         |     3 |   25 |    40 |
-| 2026-10-31 17:01:17 | anj    | Hollowbone Goblin       | Escaped         |     1 |    0 |     0 |
-| 2026-10-31 17:02:38 | anj    | Ashen Ghoul             | Victory         |     6 |   35 |    80 |
-| 2026-10-31 17:03:30 | anj    | Hollowbone Goblin       | Victory         |     5 |   70 |    60 |
-| 2026-10-31 18:34:50 | player | Soulreaper Wraith       | Victory         |     9 |  260 |   220 |
-| 2026-10-31 18:39:17 | player | Vharok, the World Eater | Defeat          |     7 |   -4 |     0 |
-| 2026-10-31 18:40:36 | player | Vharok, the World Eater | Defeat          |     3 |   -3 |     0 |
-| 2026-10-31 18:45:35 | anj    | Ironjaw Reaver          | Victory         |     5 |   50 |   100 |
-| 2026-10-31 18:45:59 | anj    | Boneguard Executioner   | Victory         |     4 |   60 |   120 |
-| 2026-10-31 18:47:04 | anj    | Hellchain Marauder      | Victory         |     7 |  150 |   140 |
-| 2026-10-31 18:48:16 | anj    | Dreadfang Berserker     | Victory         |     4 |   85 |   180 |
-| 2026-10-31 18:49:00 | anj    | Abyssal Death Knight    | Victory         |     7 |   95 |   200 |
-| 2026-10-31 18:49:47 | anj    | Soulreaper Wraith       | Victory         |     5 |  260 |   220 |
-| 2026-10-31 18:52:38 | anj    | Vharok, the World Eater | Victory         |    10 |  300 |   600 |
-| 2026-10-31 18:53:25 | anj    | Dungeon Exit            | Escaped Dungeon |     0 |    0 |   500 |
+| 2026-11-02 20:06:34 | jeo    | Gravefang Rat           | Victory         |     4 |   25 |    40 |
+| 2026-11-02 20:08:39 | jeo    | Hollowbone Goblin       | Victory         |     5 |   30 |    60 |
+| 2026-11-02 20:10:23 | jeo    | Ashen Ghoul             | Victory         |     6 |   80 |    80 |
+| 2026-11-02 20:28:22 | jeo    | Ironjaw Reaver          | Victory         |     3 |   50 |   100 |
+| 2026-11-02 20:29:49 | jeo    | Boneguard Executioner   | Victory         |     4 |   60 |   120 |
+| 2026-11-02 20:30:53 | jeo    | Hellchain Marauder      | Victory         |     6 |  150 |   140 |
+| 2026-11-02 22:40:45 | angel  | Ashen Ghoul             | Victory         |     5 |   75 |    80 |
+| 2026-11-03 01:01:45 | marie  | Vharok, the World Eater | Victory         |     7 |  300 |   600 |
+| 2026-11-03 01:02:23 | marie  | Dungeon Exit            | Escaped Dungeon |     0 |    0 |   500 |
+| 2026-11-03 01:12:14 | angel  | Ironjaw Reaver          | Victory         |     4 |   50 |   100 |
+| 2026-11-03 01:12:42 | angel  | Boneguard Executioner   | Victory         |     5 |   60 |   120 |
+| 2026-11-03 01:13:00 | angel  | Hellchain Marauder      | Defeat          |     2 |  -65 |     0 |
 +---------------------+--------+-------------------------+-----------------+-------+------+-------+
 
-Total battles: 26
+Total battles: 12

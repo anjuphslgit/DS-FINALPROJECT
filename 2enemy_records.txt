@@ -1,4 +1,4 @@
-# DUNGEON CONQUEST ENEMY RECORDS
+# DREADVEIL: THE LAST GATE ENEMY RECORDS
 # enemy_id | name                    | difficulty   | max_hp | atk | gold_reward | score_reward | room_id
   ENM-001  | Gravefang Rat           | Weak         | 55     | 7   | 25          | 40           | ROOM-001
   ENM-002  | Hollowbone Goblin       | Weak         | 70     | 9   | 30          | 60           | ROOM-001

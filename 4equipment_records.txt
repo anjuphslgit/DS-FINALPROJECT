@@ -1,4 +1,4 @@
-# DUNGEON CONQUEST EQUIPMENT RECORDS
+# DREADVEIL: THE LAST GATE EQUIPMENT RECORDS
 # equipment_id | name                | slot   | tier         | bonus | price | description                                            | speed
   EQP-001      | Rusty Sword +1      | sword  | Weak         | 4     | 40    | A nimble sewer blade; a first taste of faster strikes. | 2
   EQP-002      | Bloodstone Sword +1 | sword  | Intermediate | 8     | 95    | A balanced sword forged from the Bloodstone ore.       | 6

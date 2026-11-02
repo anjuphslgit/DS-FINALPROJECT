@@ -1,9 +1,29 @@
 PLAYER SCORE RANKING REPORT
-Generated: 2026-10-31 18:55:13
+Generated: 2026-11-03 01:27:22
 
-+-------+----------+-------+------+--------+
-| Place | Username | Score | Wins | Rank   |
-+=======+==========+=======+======+========+
-|     1 | anj      |  2240 |   10 | Master |
-|     2 | player   |  1140 |    9 | Master |
-+-------+----------+-------+------+--------+
++-------+--------------+-------+------+------------+
+| Place | Username     | Score | Wins | Rank       |
++=======+==============+=======+======+============+
+|     1 | impakto      |  2280 |   10 | Master     |
+|     2 | asawanimarie |  2270 |   10 | Master     |
+|     3 | marie        |  2260 |   10 | Master     |
+|     4 | anj          |  2240 |   10 | Master     |
+|     5 | bff          |  1160 |    9 | Master     |
+|     6 | player       |  1140 |    9 | Master     |
+|     7 | jerald       |   940 |    8 | Elite      |
+|     8 | tae          |   740 |    7 | Elite      |
+|     9 | jeo          |   550 |    6 | Elite      |
+|    10 | max          |   550 |    6 | Elite      |
+|    11 | reine        |   550 |    6 | Elite      |
+|    12 | gehlee       |   410 |    5 | Adventurer |
+|    13 | angel        |   400 |    5 | Adventurer |
+|    14 | backburner   |   290 |    4 | Adventurer |
+|    15 | jas          |   280 |    4 | Adventurer |
+|    16 | drei         |   190 |    3 | Adventurer |
+|    17 | dana         |   190 |    3 | Adventurer |
+|    18 | kim          |   190 |    3 | Adventurer |
+|    19 | ela          |   100 |    2 | Beginner   |
+|    20 | alex         |    40 |    1 | Beginner   |
+|    21 | rebound      |    40 |    1 | Beginner   |
+|    22 | green        |     0 |    0 | Beginner   |
++-------+--------------+-------+------+------------+

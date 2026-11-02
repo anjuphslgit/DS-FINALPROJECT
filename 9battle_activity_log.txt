@@ -1,4 +1,4 @@
-DUNGEON BATTLE LOG
+# DREADVEIL: THE LAST GATE BATTLE LOG
 Saved At: 2026-11-02 22:40:22
 
 ACT-001 | 2026-11-02 22:40:17 | Battle Start | Player PLY-005 | Enemy ENM-003 | Battle started with Ashen Ghoul.

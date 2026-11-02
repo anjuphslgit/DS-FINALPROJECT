@@ -1,4 +1,4 @@
-# DUNGEON CONQUEST ROOM RECORDS (GRAPH VERTICES)
+# DREADVEIL: THE LAST GATE ROOM RECORDS (GRAPH VERTICES)
 # room_id  | name               | description
   ROOM-000 | Dungeon Entrance   | A cold stone gate where every expedition begins.
   ROOM-001 | Rotting Sewers     | Knee-deep filth and the scratching of claws. Home of the Weak enemies.

@@ -1,4 +1,4 @@
-# DUNGEON CONQUEST ITEM RECORDS
+# DREADVEIL: THE LAST GATE ITEM RECORDS
 # item_id | name           | effect | power | price | max_carry | description
   ITM-001 | Health Potion  | heal   | 35    | 30    | 5         | A bitter red brew that closes wounds.
   ITM-002 | Strength Tonic | boost  | 50    | 70    | 3         | Fills your arms with burning strength.

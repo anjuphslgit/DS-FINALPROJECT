@@ -1,24 +1,79 @@
 ENEMIES DEFEATED REPORT
-Generated: 2026-10-31 18:55:09
+Generated: 2026-11-03 01:27:18
 
-+---------+-------------------------+--------------+-------+-------------+
-| ID      | Enemy                   | Difficulty   | Times | Defeated By |
-+=========+=========================+==============+=======+=============+
-| ENM-001 | Gravefang Rat           | Weak         |     2 | player, anj |
-| ENM-002 | Hollowbone Goblin       | Weak         |     2 | player, anj |
-| ENM-003 | Ashen Ghoul             | Weak         |     2 | player, anj |
-| ENM-004 | Ironjaw Reaver          | Intermediate |     2 | player, anj |
-| ENM-005 | Boneguard Executioner   | Intermediate |     2 | player, anj |
-| ENM-006 | Hellchain Marauder      | Intermediate |     2 | player, anj |
-| ENM-007 | Dreadfang Berserker     | Strong       |     2 | player, anj |
-| ENM-008 | Abyssal Death Knight    | Strong       |     2 | player, anj |
-| ENM-009 | Soulreaper Wraith       | Strong       |     2 | player, anj |
-| ENM-010 | Vharok, the World Eater | Boss         |     1 | anj         |
-+---------+-------------------------+--------------+-------+-------------+
++---------+-------------------------+--------------+-------+--------------------------------+
+| ID      | Enemy                   | Difficulty   | Times | Defeated By                    |
++=========+=========================+==============+=======+================================+
+| ENM-001 | Gravefang Rat           | Weak         |    21 | player, anj, drei, jeo, angel, |
+|         |                         |              |       | dana, alex, max, jas, gehlee,  |
+|         |                         |              |       | tae, marie, asawanimarie, kim, |
+|         |                         |              |       | jerald, reine, ela, impakto,   |
+|         |                         |              |       | backburner, rebound, bff       |
++---------+-------------------------+--------------+-------+--------------------------------+
+| ENM-002 | Hollowbone Goblin       | Weak         |    19 | player, anj, drei, jeo, angel, |
+|         |                         |              |       | dana, max, jas, gehlee, tae,   |
+|         |                         |              |       | marie, asawanimarie, kim,      |
+|         |                         |              |       | jerald, reine, ela, impakto,   |
+|         |                         |              |       | backburner, bff                |
++---------+-------------------------+--------------+-------+--------------------------------+
+| ENM-003 | Ashen Ghoul             | Weak         |    18 | player, anj, drei, jeo, angel, |
+|         |                         |              |       | dana, max, jas, gehlee, tae,   |
+|         |                         |              |       | marie, asawanimarie, kim,      |
+|         |                         |              |       | jerald, reine, impakto,        |
+|         |                         |              |       | backburner, bff                |
++---------+-------------------------+--------------+-------+--------------------------------+
+| ENM-004 | Ironjaw Reaver          | Intermediate |    15 | player, anj, jeo, angel, max,  |
+|         |                         |              |       | jas, gehlee, tae, marie,       |
+|         |                         |              |       | asawanimarie, jerald, reine,   |
+|         |                         |              |       | impakto, backburner, bff       |
++---------+-------------------------+--------------+-------+--------------------------------+
+| ENM-005 | Boneguard Executioner   | Intermediate |    13 | player, anj, jeo, angel, max,  |
+|         |                         |              |       | gehlee, tae, marie,            |
+|         |                         |              |       | asawanimarie, jerald, reine,   |
+|         |                         |              |       | impakto, bff                   |
++---------+-------------------------+--------------+-------+--------------------------------+
+| ENM-006 | Hellchain Marauder      | Intermediate |    11 | player, anj, jeo, max, tae,    |
+|         |                         |              |       | marie, asawanimarie, jerald,   |
+|         |                         |              |       | reine, impakto, bff            |
++---------+-------------------------+--------------+-------+--------------------------------+
+| ENM-007 | Dreadfang Berserker     | Strong       |     8 | player, anj, tae, marie,       |
+|         |                         |              |       | asawanimarie, jerald, impakto, |
+|         |                         |              |       | bff                            |
++---------+-------------------------+--------------+-------+--------------------------------+
+| ENM-008 | Abyssal Death Knight    | Strong       |     7 | player, anj, marie,            |
+|         |                         |              |       | asawanimarie, jerald, impakto, |
+|         |                         |              |       | bff                            |
++---------+-------------------------+--------------+-------+--------------------------------+
+| ENM-009 | Soulreaper Wraith       | Strong       |     6 | player, anj, marie,            |
+|         |                         |              |       | asawanimarie, impakto, bff     |
++---------+-------------------------+--------------+-------+--------------------------------+
+| ENM-010 | Vharok, the World Eater | Boss         |     4 | anj, marie, asawanimarie,      |
+|         |                         |              |       | impakto                        |
++---------+-------------------------+--------------+-------+--------------------------------+
 
-+----------+------------------+
-| Username | Enemies Defeated |
-+==========+==================+
-| player   |             9/10 |
-| anj      |            10/10 |
-+----------+------------------+
++--------------+------------------+
+| Username     | Enemies Defeated |
++==============+==================+
+| player       |             9/10 |
+| anj          |            10/10 |
+| drei         |             3/10 |
+| jeo          |             6/10 |
+| angel        |             5/10 |
+| dana         |             3/10 |
+| alex         |             1/10 |
+| max          |             6/10 |
+| jas          |             4/10 |
+| gehlee       |             5/10 |
+| tae          |             7/10 |
+| marie        |            10/10 |
+| asawanimarie |            10/10 |
+| kim          |             3/10 |
+| jerald       |             8/10 |
+| reine        |             6/10 |
+| ela          |             2/10 |
+| impakto      |            10/10 |
+| backburner   |             4/10 |
+| rebound      |             1/10 |
+| bff          |             9/10 |
+| green        |             0/10 |
++--------------+------------------+

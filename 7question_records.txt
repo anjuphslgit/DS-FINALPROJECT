@@ -8,7 +8,5 @@
   QST-006     | What removes an item from a queue?                        | Push;Pop;Enqueue;Dequeue               | 4                     | 22           | ENM-006
   QST-007     | What connects vertices in a graph?                        | Root;Edge;Leaf;Index                   | 2                     | 28           | ENM-007
   QST-008     | What is the top node of a tree called?                    | Leaf;Branch;Root;Edge                  | 3                     | 32           | ENM-008
-  QST-010     | Which tree traversal visits the root before its subtrees? | Inorder;Postorder;Preorder;Level-order | 3                     | 36           | ENM-010
-  QST-012     | Papasa ba ako sa Data Structure?                          | Oo;Yes;Syempre;God is good!            | 4                     | 50           | ENM-010
-  QST-009     | Papasa ba ako sa Data Structure?                          | Oo;Yes;Syempre;God is good!            | 4                     | 50           |
-  QST-011     | Papasa ba ako sa Data Structure?                          | Oo;Yes;Syempre;God is good!            | 4                     | 50           |
+  QST-009     | Which tree traversal visits the root before its subtrees? | Inorder;Postorder;Preorder;Level-order | 3                     | 36           | ENM-009
+  QST-010     | Papasa ba ako sa Data Structure?                          | Oo;Yes;Syempre;God is good!            | 4                     | 50           | ENM-010

@@ -59,11 +59,6 @@ DEFEAT_REVIVE_PERCENT = 50
 ENEMY_REGEN_PERCENT = 25
 ESCAPE_SCORE_BONUS = 500
 
-# The blueprint says a loss erases all progress. The original program
-# was kinder (the player keeps progress). Set this to True to follow the
-# blueprint's permadeath rule exactly.
-HARDCORE_DEFEAT = False
-
 # ---------------------------------------------------------------
 # THE SIX-ROOM DUNGEON (fixed route, one room per difficulty)
 # ENTRANCE -> WEAK -> INTERMEDIATE -> STRONG -> BOSS -> EXIT
@@ -87,14 +82,13 @@ LEVEL_ORDER = ["Weak", "Intermediate", "Strong", "Boss"]
 PLAYER_STATUSES = ["Active", "In Battle", "Defeated", "Retreated", "Victorious"]
 
 # ---------------------------------------------------------------
-# EQUIPMENT (Sword, Shield, Armor in three progression tiers)
+# EQUIPMENT (SWORD, SHIELD AND ARMOR ACROSS FOUR DIFFICULTY LEVELS)
 # ---------------------------------------------------------------
 
 EQUIPMENT_SLOTS = ["sword", "shield", "armor"]
 
-# A new level is unlocked after clearing the previous level. Each unlocked
-# level grants three FREE pieces; the shop sells only optional CURRENT-level
-# alternatives (two upgrade choices per slot).
+# Each unlocked level provides a free sword, shield and armor set.
+# The shop offers two optional upgrades for each slot at the active level.
 TIER_UNLOCK_REQUIREMENT = {
     "Weak": None, "Intermediate": "Weak", "Strong": "Intermediate",
     "Boss": "Strong"
@@ -107,10 +101,9 @@ SLOT_STAT_TEXT = {
     "armor": "DEF: -{b} per hit"
 }
 
-# OPTIONAL SHOP EQUIPMENT. The first nine IDs are kept in their ORIGINAL
-# tier/slot so existing saved ownerships continue to refer to the right gear.
+# Equipment IDs identify each item and link it to saved player ownership.
 # Fields: id, name, slot, tier, bonus, price, description, speed.
-# Speed (swords only) improves attack accuracy and critical-hit chance.
+# Sword speed increases attack accuracy and critical-hit chance.
 DEFAULT_EQUIPMENT = [
     ("EQP-001", "Rusty Sword +1", "sword", "Weak", 4, 40,
      "A nimble sewer blade; a first taste of faster strikes.", 2),
@@ -162,8 +155,8 @@ DEFAULT_EQUIPMENT = [
      "Ancient armor that softens devastating strikes.", 0)
 ]
 
-# Only rename known shipped names in existing equipment files. Item IDs,
-# owned equipment, bonuses, prices and custom admin names are preserved.
+# Name aliases used when loading equipment records from other formats.
+# Matching records retain their IDs, stats and saved ownership.
 PRIOR_SHOP_EQUIPMENT_NAMES = {
     "EQP-001": 'Rustfang Blade',
     "EQP-002": 'Gravesteel Sword',
@@ -191,8 +184,8 @@ PRIOR_SHOP_EQUIPMENT_NAMES = {
     "EQP-024": 'Eternal Bastion Plate',
 }
 
-# For a pristine nine-item equipment file saved by earlier versions, replace
-# the catalog with the new 24-item layout. Never wipe a custom admin catalog.
+# The standard equipment catalog contains 24 items.
+# Customized equipment catalogs are not replaced.
 PRIOR_DEFAULT_EQUIPMENT_SIGNATURE = {
     ("EQP-001", "Rustfang Blade", "sword", "Weak", 6, 60),
     ("EQP-002", "Gravesteel Sword", "sword", "Intermediate", 10, 130),
@@ -216,9 +209,9 @@ LEGACY_EQUIPMENT_SIGNATURE = {
     ("EQP-009", "Blackiron Plate Armor", "armor", "Strong", 5, 200)
 }
 
-# FREE gear is determined by the level the player has unlocked. It replaces
-# the prior level's equipped upgrades, but previous purchases stay owned.
-# Tuples: name, combat bonus, sword speed (0 for shield and armor).
+# Free equipment depends on the highest unlocked difficulty level.
+# Shop purchases remain owned when a different tier becomes active.
+# Tuples: name, combat bonus, sword speed (zero for shield and armor).
 STANDARD_EQUIPMENT = {
     "sword": [
         ("Rusty Sword", 2, 0), ("Bloodstone Sword", 6, 4),
@@ -236,8 +229,7 @@ STANDARD_EQUIPMENT = {
 STANDARD_UPGRADE_LEVELS = ["Weak", "Intermediate", "Strong"]
 
 # ---------------------------------------------------------------
-# GOLD ECONOMY (enemy and level gold live in the enemy records and in
-# LEVEL_COMPLETION_GOLD above; these are the extra sources)
+# GOLD ECONOMY (ADDITIONAL TREASURE REWARDS)
 # ---------------------------------------------------------------
 
 # One treasure chest per fighting room, opened once after the room is
@@ -399,9 +391,9 @@ DEFAULT_CONNECTIONS = [
     ("ROOM-004", "ROOM-005", "Sealed Exit Door")
 ]
 
-# Each enemy has its own challenge question. Bonuses become stronger as the
-# dungeon advances: Weak < Intermediate < Strong < Boss.
-# The final Boss question keeps its original ID so older saves remain valid.
+# Each enemy is assigned one challenge question.
+# Bonus damage increases from Weak through Boss difficulty.
+# QST-010 is assigned only to the final boss.
 BOSS_CHALLENGE_ID = "QST-010"
 DEFAULT_QUESTIONS = [
     # id, question, choices, correct answer, attack bonus, assigned enemy
@@ -427,14 +419,8 @@ DEFAULT_QUESTIONS = [
      ["Oo", "Yes", "Syempre", "God is good!"], 4, 50, "ENM-010")
 ]
 
-# Bonus values in the older nine-question record file. Only unchanged old
-# defaults are upgraded; custom admin-edited questions are preserved.
-LEGACY_QUESTION_BONUSES = {
-    "QST-001": 10, "QST-002": 10, "QST-003": 15,
-    "QST-004": 15, "QST-005": 15, "QST-006": 15,
-    "QST-007": 20, "QST-008": 20, "QST-009": 50
-}
-DEFAULT_QUESTION_BY_ID = {record[0]: record for record in DEFAULT_QUESTIONS}
+# The question catalog uses six fields, including the assigned enemy ID.
+# Question files must match these ten enemy assignments.
 
 
 # ---------------------------------------------------------------
@@ -455,7 +441,7 @@ room_records = {}
 room_connections = []
 question_records = []
 
-# Set when an old room file had to be replaced by the six-room layout
+# Indicates that room records were initialized with the six-room layout
 ROOMS_RESET = False
 
 # QUEUE: enemies of the current room, in the order chosen by the player
@@ -1081,7 +1067,7 @@ def parse_account_row(parts):
 
 
 def parse_legacy_account_row(parts):
-    # Older save files stored items as four fixed columns
+    # Parse the fixed-column inventory format for compatible save records.
     data = new_account_data(parts[1], parts[2])
     data.update({
         "hp": int(parts[3]),
@@ -1126,7 +1112,7 @@ def load_accounts():
         if username and username not in account_records:
             account_records[username] = data
 
-    # Legacy escape items no longer exist; remove them from old inventories.
+    # Remove unsupported item IDs from player inventories.
     legacy_data_cleaned = False
     for data in account_records.values():
         inventory = data.get("inventory", {})
@@ -1145,7 +1131,7 @@ def load_accounts():
         create_default_accounts()
         return
 
-    # Older files have no admin, so the default admin is added
+    # Ensure at least one administrator account is available.
     if not any(d["role"] == "Admin" for d in account_records.values()):
         if "admin" not in account_records:
             account_records["admin"] = new_account_data(
@@ -1341,7 +1327,7 @@ def load_equipment():
         except ValueError:
             continue
 
-    # A shop file that is still the untouched first version is upgraded
+    # Recognize the standard nine-item equipment catalog.
     saved_signature = {
         (e["id"], e["name"], e["slot"], e["tier"], e["bonus"], e["price"])
         for e in equipment_records.values()
@@ -1372,8 +1358,8 @@ def load_equipment():
             }
         save_equipment()
 
-    # Upgrade the DISPLAY NAMES from previous game versions without
-    # changing IDs, ownership, gameplay stats or player-customized names.
+    # Match recognized equipment names without changing record IDs,
+    # combat statistics, ownership or customized names.
     current_defaults = {eq[0]: eq for eq in DEFAULT_EQUIPMENT}
     names_updated = False
     for eid, old_name in PRIOR_SHOP_EQUIPMENT_NAMES.items():
@@ -1404,8 +1390,8 @@ def save_equipment():
 # ----- Rooms and connections (graph) -----
 
 def load_rooms():
-    # The dungeon must have exactly the six rooms in ROOM_ORDER. Any other
-    # layout (for example an old 11-room file) is replaced.
+    # Use the six-room layout defined in ROOM_ORDER.
+    # Initialize room records when the stored layout differs.
     global ROOMS_RESET
 
     room_records.clear()
@@ -1498,85 +1484,67 @@ def question_for_enemy(mob):
 
 
 def load_questions():
-    """Load assigned questions and migrate the previous five-column files."""
-    question_records.clear()
-    changed = False
+    """Load exactly one challenge per enemy using the final 10-question format.
 
-    for parts in read_record_rows(QUESTION_FILE):
-        if len(parts) not in (5, 6):
+    Valid administrator edits to non-boss questions are kept. Missing,
+    duplicate, older-format, or incorrectly assigned records are repaired
+    using DEFAULT_QUESTIONS. The boss question is fixed and always last.
+    """
+    question_records.clear()
+    saved_rows = read_record_rows(QUESTION_FILE)
+    valid_records = {}
+
+    for parts in saved_rows:
+        # Each question record has six columns, including enemy_id.
+        if len(parts) != 6:
             continue
-        choices = [c.strip() for c in parts[2].split(";") if c.strip()]
+
+        question_id, prompt, raw_choices, answer_text, bonus_text, enemy_id = parts
+        definition = next((q for q in DEFAULT_QUESTIONS if q[0] == question_id), None)
+        if definition is None or question_id in valid_records:
+            continue
+
+        # Match each question ID to its assigned enemy.
+        # Only ENM-010 can receive the boss question.
+        if enemy_id != definition[5]:
+            continue
+
+        choices = [choice.strip() for choice in raw_choices.split(';') if choice.strip()]
         try:
-            answer = int(parts[3])
-            bonus = int(parts[4])
+            answer = int(answer_text)
+            bonus = int(bonus_text)
         except ValueError:
             continue
-        if len(choices) < 2 or not 1 <= answer <= len(choices):
-            continue
-        if any(q["id"] == parts[0] for q in question_records):
+        if len(choices) != 4 or not 1 <= answer <= 4 or bonus < 0:
             continue
 
-        default = DEFAULT_QUESTION_BY_ID.get(parts[0])
-        enemy_id = (parts[5].strip() if len(parts) == 6 else
-                    default[5] if default else "")
-        if len(parts) == 5:
-            changed = True
+        if question_id == BOSS_CHALLENGE_ID:
+            # Reserve the designated boss question for ENM-010.
+            if (prompt != definition[1] or choices != definition[2]
+                    or answer != definition[3] or bonus != definition[4]):
+                continue
+        elif prompt == DEFAULT_QUESTIONS[-1][1]:
+            # Reject duplicate assignments of the boss question.
+            continue
 
-        # Preserve administrator-edited bonuses; refresh only old default
-        # records whose question text, choices, answer and bonus are untouched.
-        if (default and len(parts) == 5
-                and parts[1] == default[1]
-                and choices == default[2] and answer == default[3]
-                and bonus == LEGACY_QUESTION_BONUSES.get(parts[0])):
-            bonus = default[4]
-
-        if parts[0] == BOSS_CHALLENGE_ID and enemy_id != "ENM-010":
-            enemy_id = "ENM-010"
-            changed = True
-        elif parts[0] != BOSS_CHALLENGE_ID and enemy_id == "ENM-010":
-            enemy_id = ""  # Only the final question belongs to the Boss
-            changed = True
-
-        question_records.append({
-            "id": parts[0], "question": parts[1], "choices": choices,
+        valid_records[question_id] = {
+            "id": question_id, "question": prompt, "choices": choices,
             "answer": answer, "bonus": bonus, "enemy_id": enemy_id
-        })
+        }
 
-    # Initialize new games with all ten challenges. When loading a previous
-    # nine-question save, add the missing Strong question automatically.
-    if not question_records:
-        for qid, prompt, choices, answer, bonus, enemy_id in DEFAULT_QUESTIONS:
-            question_records.append({
-                "id": qid, "question": prompt, "choices": list(choices),
-                "answer": answer, "bonus": bonus, "enemy_id": enemy_id
-            })
-        changed = True
-    else:
-        if not any(q["id"] == BOSS_CHALLENGE_ID for q in question_records):
-            default = DEFAULT_QUESTION_BY_ID[BOSS_CHALLENGE_ID]
-            question_records.append({
-                "id": default[0], "question": default[1],
-                "choices": list(default[2]), "answer": default[3],
-                "bonus": default[4], "enemy_id": default[5]
-            })
-            changed = True
-        if not any(q.get("enemy_id") == "ENM-009" for q in question_records):
-            default = DEFAULT_QUESTION_BY_ID["QST-010"]
-            ids = {q["id"] for q in question_records}
-            qid = (default[0] if default[0] not in ids else
-                   next_record_id("QST", ids))
-            question_records.append({
-                "id": qid, "question": default[1],
-                "choices": list(default[2]), "answer": default[3],
-                "bonus": default[4], "enemy_id": default[5]
-            })
-            changed = True
+    for question_id, prompt, choices, answer, bonus, enemy_id in DEFAULT_QUESTIONS:
+        question_records.append(valid_records.get(question_id, {
+            "id": question_id, "question": prompt, "choices": list(choices),
+            "answer": answer, "bonus": bonus, "enemy_id": enemy_id
+        }))
 
-    # Keep the questions in enemy progression order (Boss question last).
-    enemy_order = {e["id"]: i for i, e in enumerate(mob_list)}
-    question_records.sort(key=lambda q: (
-        enemy_order.get(q.get("enemy_id"), 999), q["id"]))
-    if changed:
+    # Save the normalized question catalog when records require correction.
+    canonical_rows = [
+        [q["id"], q["question"], ";".join(q["choices"]),
+         str(q["answer"]), str(q["bonus"]), q["enemy_id"]]
+        for q in question_records
+    ]
+    if saved_rows != canonical_rows:
         save_questions()
 
 
@@ -1885,8 +1853,8 @@ def standard_piece(slot, level=None):
 
 
 def equipped_piece(slot):
-    # Old-tier gear stays owned, but can no longer override the new level's
-    # automatic free equipment. This also guards old save files.
+    # Equip purchases from the active tier only.
+    # Purchases from other tiers remain in the inventory.
     eid = player.get("equipped", {}).get(slot)
     rec = equipment_records.get(eid)
     if (rec is not None and rec["slot"] == slot
@@ -2021,7 +1989,7 @@ def is_level_complete(difficulty):
 
 
 def sync_completed_levels_without_rewards():
-    # Keeps old saved accounts from getting the same level bonus again
+    # Apply each level-completion reward only once per account.
     for difficulty in LEVEL_ORDER:
         if (
             is_level_complete(difficulty)
@@ -2062,9 +2030,8 @@ def process_level_completion(difficulty, enemy):
 
     push_battle_action("Level Complete", description, enemy=enemy)
 
-    # On a tier change, archive previous shop selections and immediately
-    # equip all three free pieces for the newly unlocked level. Ownership
-    # remains in inventory; no gold is refunded or charged.
+    # Equip the free sword, shield and armor upon unlocking a level.
+    # Purchased equipment remains owned and Gold stays unchanged.
     gear_notes = []
     gear_changes = []
     if current_equipment_tier() != old_tier:
@@ -2179,12 +2146,12 @@ def get_room_enemies(room_id):
 
 
 def is_room_cleared(room_id, cleared_ids):
-    # A room is cleared when every enemy inside it is in cleared_ids
+    # A room is cleared when all its enemies appear in cleared_ids.
     return all(mob["id"] in cleared_ids for mob in get_room_enemies(room_id))
 
 
 def player_cleared_ids():
-    # Only enemies the player really defeated count as cleared
+    # Count only confirmed enemy victories toward room completion.
     return set(player.get("defeated_ids", []))
 
 
@@ -2915,8 +2882,7 @@ def view_inventory(pause_after=True, show_header=True):
 
 def view_enemy_records(pause_after=True, only_available=False,
                        show_header=True):
-    # Shows information about all enemies. When another screen already
-    # printed the main title, only a sub-heading is shown.
+    # Display enemy information using the current menu's heading.
     if show_header:
         header("Enemy Information")
     else:
@@ -3079,8 +3045,7 @@ def show_instructions():
 # ---------------------------------------------------------------
 
 def display_encounter_lineup(pause_after=False, show_header=True):
-    # Shows the enemies from front to rear. Screens that already show a
-    # main title (Add Enemy, Start Battle) get a sub-heading instead.
+    # Display the encounter queue from front to rear.
     if show_header:
         header("Dungeon Encounter Queue")
     else:
@@ -3360,11 +3325,11 @@ def remove_latest_log_entry():
 
 # ---------------------------------------------------------------
 # UNDO SYSTEM (STACK, LIFO)
-# A snapshot is PUSHED before each reversible action and POPPED by Undo.
+# Store a state snapshot before each reversible action (LIFO).
 # ---------------------------------------------------------------
 
 def snapshot_state(label):
-    # Saves everything an undo has to restore
+    # Capture the game state needed for an undo operation.
     mob = get_current_enemy()
 
     return {
@@ -3565,7 +3530,7 @@ def start_battle_with_next_enemy():
     current_enemy_id = mob["id"]
     mob["engaged"] = True
     reset_battle_effects()
-    undo_stack.clear()  # camp actions cannot be undone inside a battle
+    undo_stack.clear()  # Camp actions are excluded from battle undo history.
     set_player_status("In Battle")
 
     if mob["type"] == "Boss":
@@ -3595,8 +3560,7 @@ def start_battle_with_next_enemy():
 
 
 def estimate_battle(mob):
-    # Rough forecast if the player only attacks: how many attacks it
-    # takes to win and how much damage the enemy deals meanwhile
+    # Estimate required attacks and incoming damage for normal combat.
     average_hit = (
         total_atk()
         * (100 - player_miss_chance()) / 100
@@ -4121,7 +4085,7 @@ def answer_challenge_question():
 
 
 def retreat_from_battle():
-    # Free retreat: the battle is interrupted, never "won"
+    # Retreat interrupts combat without awarding a victory.
     mob = get_current_enemy()
 
     if mob is None:
@@ -4288,8 +4252,7 @@ def resolve_player_defeat(mob):
     encounter_lineup.clear()
     print("Your expedition is over. The Encounter Queue was cleared.")
 
-    # The enemy keeps the wounds you dealt but regenerates a little,
-    # so every attempt brings the player closer to winning
+    # Restore a portion of enemy HP while retaining remaining damage.
     mob["hp"] = min(
         mob["max_hp"],
         mob["hp"] + mob["max_hp"] * ENEMY_REGEN_PERCENT // 100
@@ -4303,25 +4266,13 @@ def resolve_player_defeat(mob):
     else:
         player["wounds"].pop(mob["id"], None)
 
-    # The player wakes up at the entrance with part of their health
+    # Restore partial HP and return the player to the entrance.
     player["hp"] = max(1, player["max_hp"] * DEFEAT_REVIVE_PERCENT // 100)
     player["location"] = ENTRANCE_ROOM_ID
     print(f"You wake up at the entrance with {player['hp']} HP.")
 
     end_current_battle()
     record_battle_result(mob, "Defeat", -gold_lost, 0, turns)
-
-    if HARDCORE_DEFEAT:
-        # Blueprint rule: when the player dies all progress is lost
-        username = player["name"]
-        old = account_records[username]
-        fresh = new_account_data(old["id"], old["password"])
-        fresh["losses"] = player["losses"]
-        account_records[username] = fresh
-        save_all_accounts()
-        load_player_from_account(username)
-        print(color("HARDCORE: all progress was lost. The story restarts "
-                    "from the beginning.", "red"))
 
     save_current_player_account()
 
@@ -4362,7 +4313,7 @@ def shop_entry(number, name, price, tag, detail):
 
 
 def dungeon_shop():
-    # The player can buy items and equipment here between battles
+    # Process supply and equipment purchases between battles.
     if current_enemy_id is not None:
         print("\nYou cannot shop during a battle.")
         pause()
@@ -4476,7 +4427,7 @@ def equipment_shop():
         print_table(["Slot", "Currently Worn", "Combat Stats", "Origin"],
                     rows, max_width=29)
 
-        # Filter before numbering: no previous-tier or future locked options.
+        # Display purchase options from the currently unlocked tier only.
         available = [e for e in equipment_records.values()
                      if e["tier"] == tier]
         available.sort(key=lambda e: (EQUIPMENT_SLOTS.index(e["slot"]),
@@ -4823,7 +4774,7 @@ def travel_to_room():
         print("\nThe enemies waiting in your queue stay behind.")
 
     encounter_lineup.clear()
-    undo_stack.clear()  # moving to a new room cannot be undone
+    undo_stack.clear()  # Room movement is not reversible through the battle undo stack.
     player["location"] = destination
 
     push_battle_action("Travel", f"Player traveled to {room_name(destination)}"
@@ -5100,7 +5051,7 @@ def show_live_panel():
 
     if battle_history:
         top = battle_history[-1]
-        # Keep the live HUD readable; the full text stays in Action History.
+        # Abbreviate the status preview; full entries remain in Action History.
         preview = textwrap.shorten(
             f"{top['action_type']}: {top['description']}",
             width=62, placeholder="..."
@@ -5178,7 +5129,7 @@ def dungeon_menu():
     restore_player_for_new_transaction()
     notice = ""
 
-    # The opening story plays once for a fresh adventure
+    # Display the introduction once per play session.
     if not intro_shown and player["wins"] == 0 \
             and current_room_id() == ENTRANCE_ROOM_ID:
         story_panel("Dungeon Conquest", STORY_INTRO, "magenta")
@@ -5210,15 +5161,14 @@ def dungeon_menu():
         section("RECORDS")
         print_menu_row("[12] Player Stats", "[13] Action History Stack",
                        "[14] Undo Last Action", width=32)
-        print_menu_row("[15] Save Game", "[16] Escape Dungeon",
-                       width=32)
-        print("\n[0] Save & Exit")
+        print_menu_row("[15] Save Game", "[16] Save & Exit",
+                       "[17] Escape Dungeon", width=32)
 
         if notice:
             print(f"\n{notice}")
             notice = ""
 
-        choice = input("\nEnter choice [0-16]: ").strip()
+        choice = input("\nEnter choice [1-17]: ").strip()
 
         if choice == "1":
             add_enemy_to_lineup()
@@ -5251,13 +5201,13 @@ def dungeon_menu():
             undo_latest_action()
         elif choice == "15":
             save_game_transaction()
-        elif choice == "0":
+        elif choice == "16":
             # The queue is kept so the expedition can continue later
             save_current_player_account()
 
             print("\nGame saved. Your Encounter Queue is saved. See you next time!")
             break
-        elif choice == "16":
+        elif choice == "17":
             if escape_dungeon():
                 break
         else:
@@ -5269,7 +5219,7 @@ def dungeon_menu():
 # ---------------------------------------------------------------
 
 def player_accounts():
-    # Only player accounts (admins are excluded from game reports)
+    # Include player accounts only in gameplay statistics.
     return {
         username: data
         for username, data in account_records.items()
@@ -5873,7 +5823,7 @@ def update_item_record():
     print("Press Enter to keep the current value.\n")
     item.update(ask_item_fields(item))
 
-    # Players may now carry more than the new limit, so trim inventories
+    # Keep item quantities within the configured carrying limits.
     for data in account_records.values():
         if data["inventory"].get(item["id"], 0) > item["max_carry"]:
             data["inventory"][item["id"]] = item["max_carry"]
@@ -6026,7 +5976,7 @@ def update_equipment_record():
     old_slot = eq["slot"]
     eq.update(ask_equipment_fields(eq))
 
-    # A changed slot would break equipped pieces, so they are unequipped
+    # Unequip items whose equipment slot is updated.
     if eq["slot"] != old_slot:
         for data in account_records.values():
             data["equipped"] = {
@@ -6102,7 +6052,7 @@ def find_room_record():
 
 
 def add_room_record():
-    # The dungeon is fixed at exactly six rooms
+    # The dungeon route contains six predefined rooms.
     header("Add Room")
 
     print("The dungeon has exactly six rooms:")
@@ -6784,8 +6734,8 @@ def report_equipment():
 
 
 def report_gold_economy():
-    # Challenge answers grant attack damage only, never Gold.
-    # This report includes only the game's real Gold sources.
+    # Challenge bonuses modify attack damage, not Gold.
+    # Include only actual Gold rewards in this report.
     shop_cost = {
         tier: sum(e["price"] for e in equipment_records.values()
                   if e["tier"] == tier)
@@ -6973,7 +6923,7 @@ def report_menu():
 
 
 def admin_menu():
-    # Main menu for administrators
+    # Entry point for administrator functions.
     while True:
         header("Admin Menu")
 

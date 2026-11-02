@@ -6,3 +6,4 @@
   2026-11-02 20:28:22 | PLY-004   | jeo      | ENM-004  | Ironjaw Reaver        | Victory | 3     | 50   | 100
   2026-11-02 20:29:49 | PLY-004   | jeo      | ENM-005  | Boneguard Executioner | Victory | 4     | 60   | 120
   2026-11-02 20:30:53 | PLY-004   | jeo      | ENM-006  | Hellchain Marauder    | Victory | 6     | 150  | 140
+  2026-11-02 22:40:45 | PLY-005   | angel    | ENM-003  | Ashen Ghoul           | Victory | 5     | 75   | 80

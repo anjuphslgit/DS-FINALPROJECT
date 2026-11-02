@@ -1,4 +1,5 @@
 DUNGEON BATTLE LOG
-Saved At: 2026-11-02 21:22:22
+Saved At: 2026-11-02 22:40:22
 
-NO BATTLE ACTIONS RECORDED
+ACT-001 | 2026-11-02 22:40:17 | Battle Start | Player PLY-005 | Enemy ENM-003 | Battle started with Ashen Ghoul.
+    Player HP: 100 -> 100 | Enemy HP: 85 -> 85

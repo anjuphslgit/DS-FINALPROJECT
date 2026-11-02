@@ -1,0 +1,8 @@
+# DUNGEON CONQUEST ROOM RECORDS (GRAPH VERTICES)
+# room_id  | name               | description
+  ROOM-000 | Dungeon Entrance   | A cold stone gate where every expedition begins.
+  ROOM-001 | Rotting Sewers     | Knee-deep filth and the scratching of claws. Home of the Weak enemies.
+  ROOM-002 | Bloodstone Hall    | Red crystals pulse inside the walls. Home of the Intermediate enemies.
+  ROOM-003 | War-Torn Catacombs | Broken shields of a forgotten army. Home of the Strong enemies.
+  ROOM-004 | Throne of Ruin     | The seat of the World Eater. The Boss Room.
+  ROOM-005 | The Last Gate      | A stairway of daylight. The real dungeon exit.

@@ -1,0 +1,8 @@
+# DUNGEON CONQUEST BATTLE HISTORY
+# date_time           | player_id | username | enemy_id | enemy_name            | result  | turns | gold | score
+  2026-11-02 20:06:34 | PLY-004   | jeo      | ENM-001  | Gravefang Rat         | Victory | 4     | 25   | 40
+  2026-11-02 20:08:39 | PLY-004   | jeo      | ENM-002  | Hollowbone Goblin     | Victory | 5     | 30   | 60
+  2026-11-02 20:10:23 | PLY-004   | jeo      | ENM-003  | Ashen Ghoul           | Victory | 6     | 80   | 80
+  2026-11-02 20:28:22 | PLY-004   | jeo      | ENM-004  | Ironjaw Reaver        | Victory | 3     | 50   | 100
+  2026-11-02 20:29:49 | PLY-004   | jeo      | ENM-005  | Boneguard Executioner | Victory | 4     | 60   | 120
+  2026-11-02 20:30:53 | PLY-004   | jeo      | ENM-006  | Hellchain Marauder    | Victory | 6     | 150  | 140

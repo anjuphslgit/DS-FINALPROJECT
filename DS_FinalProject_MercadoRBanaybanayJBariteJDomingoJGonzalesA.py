@@ -11,19 +11,17 @@ from pathlib import Path
 ACCOUNT_FILE = "1player_accounts.txt"
 ENEMY_FILE = "2enemy_records.txt"
 ITEM_FILE = "3item_records.txt"
-ROOM_FILE = "4room_records.txt"
-CONNECTION_FILE = "5room_connections.txt"
-QUESTION_FILE = "6question_records.txt"
-BATTLE_HISTORY_FILE = "7battle_history_records.txt"
-GAME_RECORD_FILE = "8dungeon_game_records.txt"
+EQUIPMENT_FILE = "4equipment_records.txt"
+ROOM_FILE = "5room_records.txt"
+CONNECTION_FILE = "6room_connections.txt"
+QUESTION_FILE = "7question_records.txt"
+BATTLE_HISTORY_FILE = "8battle_history_records.txt"
 BATTLE_LOG_FILE = "9battle_activity_log.txt"
+GAME_RECORD_FILE = "10dungeon_game_records.txt"
 REPORT_FOLDER = "reports"
 
 # ---------------------------------------------------------------
 # GAME BALANCE
-# These values were tuned with a simulation so that simply spamming
-# Attack and potions usually fails, while planning purchases, resting,
-# defending and timing items lets a careful player clear the dungeon.
 # ---------------------------------------------------------------
 
 # Stats given to every new (or reset) player
@@ -45,7 +43,6 @@ BOSS_ENRAGE_MULTIPLIER = 1.3
 # Battle action rules
 DEFEND_DAMAGE_TAKEN = 0.4
 DEFEND_COUNTER_BONUS = 30
-FLEE_CHANCE = 50
 STUN_CHANCE = 75
 BOOST_ATTACKS = 3
 
@@ -62,21 +59,283 @@ DEFEAT_REVIVE_PERCENT = 50
 ENEMY_REGEN_PERCENT = 25
 ESCAPE_SCORE_BONUS = 500
 
-# The room every expedition starts from
-ENTRANCE_ROOM_ID = "ROOM-000"
+# The blueprint says a loss erases all progress. The original program
+# was kinder (the player keeps progress). Set this to True to follow the
+# blueprint's permadeath rule exactly.
+HARDCORE_DEFEAT = False
+
+# ---------------------------------------------------------------
+# THE SIX-ROOM DUNGEON (fixed route, one room per difficulty)
+# ENTRANCE -> WEAK -> INTERMEDIATE -> STRONG -> BOSS -> EXIT
+# ---------------------------------------------------------------
+
+ROOM_ORDER = ["ROOM-000", "ROOM-001", "ROOM-002", "ROOM-003", "ROOM-004",
+              "ROOM-005"]
+ENTRANCE_ROOM_ID = ROOM_ORDER[0]
+EXIT_ROOM_ID = ROOM_ORDER[5]
+
+# Each difficulty level lives in exactly one room
+ROOM_FOR_DIFFICULTY = {
+    "Weak": "ROOM-001",
+    "Intermediate": "ROOM-002",
+    "Strong": "ROOM-003",
+    "Boss": "ROOM-004"
+}
 
 DIFFICULTY_ORDER = {"Weak": 1, "Intermediate": 2, "Strong": 3, "Boss": 4}
 LEVEL_ORDER = ["Weak", "Intermediate", "Strong", "Boss"]
-PLAYER_STATUSES = ["Active", "In Battle", "Defeated", "Escaped", "Victorious"]
+PLAYER_STATUSES = ["Active", "In Battle", "Defeated", "Retreated", "Victorious"]
+
+# ---------------------------------------------------------------
+# EQUIPMENT (Sword, Shield, Armor in three progression tiers)
+# ---------------------------------------------------------------
+
+EQUIPMENT_SLOTS = ["sword", "shield", "armor"]
+
+# A new level is unlocked after clearing the previous level. Each unlocked
+# level grants three FREE pieces; the shop sells only optional CURRENT-level
+# alternatives (two upgrade choices per slot).
+TIER_UNLOCK_REQUIREMENT = {
+    "Weak": None, "Intermediate": "Weak", "Strong": "Intermediate",
+    "Boss": "Strong"
+}
+EQUIPMENT_LEVELS = ["Weak", "Intermediate", "Strong", "Boss"]
+
+SLOT_STAT_TEXT = {
+    "sword": "ATK: +{b}",
+    "shield": "BLOCK: {b}%",
+    "armor": "DEF: -{b} per hit"
+}
+
+# OPTIONAL SHOP EQUIPMENT. The first nine IDs are kept in their ORIGINAL
+# tier/slot so existing saved ownerships continue to refer to the right gear.
+# Fields: id, name, slot, tier, bonus, price, description, speed.
+# Speed (swords only) improves attack accuracy and critical-hit chance.
+DEFAULT_EQUIPMENT = [
+    ("EQP-001", "Rusty Sword +1", "sword", "Weak", 4, 40,
+     "A nimble sewer blade; a first taste of faster strikes.", 2),
+    ("EQP-002", "Bloodstone Sword +1", "sword", "Intermediate", 8, 95,
+     "A balanced sword forged from the Bloodstone ore.", 6),
+    ("EQP-003", "Steel Sword +1", "sword", "Strong", 13, 175,
+     "A fierce warblade with relentless momentum.", 11),
+    ("EQP-004", "Wooden Shield +1", "shield", "Weak", 7, 35,
+     "Lightweight protection for sewer skirmishes.", 0),
+    ("EQP-005", "Iron Shield +1", "shield", "Intermediate", 12, 90,
+     "Layered bone plates brace against heavier attacks.", 0),
+    ("EQP-006", "Steel Shield +1", "shield", "Strong", 18, 160,
+     "A towering shield that can endure savage blows.", 0),
+    ("EQP-007", "Cloth Armor +1", "armor", "Weak", 2, 35,
+     "Patched leather dulls the edge of enemy hits.", 0),
+    ("EQP-008", "Chainmail Armor +1", "armor", "Intermediate", 3, 85,
+     "Reinforced chains absorb force from each strike.", 0),
+    ("EQP-009", "Steel Armor +1", "armor", "Strong", 5, 155,
+     "Forged plates soften the impact of heavy weapons.", 0),
+    ("EQP-010", "Rusty Sword +2", "sword", "Weak", 6, 75,
+     "An unusually sharp saber that rewards quick hands.", 4),
+    ("EQP-011", "Bloodstone Sword +2", "sword", "Intermediate", 10, 145,
+     "A swift crystal-edged blade with a stronger bite.", 8),
+    ("EQP-012", "Steel Sword +2", "sword", "Strong", 16, 260,
+     "Its deadly edge turns speed into precision.", 13),
+    ("EQP-013", "Darksteel Sword +1", "sword", "Boss", 17, 290,
+     "A blade honed to challenge the ruler of ruin.", 16),
+    ("EQP-014", "Darksteel Sword +2", "sword", "Boss", 20, 420,
+     "A legendary sword said to cut through darkness.", 19),
+    ("EQP-015", "Wooden Shield +2", "shield", "Weak", 10, 65,
+     "Metal-bound timber gives extra protection.", 0),
+    ("EQP-016", "Iron Shield +2", "shield", "Intermediate", 15, 135,
+     "A thick bloodsteel shield built for hardened foes.", 0),
+    ("EQP-017", "Steel Shield +2", "shield", "Strong", 22, 240,
+     "A heavy bulwark shaped from ancient fortress steel.", 0),
+    ("EQP-018", "Darksteel Shield +1", "shield", "Boss", 27, 270,
+     "Its enchanted face turns aside powerful attacks.", 0),
+    ("EQP-019", "Darksteel Shield +2", "shield", "Boss", 32, 395,
+     "A rare shield built to withstand the World Eater.", 0),
+    ("EQP-020", "Cloth Armor +2", "armor", "Weak", 3, 70,
+     "Extra rivets reinforce weak seams.", 0),
+    ("EQP-021", "Chainmail Armor +2", "armor", "Intermediate", 4, 130,
+     "Stone-lined plates spread the force of each blow.", 0),
+    ("EQP-022", "Steel Armor +2", "armor", "Strong", 7, 235,
+     "A sturdy shell crafted for prolonged battles.", 0),
+    ("EQP-023", "Darksteel Armor +1", "armor", "Boss", 7, 265,
+     "Dense armor prepared for the final confrontation.", 0),
+    ("EQP-024", "Darksteel Armor +2", "armor", "Boss", 9, 385,
+     "Ancient armor that softens devastating strikes.", 0)
+]
+
+# Only rename known shipped names in existing equipment files. Item IDs,
+# owned equipment, bonuses, prices and custom admin names are preserved.
+PRIOR_SHOP_EQUIPMENT_NAMES = {
+    "EQP-001": 'Rustfang Blade',
+    "EQP-002": 'Gravesteel Sword',
+    "EQP-003": 'Soulreaver Greatsword',
+    "EQP-004": 'Splintered Buckler',
+    "EQP-005": 'Bonewall Shield',
+    "EQP-006": 'Aegis of Ruin',
+    "EQP-007": 'Tattered Leather Armor',
+    "EQP-008": 'Chainbound Hauberk',
+    "EQP-009": 'Blackiron Plate Armor',
+    "EQP-010": 'Ratfang Saber',
+    "EQP-011": 'Crimson Sabre',
+    "EQP-012": 'Dreadsteel Cutter',
+    "EQP-013": 'Thronepiercer',
+    "EQP-014": 'Eclipse Fang',
+    "EQP-015": 'Ironwood Guard',
+    "EQP-016": 'Bloodsteel Ward',
+    "EQP-017": 'Catacomb Bastion',
+    "EQP-018": 'Throne Guard',
+    "EQP-019": 'Voidward Aegis',
+    "EQP-020": 'Riveted Leather',
+    "EQP-021": 'Bloodstone Plate',
+    "EQP-022": "Warden's Carapace",
+    "EQP-023": 'Ruinforged Harness',
+    "EQP-024": 'Eternal Bastion Plate',
+}
+
+# For a pristine nine-item equipment file saved by earlier versions, replace
+# the catalog with the new 24-item layout. Never wipe a custom admin catalog.
+PRIOR_DEFAULT_EQUIPMENT_SIGNATURE = {
+    ("EQP-001", "Rustfang Blade", "sword", "Weak", 6, 60),
+    ("EQP-002", "Gravesteel Sword", "sword", "Intermediate", 10, 130),
+    ("EQP-003", "Soulreaver Greatsword", "sword", "Strong", 15, 230),
+    ("EQP-004", "Splintered Buckler", "shield", "Weak", 10, 50),
+    ("EQP-005", "Bonewall Shield", "shield", "Intermediate", 18, 110),
+    ("EQP-006", "Aegis of Ruin", "shield", "Strong", 26, 190),
+    ("EQP-007", "Tattered Leather Armor", "armor", "Weak", 3, 50),
+    ("EQP-008", "Chainbound Hauberk", "armor", "Intermediate", 5, 110),
+    ("EQP-009", "Blackiron Plate Armor", "armor", "Strong", 7, 200)
+}
+LEGACY_EQUIPMENT_SIGNATURE = {
+    ("EQP-001", "Rustfang Blade", "sword", "Weak", 3, 50),
+    ("EQP-002", "Gravesteel Sword", "sword", "Intermediate", 7, 120),
+    ("EQP-003", "Soulreaver Greatsword", "sword", "Strong", 12, 220),
+    ("EQP-004", "Splintered Buckler", "shield", "Weak", 8, 40),
+    ("EQP-005", "Bonewall Shield", "shield", "Intermediate", 16, 100),
+    ("EQP-006", "Aegis of Ruin", "shield", "Strong", 25, 190),
+    ("EQP-007", "Tattered Leather Armor", "armor", "Weak", 1, 40),
+    ("EQP-008", "Chainbound Hauberk", "armor", "Intermediate", 3, 110),
+    ("EQP-009", "Blackiron Plate Armor", "armor", "Strong", 5, 200)
+}
+
+# FREE gear is determined by the level the player has unlocked. It replaces
+# the prior level's equipped upgrades, but previous purchases stay owned.
+# Tuples: name, combat bonus, sword speed (0 for shield and armor).
+STANDARD_EQUIPMENT = {
+    "sword": [
+        ("Rusty Sword", 2, 0), ("Bloodstone Sword", 6, 4),
+        ("Steel Sword", 10, 8), ("Darksteel Sword", 14, 12)
+    ],
+    "shield": [
+        ("Wooden Shield", 4, 0), ("Iron Shield", 9, 0),
+        ("Steel Shield", 15, 0), ("Darksteel Shield", 23, 0)
+    ],
+    "armor": [
+        ("Cloth Armor", 1, 0), ("Chainmail Armor", 2, 0),
+        ("Steel Armor", 4, 0), ("Darksteel Armor", 6, 0)
+    ]
+}
+STANDARD_UPGRADE_LEVELS = ["Weak", "Intermediate", "Strong"]
+
+# ---------------------------------------------------------------
+# GOLD ECONOMY (enemy and level gold live in the enemy records and in
+# LEVEL_COMPLETION_GOLD above; these are the extra sources)
+# ---------------------------------------------------------------
+
+# One treasure chest per fighting room, opened once after the room is
+# cleared: room id -> (chest name, rarity, gold)
+TREASURES = {
+    "ROOM-001": ("Mossy Supply Chest", "Basic", 25),
+    "ROOM-002": ("Bloodstone Coffer", "Better", 40),
+    "ROOM-003": ("War-Torn Strongbox", "Better", 50),
+    "ROOM-004": ("Throne Hoard", "Rare", 75)
+}
+TREASURE_SCORE = 10
+
+# A correct challenge answer grants the question's bonus attack damage.
+# Challenges never grant Gold; the bonus applies to that attack only.
 
 # What each item effect does with its power value
 ITEM_EFFECTS = {
     "heal": "Restores {power}% of Max HP",
     "boost": "+{power}% damage on your next 3 attacks",
     "stun": "75% chance the enemy loses its next {power} turns",
-    "damage": "Deals {low}-{high} damage that never misses",
-    "escape": "Guaranteed escape from the current battle"
+    "damage": "Deals {low}-{high} damage that never misses"
 }
+
+# ---------------------------------------------------------------
+# STORY TEXT
+# ---------------------------------------------------------------
+
+STORY_INTRO = [
+    "While playing Dungeon Conquest online, you find a mysterious "
+    "treasure chest. Its lid creaks open and a voice whispers: "
+    "\"Can you find and kill me?\"",
+    "You accept the challenge. The screen swallows you whole and you "
+    "wake up trapped inside a real dungeon.",
+    "To escape you must fight through the Weak, Intermediate and Strong "
+    "halls, destroy the World Eater, and then walk out of the final exit."
+]
+
+ROOM_STORY = {
+    "ROOM-000": [
+        "A cold stone gate groans shut behind you. Torches flicker along "
+        "a stairway that leads down into the dark.",
+        "Beyond the Rusted Grate, the Rotting Sewers wait."
+    ],
+    "ROOM-001": [
+        "The stench of the sewers hits you. Claws scratch in the dark. "
+        "The weakest guardians of the dungeon live here.",
+        "Learn to attack, defend and use potions. Clear every enemy to "
+        "open the Crimson Gate."
+    ],
+    "ROOM-002": [
+        "Red crystals pulse inside the walls of the Bloodstone Hall. "
+        "These guardians are tougher and carry status tricks.",
+        "Defense and good timing will matter now."
+    ],
+    "ROOM-003": [
+        "Broken shields of a forgotten army litter the catacombs. "
+        "The strongest guardians stand between you and the throne.",
+        "Use everything you have learned. Rest, shop and plan."
+    ],
+    "ROOM-004": [
+        "A vast door of black iron swings open. The Throne of Ruin "
+        "stretches before you and the air itself feels heavy.",
+        "There is no way around the creature on the throne."
+    ],
+    "ROOM-005": [
+        "Cold air rushes across your face. Beyond the Sealed Exit Door "
+        "a thin line of daylight cuts through the dark.",
+        "The dungeon exit is finally open. Step through to escape."
+    ]
+}
+
+ENCOUNTER_TEXT = {
+    "Weak": "A weak guardian lunges out of the shadows!",
+    "Intermediate": "A hardened guardian blocks your path, growling.",
+    "Strong": "A powerful guardian steps forward. The floor trembles.",
+    "Boss": "The World Eater rises from the Throne of Ruin."
+}
+
+BOSS_INTRO = [
+    "Vharok, the World Eater, opens a thousand-year-old eye.",
+    "\"So you are the one who answered the chest. Come, little hero. "
+    "Let us see whether you can find and kill me.\"",
+    "The World Eater towers above you as the battle begins."
+]
+
+BOSS_DEFEAT = [
+    "Vharok shrieks and crumbles into black ash. The dungeon shakes as "
+    "its power fades.",
+    "Behind the throne, the Sealed Exit Door grinds open. The Last Room "
+    "is now unlocked."
+]
+
+ENDING_TEXT = [
+    "You step through the exit and sunlight floods your eyes.",
+    "The dungeon fades behind you. The treasure chest sits closed and "
+    "silent, its challenge answered.",
+    "YOU ESCAPED THE DUNGEON!"
+]
 
 # ---------------------------------------------------------------
 # DEFAULT RECORDS (written to the text files on the first run)
@@ -92,22 +351,22 @@ DEFAULT_ACCOUNTS = [
 DEFAULT_ENEMIES = [
     # id, name, type, max_hp, atk, gold, score, room
     ("ENM-001", "Gravefang Rat", "Weak", 55, 7, 25, 40, "ROOM-001"),
-    ("ENM-002", "Hollowbone Goblin", "Weak", 70, 9, 30, 60, "ROOM-002"),
-    ("ENM-003", "Ashen Ghoul", "Weak", 85, 11, 35, 80, "ROOM-003"),
+    ("ENM-002", "Hollowbone Goblin", "Weak", 70, 9, 30, 60, "ROOM-001"),
+    ("ENM-003", "Ashen Ghoul", "Weak", 85, 11, 35, 80, "ROOM-001"),
     ("ENM-004", "Ironjaw Reaver", "Intermediate", 105, 12, 50, 100,
-     "ROOM-004"),
+     "ROOM-002"),
     ("ENM-005", "Boneguard Executioner", "Intermediate", 120, 13, 60, 120,
-     "ROOM-005"),
+     "ROOM-002"),
     ("ENM-006", "Hellchain Marauder", "Intermediate", 135, 14, 70, 140,
-     "ROOM-006"),
+     "ROOM-002"),
     ("ENM-007", "Dreadfang Berserker", "Strong", 150, 16, 85, 180,
-     "ROOM-007"),
+     "ROOM-003"),
     ("ENM-008", "Abyssal Death Knight", "Strong", 165, 17, 95, 200,
-     "ROOM-008"),
+     "ROOM-003"),
     ("ENM-009", "Soulreaper Wraith", "Strong", 180, 18, 110, 220,
-     "ROOM-009"),
+     "ROOM-003"),
     ("ENM-010", "Vharok, the World Eater", "Boss", 320, 22, 300, 600,
-     "ROOM-010")
+     "ROOM-004")
 ]
 
 DEFAULT_ITEMS = [
@@ -119,63 +378,64 @@ DEFAULT_ITEMS = [
     ("ITM-003", "Paralysis Bomb", "stun", 2, 110, 2,
      "Releases a numbing cloud of spores."),
     ("ITM-004", "Poison Dagger", "damage", 35, 120, 2,
-     "A throwing blade coated in venom."),
-    ("ITM-005", "Smoke Bomb", "escape", 0, 40, 2,
-     "A thick cloud that hides your retreat.")
+     "A throwing blade coated in venom.")
 ]
 
 DEFAULT_ROOMS = [
     ("ROOM-000", "Dungeon Entrance", "A cold stone gate where every expedition begins."),
-    ("ROOM-001", "Rotting Sewers", "Knee-deep filth and the scratching of claws."),
-    ("ROOM-002", "Forsaken Tunnel", "A collapsed mining tunnel littered with bones."),
-    ("ROOM-003", "Burial Chambers", "Rows of opened coffins and drifting ash."),
-    ("ROOM-004", "Bloodstone Hall", "Red crystals pulse inside the walls."),
-    ("ROOM-005", "Execution Pit", "A sunken arena stained by old sentences."),
-    ("ROOM-006", "Infernal Prison", "Burning cells that never cool down."),
-    ("ROOM-007", "War-Torn Catacombs", "Broken shields of a forgotten army."),
-    ("ROOM-008", "Black Iron Citadel", "A fortress forged from black iron."),
-    ("ROOM-009", "Hall of Lost Souls", "Whispers of the fallen echo here."),
-    ("ROOM-010", "Throne of Ruin", "The seat of the World Eater and the only exit.")
+    ("ROOM-001", "Rotting Sewers", "Knee-deep filth and the scratching of claws. Home of the Weak enemies."),
+    ("ROOM-002", "Bloodstone Hall", "Red crystals pulse inside the walls. Home of the Intermediate enemies."),
+    ("ROOM-003", "War-Torn Catacombs", "Broken shields of a forgotten army. Home of the Strong enemies."),
+    ("ROOM-004", "Throne of Ruin", "The seat of the World Eater. The Boss Room."),
+    ("ROOM-005", "The Last Gate", "A stairway of daylight. The real dungeon exit.")
 ]
 
 DEFAULT_CONNECTIONS = [
     # room a, room b, passage name (connections go both ways)
     ("ROOM-000", "ROOM-001", "Rusted Grate"),
-    ("ROOM-000", "ROOM-002", "Collapsed Stairway"),
-    ("ROOM-001", "ROOM-003", "Flooded Passage"),
-    ("ROOM-002", "ROOM-003", "Bone-Lined Corridor"),
-    ("ROOM-003", "ROOM-004", "Crimson Gate"),
-    ("ROOM-003", "ROOM-005", "Hangman's Path"),
-    ("ROOM-004", "ROOM-006", "Chain Bridge"),
-    ("ROOM-005", "ROOM-006", "Cell Block Door"),
-    ("ROOM-006", "ROOM-007", "Scorched Tunnel"),
-    ("ROOM-006", "ROOM-008", "Iron Drawbridge"),
-    ("ROOM-007", "ROOM-009", "Whispering Stair"),
-    ("ROOM-008", "ROOM-009", "Shadow Archway"),
-    ("ROOM-009", "ROOM-010", "Throne Gate")
+    ("ROOM-001", "ROOM-002", "Crimson Gate"),
+    ("ROOM-002", "ROOM-003", "Iron Drawbridge"),
+    ("ROOM-003", "ROOM-004", "Throne Gate"),
+    ("ROOM-004", "ROOM-005", "Sealed Exit Door")
 ]
 
+# Each enemy has its own challenge question. Bonuses become stronger as the
+# dungeon advances: Weak < Intermediate < Strong < Boss.
+# The final Boss question keeps its original ID so older saves remain valid.
+BOSS_CHALLENGE_ID = "QST-010"
 DEFAULT_QUESTIONS = [
-    # id, question, choices, correct choice number, bonus damage
+    # id, question, choices, correct answer, attack bonus, assigned enemy
     ("QST-001", "Which data structure follows First-In, First-Out (FIFO)?",
-     ["Stack", "Queue", "Tree", "Graph"], 2, 10),
+     ["Stack", "Queue", "Tree", "Graph"], 2, 10, "ENM-001"),
     ("QST-002", "Which data structure follows Last-In, First-Out (LIFO)?",
-     ["Queue", "Array", "Stack", "Graph"], 3, 10),
+     ["Queue", "Array", "Stack", "Graph"], 3, 12, "ENM-002"),
     ("QST-003", "What adds an item to a stack?",
-     ["Pop", "Push", "Peek", "Enqueue"], 2, 15),
+     ["Pop", "Push", "Peek", "Enqueue"], 2, 14, "ENM-003"),
     ("QST-004", "What removes an item from a stack?",
-     ["Pop", "Push", "Peek", "Enqueue"], 1, 15),
+     ["Pop", "Push", "Peek", "Enqueue"], 1, 18, "ENM-004"),
     ("QST-005", "What adds an item to a queue?",
-     ["Push", "Pop", "Enqueue", "Dequeue"], 3, 15),
+     ["Push", "Pop", "Enqueue", "Dequeue"], 3, 20, "ENM-005"),
     ("QST-006", "What removes an item from a queue?",
-     ["Push", "Pop", "Enqueue", "Dequeue"], 4, 15),
+     ["Push", "Pop", "Enqueue", "Dequeue"], 4, 22, "ENM-006"),
     ("QST-007", "What connects vertices in a graph?",
-     ["Root", "Edge", "Leaf", "Index"], 2, 20),
+     ["Root", "Edge", "Leaf", "Index"], 2, 28, "ENM-007"),
     ("QST-008", "What is the top node of a tree called?",
-     ["Leaf", "Branch", "Root", "Edge"], 3, 20),
-    ("QST-009", "Papasa ba ako sa Data Structure?",
-     ["Oo", "Yes", "Syempre", "God is good!"], 4, 50)
+     ["Leaf", "Branch", "Root", "Edge"], 3, 32, "ENM-008"),
+    ("QST-009", "Which tree traversal visits the root before its subtrees?",
+     ["Inorder", "Postorder", "Preorder", "Level-order"], 3, 36, "ENM-009"),
+    ("QST-010", "Papasa ba ako sa Data Structure?",
+     ["Oo", "Yes", "Syempre", "God is good!"], 4, 50, "ENM-010")
 ]
+
+# Bonus values in the older nine-question record file. Only unchanged old
+# defaults are upgraded; custom admin-edited questions are preserved.
+LEGACY_QUESTION_BONUSES = {
+    "QST-001": 10, "QST-002": 10, "QST-003": 15,
+    "QST-004": 15, "QST-005": 15, "QST-006": 15,
+    "QST-007": 20, "QST-008": 20, "QST-009": 50
+}
+DEFAULT_QUESTION_BY_ID = {record[0]: record for record in DEFAULT_QUESTIONS}
+
 
 # ---------------------------------------------------------------
 # LIVE RECORDS
@@ -187,18 +447,26 @@ account_records = {}
 # Information of the player who is currently logged in
 player = {}
 
-# Enemy, item, room, connection and question records loaded from files
+# Enemy, item, equipment, room, connection and question records
 mob_list = []
 item_records = {}
+equipment_records = {}
 room_records = {}
 room_connections = []
 question_records = []
 
-# QUEUE: enemies are added here in the order chosen by the player
+# Set when an old room file had to be replaced by the six-room layout
+ROOMS_RESET = False
+
+# QUEUE: enemies of the current room, in the order chosen by the player
 encounter_lineup = []
 
-# STACK: stores the actions that happen during battle (top = last item)
+# STACK 1: log of every battle action (top = last item)
 battle_history = []
+
+# STACK 2: UNDO stack. A snapshot is pushed BEFORE each reversible action
+# and popped when the player chooses Undo (LIFO).
+undo_stack = []
 
 # Stores the enemy currently being fought
 current_enemy_id = None
@@ -215,15 +483,20 @@ challenge_used = False
 boss_enrage_announced = False
 battle_turns = 0
 
+# The opening story is shown once per login session
+intro_shown = False
+
 
 # ---------------------------------------------------------------
 # GENERAL HELPERS
 # ---------------------------------------------------------------
 
 def header(txt):
-    print("\n" + "-" * 105)
-    print(txt.upper().center(105))
-    print("-" * 105)
+    # Boxed title bar used by every screen
+    print()
+    print(color("+" + "=" * 103 + "+", "cyan"))
+    print(color("|" + f" {txt.upper()} ".center(103) + "|", "bold"))
+    print(color("+" + "=" * 103 + "+", "cyan"))
 
 
 def pause():
@@ -233,6 +506,33 @@ def pause():
 def print_menu_row(*options, width=26):
     # Prints menu options side by side in fixed-width columns
     print("".join(f"{option:<{width}}" for option in options).rstrip())
+
+
+def section(title):
+    # Small coloured section title used inside menus
+    print("\n" + color(f"-- {title} " + "-" * max(3, 101 - len(title)),
+                       "yellow"))
+
+
+def story_panel(title, lines, tone="cyan"):
+    # Story box: shown for room entries, boss scenes and the ending.
+    # It uses the same width as every screen header and table.
+    width = 105
+    edge = "+" + "=" * (width - 2) + "+"
+
+    print()
+    print(color(edge, tone))
+    print(color("| " + title.upper().center(width - 4) + " |", tone))
+    print(color("+" + "-" * (width - 2) + "+", tone))
+
+    for line in lines:
+        for part in textwrap.wrap(line, width - 4) or [""]:
+            print(color("| ", tone) + part.ljust(width - 4)
+                  + color(" |", tone))
+            wait(0.12)
+        print(color("| " + " " * (width - 4) + " |", tone))
+
+    print(color(edge, tone))
 
 
 def is_number_text(text):
@@ -675,6 +975,24 @@ def id_list_from_text(text):
     return [x.strip() for x in text.split(",") if x.strip()]
 
 
+def equipped_to_text(equipped):
+    # Example: sword=EQP-001;shield=EQP-004
+    return ";".join(f"{slot}={eid}" for slot, eid in equipped.items() if eid)
+
+
+def equipped_from_text(text):
+    equipped = {}
+
+    for entry in text.split(";"):
+        if "=" in entry:
+            slot, eid = entry.split("=", 1)
+
+            if slot.strip() in EQUIPMENT_SLOTS and eid.strip():
+                equipped[slot.strip()] = eid.strip()
+
+    return equipped
+
+
 # ----- Accounts -----
 
 def new_account_data(player_id, password, role="Player"):
@@ -695,7 +1013,11 @@ def new_account_data(player_id, password, role="Player"):
         "completed_levels": [],
         "inventory": dict(STARTING_ITEMS) if role == "Player" else {},
         "lineup": [],
-        "wounds": {}
+        "wounds": {},
+        "owned_equipment": [],
+        "equipped": {},
+        "location": ENTRANCE_ROOM_ID,
+        "treasures": []
     }
 
 
@@ -727,7 +1049,7 @@ def create_default_accounts():
 
 
 def parse_account_row(parts):
-    # Current format with role, inventory and saved encounter queue
+    # Current format: role, inventory, saved queue, wounds, equipment, room
     return parts[0], {
         "id": parts[1],
         "password": parts[2],
@@ -744,7 +1066,17 @@ def parse_account_row(parts):
         "completed_levels": id_list_from_text(parts[13]),
         "inventory": inventory_from_text(parts[14]),
         "lineup": id_list_from_text(parts[15]) if len(parts) > 15 else [],
-        "wounds": inventory_from_text(parts[16]) if len(parts) > 16 else {}
+        "wounds": inventory_from_text(parts[16]) if len(parts) > 16 else {},
+        "owned_equipment": (
+            id_list_from_text(parts[17]) if len(parts) > 17 else []
+        ),
+        "equipped": (
+            equipped_from_text(parts[18]) if len(parts) > 18 else {}
+        ),
+        "location": (
+            parts[19] if len(parts) > 19 and parts[19] else ENTRANCE_ROOM_ID
+        ),
+        "treasures": id_list_from_text(parts[20]) if len(parts) > 20 else []
     }
 
 
@@ -782,8 +1114,7 @@ def load_accounts():
 
     for parts in read_record_rows(ACCOUNT_FILE):
         try:
-            # 18 columns: files saved while players had a current room
-            if len(parts) in (15, 16, 17, 18) and not parts[3].isdigit():
+            if len(parts) in range(15, 22) and not parts[3].isdigit():
                 username, data = parse_account_row(parts)
             elif len(parts) in (16, 17):
                 username, data = parse_legacy_account_row(parts)
@@ -794,6 +1125,21 @@ def load_accounts():
 
         if username and username not in account_records:
             account_records[username] = data
+
+    # Legacy escape items no longer exist; remove them from old inventories.
+    legacy_data_cleaned = False
+    for data in account_records.values():
+        inventory = data.get("inventory", {})
+        for item_id in list(inventory):
+            if item_id not in item_records:
+                inventory.pop(item_id)
+                legacy_data_cleaned = True
+        if data["status"] == "Escaped":
+            data["status"] = "Retreated"
+            legacy_data_cleaned = True
+
+    if legacy_data_cleaned:
+        save_all_accounts()
 
     if not account_records:
         create_default_accounts()
@@ -821,7 +1167,11 @@ def save_all_accounts():
             ",".join(data.get("completed_levels", [])),
             inventory_to_text(data.get("inventory", {})),
             ",".join(data.get("lineup", [])),
-            inventory_to_text(data.get("wounds", {}))
+            inventory_to_text(data.get("wounds", {})),
+            ",".join(data.get("owned_equipment", [])),
+            equipped_to_text(data.get("equipped", {})),
+            data.get("location", ENTRANCE_ROOM_ID),
+            ",".join(data.get("treasures", []))
         ])
 
     write_record_rows(
@@ -829,7 +1179,8 @@ def save_all_accounts():
         "DUNGEON CONQUEST PLAYER ACCOUNTS",
         "username|player_id|password|role|hp|max_hp|atk|gold|score|wins|"
         "losses|status|defeated_enemy_ids|completed_levels|inventory|"
-        "encounter_queue|wounded_enemy_hp",
+        "encounter_queue|wounded_enemy_hp|owned_equipment|equipped|"
+        "current_room|treasures_opened",
         rows
     )
 
@@ -847,8 +1198,24 @@ def make_enemy(enemy_id, name, enemy_type, max_hp, atk, gold, score, room):
         "gold_reward": gold,
         "score_reward": score,
         "room": room,
-        "defeated": False
+        "defeated": False,
+        "engaged": False
     }
+
+
+def sync_enemy_rooms():
+    # Every difficulty level lives in exactly one room
+    changed = False
+
+    for mob in mob_list:
+        target = ROOM_FOR_DIFFICULTY[mob["type"]]
+
+        if mob["room"] != target:
+            mob["room"] = target
+            changed = True
+
+    if changed:
+        save_enemies()
 
 
 def load_enemies():
@@ -874,6 +1241,8 @@ def load_enemies():
             mob_list.append(make_enemy(*record))
         save_enemies()
 
+    sync_enemy_rooms()
+
 
 def save_enemies():
     write_record_rows(
@@ -893,7 +1262,12 @@ def save_enemies():
 def load_items():
     item_records.clear()
 
+    legacy_escape_items_removed = False
+
     for parts in read_record_rows(ITEM_FILE):
+        if len(parts) == 7 and parts[2] == "escape":
+            legacy_escape_items_removed = True
+            continue
         if len(parts) != 7 or parts[2] not in ITEM_EFFECTS:
             continue
 
@@ -922,6 +1296,8 @@ def load_items():
                 "description": description
             }
         save_items()
+    elif legacy_escape_items_removed:
+        save_items()
 
 
 def save_items():
@@ -937,10 +1313,103 @@ def save_items():
     )
 
 
+# ----- Equipment -----
+
+def load_equipment():
+    equipment_records.clear()
+
+    for parts in read_record_rows(EQUIPMENT_FILE):
+        if len(parts) not in (7, 8):
+            continue
+
+        if parts[2] not in EQUIPMENT_SLOTS:
+            continue
+
+        if parts[3] not in TIER_UNLOCK_REQUIREMENT:
+            continue
+
+        if parts[0] in equipment_records:
+            continue
+
+        try:
+            equipment_records[parts[0]] = {
+                "id": parts[0], "name": parts[1], "slot": parts[2],
+                "tier": parts[3], "bonus": int(parts[4]),
+                "price": int(parts[5]), "description": parts[6],
+                "speed": int(parts[7]) if len(parts) == 8 else 0
+            }
+        except ValueError:
+            continue
+
+    # A shop file that is still the untouched first version is upgraded
+    saved_signature = {
+        (e["id"], e["name"], e["slot"], e["tier"], e["bonus"], e["price"])
+        for e in equipment_records.values()
+    }
+
+    if saved_signature in (LEGACY_EQUIPMENT_SIGNATURE,
+                           PRIOR_DEFAULT_EQUIPMENT_SIGNATURE):
+        equipment_records.clear()
+
+    old_nine_ids = {f"EQP-{number:03d}" for number in range(1, 10)}
+    if set(equipment_records) == old_nine_ids:
+        for eid, name, slot, tier, bonus, price, description, speed in DEFAULT_EQUIPMENT:
+            if eid not in equipment_records:
+                equipment_records[eid] = {
+                    "id": eid, "name": name, "slot": slot, "tier": tier,
+                    "bonus": bonus, "price": price,
+                    "description": description, "speed": speed
+                }
+        save_equipment()
+
+    if not equipment_records:
+        for (eid, name, slot, tier, bonus, price,
+             description, speed) in DEFAULT_EQUIPMENT:
+            equipment_records[eid] = {
+                "id": eid, "name": name, "slot": slot, "tier": tier,
+                "bonus": bonus, "price": price, "description": description,
+                "speed": speed
+            }
+        save_equipment()
+
+    # Upgrade the DISPLAY NAMES from previous game versions without
+    # changing IDs, ownership, gameplay stats or player-customized names.
+    current_defaults = {eq[0]: eq for eq in DEFAULT_EQUIPMENT}
+    names_updated = False
+    for eid, old_name in PRIOR_SHOP_EQUIPMENT_NAMES.items():
+        rec = equipment_records.get(eid)
+        default = current_defaults[eid]
+        if (rec and rec["name"] == old_name
+                and rec["slot"] == default[2]
+                and rec["tier"] == default[3]):
+            rec["name"] = default[1]
+            names_updated = True
+    if names_updated:
+        save_equipment()
+
+
+def save_equipment():
+    write_record_rows(
+        EQUIPMENT_FILE,
+        "DUNGEON CONQUEST EQUIPMENT RECORDS",
+        "equipment_id|name|slot|tier|bonus|price|description|speed",
+        [
+            [e["id"], e["name"], e["slot"], e["tier"], e["bonus"],
+             e["price"], e["description"], e.get("speed", 0)]
+            for e in equipment_records.values()
+        ]
+    )
+
+
 # ----- Rooms and connections (graph) -----
 
 def load_rooms():
+    # The dungeon must have exactly the six rooms in ROOM_ORDER. Any other
+    # layout (for example an old 11-room file) is replaced.
+    global ROOMS_RESET
+
     room_records.clear()
+    ROOMS_RESET = False
 
     for parts in read_record_rows(ROOM_FILE):
         if len(parts) != 3 or parts[0] in room_records:
@@ -950,14 +1419,21 @@ def load_rooms():
             "id": parts[0], "name": parts[1], "description": parts[2]
         }
 
-    if ENTRANCE_ROOM_ID not in room_records:
+    if set(room_records) != set(ROOM_ORDER):
         room_records.clear()
 
         for room_id, name, description in DEFAULT_ROOMS:
             room_records[room_id] = {
                 "id": room_id, "name": name, "description": description
             }
+
+        ROOMS_RESET = True
         save_rooms()
+
+    # Keeps the rooms in route order
+    ordered = {r: room_records[r] for r in ROOM_ORDER}
+    room_records.clear()
+    room_records.update(ordered)
 
 
 def save_rooms():
@@ -974,22 +1450,26 @@ def load_connections():
     room_connections.clear()
     file_existed = Path(CONNECTION_FILE).exists()
 
-    for parts in read_record_rows(CONNECTION_FILE):
-        if len(parts) != 3:
-            continue
+    if file_existed and not ROOMS_RESET:
+        for parts in read_record_rows(CONNECTION_FILE):
+            if len(parts) != 3:
+                continue
 
-        # Only valid links between existing rooms are kept
-        if validate_connection(parts[0], parts[1]) is None:
-            room_connections.append(
-                {"a": parts[0], "b": parts[1], "label": parts[2]}
-            )
+            # Only valid links between existing rooms are kept
+            if validate_connection(parts[0], parts[1]) is None:
+                room_connections.append(
+                    {"a": parts[0], "b": parts[1], "label": parts[2]}
+                )
 
-    if not file_existed:
+    if ROOMS_RESET or not file_existed:
+        room_connections.clear()
+
         for room_a, room_b, label in DEFAULT_CONNECTIONS:
             if validate_connection(room_a, room_b) is None:
                 room_connections.append(
                     {"a": room_a, "b": room_b, "label": label}
                 )
+
         save_connections()
 
 
@@ -1004,38 +1484,99 @@ def save_connections():
 
 # ----- Challenge questions -----
 
+def question_for_enemy(mob):
+    """Return this enemy's assigned question; never offer Boss quizzes early."""
+    if mob is None:
+        return None
+    eligible = [
+        q for q in question_records
+        if q.get("enemy_id") == mob["id"]
+        and (mob["type"] != "Boss" or q["id"] == BOSS_CHALLENGE_ID)
+        and (mob["type"] == "Boss" or q["id"] != BOSS_CHALLENGE_ID)
+    ]
+    return random.choice(eligible) if eligible else None
+
+
 def load_questions():
+    """Load assigned questions and migrate the previous five-column files."""
     question_records.clear()
+    changed = False
 
     for parts in read_record_rows(QUESTION_FILE):
-        if len(parts) != 5:
+        if len(parts) not in (5, 6):
             continue
-
         choices = [c.strip() for c in parts[2].split(";") if c.strip()]
-
         try:
             answer = int(parts[3])
             bonus = int(parts[4])
         except ValueError:
             continue
-
         if len(choices) < 2 or not 1 <= answer <= len(choices):
             continue
-
         if any(q["id"] == parts[0] for q in question_records):
             continue
 
+        default = DEFAULT_QUESTION_BY_ID.get(parts[0])
+        enemy_id = (parts[5].strip() if len(parts) == 6 else
+                    default[5] if default else "")
+        if len(parts) == 5:
+            changed = True
+
+        # Preserve administrator-edited bonuses; refresh only old default
+        # records whose question text, choices, answer and bonus are untouched.
+        if (default and len(parts) == 5
+                and parts[1] == default[1]
+                and choices == default[2] and answer == default[3]
+                and bonus == LEGACY_QUESTION_BONUSES.get(parts[0])):
+            bonus = default[4]
+
+        if parts[0] == BOSS_CHALLENGE_ID and enemy_id != "ENM-010":
+            enemy_id = "ENM-010"
+            changed = True
+        elif parts[0] != BOSS_CHALLENGE_ID and enemy_id == "ENM-010":
+            enemy_id = ""  # Only the final question belongs to the Boss
+            changed = True
+
         question_records.append({
             "id": parts[0], "question": parts[1], "choices": choices,
-            "answer": answer, "bonus": bonus
+            "answer": answer, "bonus": bonus, "enemy_id": enemy_id
         })
 
+    # Initialize new games with all ten challenges. When loading a previous
+    # nine-question save, add the missing Strong question automatically.
     if not question_records:
-        for qid, question, choices, answer, bonus in DEFAULT_QUESTIONS:
+        for qid, prompt, choices, answer, bonus, enemy_id in DEFAULT_QUESTIONS:
             question_records.append({
-                "id": qid, "question": question, "choices": list(choices),
-                "answer": answer, "bonus": bonus
+                "id": qid, "question": prompt, "choices": list(choices),
+                "answer": answer, "bonus": bonus, "enemy_id": enemy_id
             })
+        changed = True
+    else:
+        if not any(q["id"] == BOSS_CHALLENGE_ID for q in question_records):
+            default = DEFAULT_QUESTION_BY_ID[BOSS_CHALLENGE_ID]
+            question_records.append({
+                "id": default[0], "question": default[1],
+                "choices": list(default[2]), "answer": default[3],
+                "bonus": default[4], "enemy_id": default[5]
+            })
+            changed = True
+        if not any(q.get("enemy_id") == "ENM-009" for q in question_records):
+            default = DEFAULT_QUESTION_BY_ID["QST-010"]
+            ids = {q["id"] for q in question_records}
+            qid = (default[0] if default[0] not in ids else
+                   next_record_id("QST", ids))
+            question_records.append({
+                "id": qid, "question": default[1],
+                "choices": list(default[2]), "answer": default[3],
+                "bonus": default[4], "enemy_id": default[5]
+            })
+            changed = True
+
+    # Keep the questions in enemy progression order (Boss question last).
+    enemy_order = {e["id"]: i for i, e in enumerate(mob_list)}
+    question_records.sort(key=lambda q: (
+        enemy_order.get(q.get("enemy_id"), 999), q["id"]))
+    if changed:
         save_questions()
 
 
@@ -1044,9 +1585,9 @@ def save_questions():
         QUESTION_FILE,
         "DUNGEON CONQUEST CHALLENGE QUESTIONS",
         "question_id|question|choices_separated_by_semicolon|"
-        "correct_choice_number|bonus_damage",
+        "correct_choice_number|bonus_damage|enemy_id",
         [[q["id"], q["question"], ";".join(q["choices"]), q["answer"],
-          q["bonus"]] for q in question_records]
+          q["bonus"], q.get("enemy_id", "")] for q in question_records]
     )
 
 
@@ -1098,6 +1639,7 @@ def load_all_records():
     load_rooms()
     load_connections()
     load_items()
+    load_equipment()
     load_enemies()
     load_questions()
     load_accounts()
@@ -1123,7 +1665,9 @@ def get_current_enemy():
 
 
 def enemy_status(mob):
-    return "Defeated" if mob["defeated"] else "Active"
+    if mob["defeated"]:
+        return "Defeated"
+    return "Fighting" if mob.get("engaged") else "Active"
 
 
 def room_name(room_id):
@@ -1148,13 +1692,18 @@ def reset_battle_effects():
 
 def reset_session_state():
     # Clears temporary battle information when changing accounts
-    global current_enemy_id, action_counter
+    global current_enemy_id, action_counter, intro_shown
 
     encounter_lineup.clear()
     battle_history.clear()
+    undo_stack.clear()
     current_enemy_id = None
     action_counter = 0
+    intro_shown = False
     reset_battle_effects()
+
+    for mob in mob_list:
+        mob["engaged"] = False
 
 
 def load_player_from_account(username):
@@ -1177,8 +1726,28 @@ def load_player_from_account(username):
         "defeated_ids": list(data.get("defeated_ids", [])),
         "completed_levels": list(data.get("completed_levels", [])),
         "inventory": dict(data.get("inventory", {})),
-        "wounds": dict(data.get("wounds", {}))
+        "wounds": dict(data.get("wounds", {})),
+        "owned_equipment": [
+            e for e in data.get("owned_equipment", [])
+            if e in equipment_records
+        ],
+        "equipped": dict(data.get("equipped", {})),
+        "location": data.get("location", ENTRANCE_ROOM_ID),
+        "treasures": [
+            t for t in data.get("treasures", []) if t in TREASURES
+        ]
     })
+
+    # Equipped items must be owned and must exist
+    for slot, eid in list(player["equipped"].items()):
+        rec = equipment_records.get(eid)
+
+        if (rec is None or eid not in player["owned_equipment"]
+                or rec["slot"] != slot):
+            del player["equipped"][slot]
+
+    if player["location"] not in room_records:
+        player["location"] = ENTRANCE_ROOM_ID
 
     # A battle cannot continue after logging out
     if player["status"] == "In Battle":
@@ -1186,13 +1755,16 @@ def load_player_from_account(username):
 
     apply_player_enemy_progress()
     sync_completed_levels_without_rewards()
+    for slot, eid in list(player["equipped"].items()):
+        if equipment_records[eid]["tier"] != current_equipment_tier():
+            del player["equipped"][slot]
     restore_saved_lineup(data.get("lineup", []))
 
 
 def restore_saved_lineup(saved_ids):
     # Rebuilds the saved Encounter Queue in the same FIFO order.
-    # Enemies that were deleted, defeated or are no longer reachable
-    # are skipped so the queue always follows the game rules.
+    # Enemies that were deleted, defeated or are no longer in the player's
+    # room are skipped so the queue always follows the game rules.
     encounter_lineup.clear()
     skipped = []
 
@@ -1205,6 +1777,7 @@ def restore_saved_lineup(saved_ids):
             or enemy_id in encounter_lineup
             or not can_player_select_enemy(mob)
             or not is_enemy_reachable(mob)
+            or mob["room"] != player["location"]
         ):
             skipped.append(enemy_id)
             continue
@@ -1224,7 +1797,7 @@ def save_current_player_account():
     record = account_records[username]
 
     for key in ("id", "hp", "max_hp", "atk", "gold", "score", "wins",
-                "losses", "status"):
+                "losses", "status", "location"):
         record[key] = player[key]
 
     record["defeated_ids"] = list(player["defeated_ids"])
@@ -1232,6 +1805,9 @@ def save_current_player_account():
     record["inventory"] = dict(player["inventory"])
     record["lineup"] = list(encounter_lineup)
     record["wounds"] = dict(player["wounds"])
+    record["owned_equipment"] = list(player["owned_equipment"])
+    record["equipped"] = dict(player["equipped"])
+    record["treasures"] = list(player["treasures"])
 
     save_all_accounts()
 
@@ -1244,6 +1820,7 @@ def apply_player_enemy_progress():
 
     for mob in mob_list:
         mob["defeated"] = mob["id"] in defeated
+        mob["engaged"] = False
 
         if mob["defeated"]:
             mob["hp"] = 0
@@ -1278,6 +1855,125 @@ def describe_item_effect(item):
         high=item["power"] + 5
     )
 
+
+# ---------------------------------------------------------------
+# EQUIPMENT STATISTICS
+# Equipped items change the real battle numbers.
+# ---------------------------------------------------------------
+
+def describe_equipment(item):
+    return describe_piece(item)
+
+
+def standard_level():
+    # The current gear tier is the current unlocked level. Clearing Boss
+    # ends the game without inventing a fifth equipment tier.
+    done = player.get("completed_levels", [])
+    return min(3, sum(1 for level in STANDARD_UPGRADE_LEVELS if level in done))
+
+
+def current_equipment_tier():
+    return EQUIPMENT_LEVELS[standard_level()]
+
+
+def standard_piece(slot, level=None):
+    level = standard_level() if level is None else level
+    name, bonus, speed = STANDARD_EQUIPMENT[slot][level]
+    return {"id": None, "name": name, "slot": slot, "bonus": bonus,
+            "speed": speed, "tier": EQUIPMENT_LEVELS[level],
+            "source": f"Free {EQUIPMENT_LEVELS[level]} Gear"}
+
+
+def equipped_piece(slot):
+    # Old-tier gear stays owned, but can no longer override the new level's
+    # automatic free equipment. This also guards old save files.
+    eid = player.get("equipped", {}).get(slot)
+    rec = equipment_records.get(eid)
+    if (rec is not None and rec["slot"] == slot
+            and rec["tier"] == current_equipment_tier()
+            and eid in player.get("owned_equipment", [])):
+        return {"id": eid, "name": rec["name"], "slot": slot,
+                "bonus": rec["bonus"], "speed": rec.get("speed", 0),
+                "tier": rec["tier"], "source": "Shop Upgrade"}
+    return standard_piece(slot)
+
+
+def equipped_bonus(slot):
+    return equipped_piece(slot)["bonus"]
+
+
+def sword_speed():
+    return equipped_piece("sword").get("speed", 0)
+
+
+def player_miss_chance():
+    # Sword speed makes strikes more accurate (at least 1% miss chance).
+    return max(1, PLAYER_MISS_CHANCE - sword_speed() // 2)
+
+
+def player_crit_chance():
+    # Each speed point adds one percentage point to critical-hit chance.
+    return min(35, PLAYER_CRIT_CHANCE + sword_speed())
+
+
+def describe_piece(piece):
+    result = SLOT_STAT_TEXT[piece["slot"]].format(b=piece["bonus"])
+    if piece["slot"] == "sword":
+        result += f" | SPD: +{piece.get('speed', 0)}%"
+    return result
+
+
+def compare_text(eq):
+    # An actionable comparison with gear currently equipped (not with an
+    # unseen locked item). The sword compares BOTH attack and speed.
+    worn = equipped_piece(eq["slot"])
+    diff = eq["bonus"] - worn["bonus"]
+    label = {"sword": "ATK", "shield": "BLOCK", "armor": "DEF"}[eq["slot"]]
+    suffix = "%" if eq["slot"] == "shield" else ""
+    changes = [f"{label}: {diff:+}{suffix}"]
+    if eq["slot"] == "sword":
+        changes.append(f"SPD: {eq.get('speed', 0) - worn.get('speed', 0):+}%")
+    return ", ".join(changes)
+
+
+def total_atk():
+    return player["atk"] + equipped_bonus("sword")
+
+
+def armor_defense():
+    return equipped_bonus("armor")
+
+
+def shield_block():
+    return min(75, equipped_bonus("shield"))
+
+
+def mitigate_damage(damage):
+    # Armor reduces raw damage first, then shield blocks a percentage.
+    damage = max(1, damage - armor_defense())
+    return max(1, damage * (100 - shield_block()) // 100)
+
+
+def tier_unlocked(tier):
+    required = TIER_UNLOCK_REQUIREMENT.get(tier)
+    return tier in TIER_UNLOCK_REQUIREMENT and (
+        required is None or required in player["completed_levels"])
+
+
+def tier_requirement_text(tier):
+    required = TIER_UNLOCK_REQUIREMENT.get(tier)
+    return f"Clear every {required} enemy first" if required else ""
+
+
+def equipment_state(eid):
+    rec = equipment_records[eid]
+    if eid in player["owned_equipment"] and rec["tier"] != current_equipment_tier():
+        return "Archived (previous level)"
+    if player["equipped"].get(rec["slot"]) == eid:
+        return "Equipped"
+    if eid in player["owned_equipment"]:
+        return "Owned"
+    return "Not owned"
 
 # ---------------------------------------------------------------
 # PROGRESSION (rank and level completion)
@@ -1345,6 +2041,8 @@ def process_level_completion(difficulty, enemy):
     old_atk = player["atk"]
     old_max_hp = player["max_hp"]
     bonus_gold = LEVEL_COMPLETION_GOLD.get(difficulty, 0)
+    old_gear = {slot: equipped_piece(slot) for slot in EQUIPMENT_SLOTS}
+    old_tier = current_equipment_tier()
 
     player["completed_levels"].append(difficulty)
     player["atk"] += ATTACK_BONUS_PER_LEVEL
@@ -1352,7 +2050,7 @@ def process_level_completion(difficulty, enemy):
     player["hp"] += MAX_HP_BONUS_PER_LEVEL
     player["gold"] += bonus_gold
 
-    display_name = "Easy" if difficulty == "Weak" else difficulty
+    display_name = difficulty
 
     description = (
         f"{display_name} level completed. Attack {old_atk} -> "
@@ -1364,7 +2062,35 @@ def process_level_completion(difficulty, enemy):
 
     push_battle_action("Level Complete", description, enemy=enemy)
 
+    # On a tier change, archive previous shop selections and immediately
+    # equip all three free pieces for the newly unlocked level. Ownership
+    # remains in inventory; no gold is refunded or charged.
+    gear_notes = []
+    gear_changes = []
+    if current_equipment_tier() != old_tier:
+        player["equipped"].clear()
+        for slot in EQUIPMENT_SLOTS:
+            new_piece = standard_piece(slot)
+            gear_notes.append(
+                f"{slot.title()}: {old_gear[slot]['name']} -> "
+                f"{new_piece['name']} ({describe_piece(new_piece)})"
+            )
+            gear_changes.append((slot.title(), old_gear[slot]["name"],
+                                 new_piece["name"], describe_piece(new_piece)))
+
+    if gear_notes:
+        push_battle_action(
+            "Equipment Upgrade",
+            "Standard-Issue gear upgraded for free: "
+            + "; ".join(gear_notes) + ".",
+            enemy=enemy
+        )
+
     return {
+        "gear_notes": gear_notes,
+        "gear_changes": gear_changes,
+        "next_tier": (current_equipment_tier()
+                      if current_equipment_tier() != old_tier else None),
         "difficulty": display_name,
         "old_atk": old_atk,
         "new_atk": player["atk"],
@@ -1372,6 +2098,42 @@ def process_level_completion(difficulty, enemy):
         "new_max_hp": player["max_hp"],
         "gold_bonus": bonus_gold
     }
+
+
+def show_level_completion_rewards(reward, old_rank, new_rank):
+    """Readable reward summary after a full difficulty is cleared."""
+    section(f"LEVEL CLEARED: {reward['difficulty'].upper()}")
+    print(f"All {reward['difficulty']} enemies defeated. Well done!")
+
+    section("YOUR LEVEL REWARDS")
+    print_table(
+        ["Stat", "Before", "After", "Gained"],
+        [["Base ATK", reward["old_atk"], reward["new_atk"],
+          f"+{reward['new_atk'] - reward['old_atk']}"],
+         ["Max HP", reward["old_max_hp"], reward["new_max_hp"],
+          f"+{reward['new_max_hp'] - reward['old_max_hp']}"],
+         ["Bonus Gold", "-", "-", f"+{reward['gold_bonus']} Gold"]],
+        max_width=22
+    )
+
+    if old_rank["rank"] != new_rank["rank"]:
+        print(f"Rank Up: {old_rank['rank']} -> {new_rank['rank']}")
+
+    if reward["gear_changes"]:
+        section("FREE EQUIPMENT - AUTOMATICALLY EQUIPPED")
+        print_table(["Slot", "Previously Using", "New Free Gear", "New Stats"],
+                    reward["gear_changes"], max_width=30)
+        print("Your old shop purchases remain owned and can be found in Inventory.")
+
+    section("NEWLY UNLOCKED")
+    if reward["next_tier"]:
+        print(f"Next Level: {reward['next_tier']}")
+        print(f"New Shop Upgrades: {reward['next_tier']} equipment is now available.")
+        print("Next Step: Choose Travel to Room and explore the next area.")
+        print("A stronger armory awaits beyond the next gate...")
+    else:
+        print("The World Eater has fallen! The final exit is now open.")
+        print("Next Step: Travel to the Last Gate to finish your journey.")
 
 
 def show_progress_summary():
@@ -1395,8 +2157,8 @@ def show_progress_summary():
 # ---------------------------------------------------------------
 # DUNGEON MAP (GRAPH)
 # Rooms are vertices and passages are two-way labelled edges.
-# A room can be entered if it touches the entrance or a cleared room,
-# so the player has to fight their way through the map.
+# A room can be entered only if a path from the entrance exists that
+# passes through cleared rooms, so the six rooms must be done in order.
 # ---------------------------------------------------------------
 
 def get_neighbors(room_id):
@@ -1421,15 +2183,9 @@ def is_room_cleared(room_id, cleared_ids):
     return all(mob["id"] in cleared_ids for mob in get_room_enemies(room_id))
 
 
-def player_cleared_ids(include_lineup=True):
-    # Enemies waiting in the queue count as "planned" clears, so the
-    # player can line up a route through several rooms in advance
-    ids = set(player.get("defeated_ids", []))
-
-    if include_lineup:
-        ids.update(encounter_lineup)
-
-    return ids
+def player_cleared_ids():
+    # Only enemies the player really defeated count as cleared
+    return set(player.get("defeated_ids", []))
 
 
 def get_accessible_rooms(cleared_ids=None):
@@ -1466,20 +2222,9 @@ def is_enemy_reachable(mob, cleared_ids=None):
 
 
 def current_room_id():
-    # Where the player is on the map: the room of the enemy being fought,
-    # otherwise the room of the last enemy defeated, otherwise the entrance
-    mob = get_current_enemy()
-
-    if mob and mob["room"] in room_records:
-        return mob["room"]
-
-    for enemy_id in reversed(player.get("defeated_ids", [])):
-        mob = get_enemy_by_id(enemy_id)
-
-        if mob and mob["room"] in room_records:
-            return mob["room"]
-
-    return ENTRANCE_ROOM_ID
+    # The room the player is standing in (saved with the account)
+    location = player.get("location", ENTRANCE_ROOM_ID)
+    return location if location in room_records else ENTRANCE_ROOM_ID
 
 
 def get_room_status(room_id, defeated_ids, accessible):
@@ -1550,8 +2295,7 @@ def depth_first_traversal(start_id):
 
 def dungeon_map_lines(defeated_ids, lineup_ids=()):
     # Builds the map display from the live room and enemy records
-    cleared_ids = set(defeated_ids) | set(lineup_ids)
-    accessible = get_accessible_rooms(cleared_ids)
+    accessible = get_accessible_rooms(set(defeated_ids))
     markers = {"Entrance": "E", "Locked": "L", "Cleared": "C", "Open": "O"}
 
     lines = ["Legend: [E] Entrance  [O] Open  [C] Cleared  [L] Locked", ""]
@@ -1640,7 +2384,12 @@ def room_box_lines(room_id, status, defeated_ids, lineup_ids, box_width,
     enemies = get_room_enemies(room_id)
 
     if not enemies:
-        detail = "Start here" if room_id == ENTRANCE_ROOM_ID else "(empty)"
+        if room_id == ENTRANCE_ROOM_ID:
+            detail = "Start here"
+        elif room_id == EXIT_ROOM_ID:
+            detail = "DUNGEON EXIT"
+        else:
+            detail = "(empty)"
     else:
         mob = enemies[0]
 
@@ -1672,8 +2421,7 @@ def dungeon_drawing_lines(defeated_ids, lineup_ids=(), here=None):
     if not levels:
         return ["The dungeon has no entrance."]
 
-    cleared_ids = set(defeated_ids) | set(lineup_ids)
-    accessible = get_accessible_rooms(cleared_ids)
+    accessible = get_accessible_rooms(set(defeated_ids))
     most_rooms = max(len(level) for level in levels)
     box_width = max(
         14, min(MAP_MAX_BOX_WIDTH, MAP_MAX_WIDTH // most_rooms - MAP_BOX_GAP)
@@ -1813,7 +2561,7 @@ def choose_room(prompt="Enter Room ID: ", allow_entrance=True):
 
 
 def show_route_to_room():
-    # Shortest path search (BFS) from the entrance to a chosen room
+    # Shortest path search (BFS) from the player's room to a chosen room
     header("Find Route to Room")
 
     for room_id, room in room_records.items():
@@ -1825,7 +2573,8 @@ def show_route_to_room():
         pause()
         return
 
-    route = find_route(ENTRANCE_ROOM_ID, target)
+    start = current_room_id()
+    route = find_route(start, target)
 
     if route is None:
         print("\nThere is no passage leading to that room.")
@@ -1834,7 +2583,8 @@ def show_route_to_room():
 
     accessible = get_accessible_rooms()
 
-    print(f"\nShortest route to {room_name(target)} ({len(route) - 1} steps):")
+    print(f"\nShortest route from {room_name(start)} to {room_name(target)} "
+          f"({len(route) - 1} steps):")
 
     for step, (room_id, label) in enumerate(route):
         status = get_room_status(
@@ -1852,10 +2602,13 @@ def show_route_to_room():
         and not is_room_cleared(room_id, player_cleared_ids())
     ]
 
+    if target not in accessible:
+        print("\nThe destination is still sealed.")
+
     if blocked:
-        print("\nYou must clear these rooms first: "
+        print("You must clear these rooms first: "
               + ", ".join(room_name(r) for r in blocked))
-    else:
+    elif target in accessible:
         print("\nThe route is open.")
 
     pause()
@@ -1886,9 +2639,9 @@ def dungeon_map_menu():
         print("[2] Room Details and Passages")
         print("[3] Find Route to a Room (BFS)")
         print("[4] Exploration Order (DFS Traversal)")
-        print("[5] Back")
+        print("\n[0] Back")
 
-        choice = input("\nEnter choice [1-5]: ").strip()
+        choice = input("\nEnter choice [0-4]: ").strip()
 
         if choice == "1":
             display_dungeon_map()
@@ -1898,7 +2651,7 @@ def dungeon_map_menu():
             show_route_to_room()
         elif choice == "4":
             show_traversal()
-        elif choice == "5":
+        elif choice == "0":
             break
         else:
             invalid_choice()
@@ -1924,9 +2677,9 @@ def login_screen():
 
         print("[1] Login")
         print("[2] Create New Account")
-        print("[3] Exit Game")
+        print("\n[0] Exit Game")
 
-        choice = input("\nEnter choice [1-3]: ").strip()
+        choice = input("\nEnter choice [0-2]: ").strip()
 
         if choice == "1":
             username = input("Enter Username: ").strip()
@@ -1953,6 +2706,8 @@ def login_screen():
                     admin_menu()
                 else:
                     print("Your saved progress has been loaded.")
+                    print(f"You are standing in: "
+                          f"{room_name(current_room_id())}")
 
                     if encounter_lineup:
                         print(
@@ -1977,7 +2732,7 @@ def login_screen():
         elif choice == "2":
             signup_screen()
 
-        elif choice == "3":
+        elif choice == "0":
             print("\nThank you for playing Dungeon Conquest!")
             print("Goodbye.")
             break
@@ -2041,10 +2796,11 @@ def open_adventure_menu():
 
         print(f"Welcome, Warrior {player['name']}!")
         print(
-            f"HP {player['hp']}/{player['max_hp']} | ATK {player['atk']} | "
-            f"Gold {player['gold']} | Rank {rank['rank']} | "
-            f"Status {player['status']}"
+            f"HP: {player['hp']}/{player['max_hp']} | ATK: {total_atk()} | "
+            f"Gold: {player['gold']} | Rank: {rank['rank']} | "
+            f"Status: {player['status']}"
         )
+        print(f"Location: {room_name(current_room_id())}")
 
         if encounter_lineup:
             print(f"Enemies waiting in your queue: {len(encounter_lineup)}")
@@ -2054,9 +2810,9 @@ def open_adventure_menu():
         print("[3] Dungeon Map and Routes")
         print("[4] Enemy Information")
         print("[5] How to Play")
-        print("[6] Logout")
+        print("\n[0] Logout")
 
-        choice = input("\nEnter choice [1-6]: ").strip()
+        choice = input("\nEnter choice [0-5]: ").strip()
 
         if choice == "1":
             dungeon_menu()
@@ -2068,7 +2824,7 @@ def open_adventure_menu():
             view_enemy_records()
         elif choice == "5":
             show_instructions()
-        elif choice == "6":
+        elif choice == "0":
             # Saves the player (including the queue) before logging out
             save_current_player_account()
             reset_session_state()
@@ -2086,17 +2842,23 @@ def view_stats(pause_after=True):
 
     print(f"Player ID         : {player['id']}")
     print(f"Player Name       : {player['name']}")
+    print(f"Location          : {room_name(current_room_id())}")
     print(f"Health Points     : {player['hp']}/{player['max_hp']}")
-    print(f"Attack Power      : {player['atk']}")
+    print(f"Attack Power      : {total_atk()} (base {player['atk']} "
+          f"+ sword {equipped_bonus('sword')})")
+    print(f"Armor Defense     : -{armor_defense()} damage per hit")
+    print(f"Shield Block      : {shield_block()}% damage blocked")
+    print(f"Sword Speed       : +{sword_speed()}% "
+          f"(crit {player_crit_chance()}%, miss {player_miss_chance()}%)")
+    print(f"Current Gear Tier : {current_equipment_tier()}")
     print(f"Current Score     : {player['score']}")
     print(f"Gold              : {player['gold']}")
     print(f"Wins              : {player['wins']}")
     print(f"Losses            : {player['losses']}")
     print(f"Status            : {player['status']}")
 
-    print()
+    section("Progression")
     show_progress_summary()
-    print()
     view_inventory(pause_after=False, show_header=False)
 
     if pause_after:
@@ -2107,8 +2869,8 @@ def view_inventory(pause_after=True, show_header=True):
     # Shows how many items the player currently has
     if show_header:
         header("Inventory")
-    else:
-        print("INVENTORY")
+
+    section("Items")
 
     rows = [
         [item["name"], f"{item_quantity(item_id)}/{item['max_carry']}",
@@ -2122,32 +2884,63 @@ def view_inventory(pause_after=True, show_header=True):
     else:
         print("Your inventory is empty.")
 
+    section("Equipment")
+
+    # Free Standard-Issue pieces first, then anything bought in the shop
+    gear = []
+
+    for slot in EQUIPMENT_SLOTS:
+        std = standard_piece(slot)
+        gear.append([
+            std["name"], slot.title(), std["source"], describe_piece(std),
+            "Equipped" if equipped_piece(slot)["id"] is None else "Available"
+        ])
+
+    for e in player["owned_equipment"]:
+        if e in equipment_records:
+            eq = equipment_records[e]
+            gear.append([eq["name"], eq["slot"].title(),
+                         f"Shop ({eq['tier']})", describe_equipment(eq),
+                         equipment_state(e)])
+
+    print_table(["Name", "Slot", "Source", "Effect", "State"], gear,
+                max_width=30)
+
+    if not player["owned_equipment"]:
+        print("No optional upgrades bought yet. See the Dungeon Shop.")
+
     if pause_after:
         pause()
 
 
-def view_enemy_records(pause_after=True, only_available=False):
-    # Shows information about all enemies
-    print("Enemy Information".upper().center(105))
-    print("-" * 105)
+def view_enemy_records(pause_after=True, only_available=False,
+                       show_header=True):
+    # Shows information about all enemies. When another screen already
+    # printed the main title, only a sub-heading is shown.
+    if show_header:
+        header("Enemy Information")
+    else:
+        section("Available Enemies")
 
     rank = get_player_rank_info()
     accessible = get_accessible_rooms()
+    here = current_room_id()
 
     print(f"Current Rank    : {rank['rank']}")
     print(f"Unlocked Levels : {get_unlocked_difficulties()}")
     print(f"Next Goal       : {rank['next_unlock']}")
+    print(f"You Are In      : {room_name(here)}")
     print()
 
     rows = []
 
     for mob in mob_list:
-        # When choosing an enemy to queue, only show available choices
+        # When choosing an enemy to queue, only show enemies of this room
         if only_available and (
             mob["defeated"]
             or mob["id"] in encounter_lineup
             or not can_player_select_enemy(mob)
-            or mob["room"] not in accessible
+            or mob["room"] != here
         ):
             continue
 
@@ -2162,6 +2955,8 @@ def view_enemy_records(pause_after=True, only_available=False):
             access = "Rank locked"
         elif mob["room"] not in accessible:
             access = "Room locked"
+        elif mob["room"] != here:
+            access = "Other room"
         else:
             access = "Unlocked"
 
@@ -2180,7 +2975,7 @@ def view_enemy_records(pause_after=True, only_available=False):
             max_width=18
         )
     else:
-        print("No available enemies match your current progress.")
+        print("No available enemies in this room.")
 
     if pause_after:
         pause()
@@ -2190,55 +2985,91 @@ def show_instructions():
     # Gives the player the basic rules of the game
     header("How to Play")
 
-    print("GOAL")
-    print("- Fight through the dungeon map, defeat the World Eater,")
-    print("  then choose Escape the Dungeon to win the game.")
+    section("Goal")
+    print("- Fight through the six rooms, defeat the World Eater in the")
+    print("  Boss Room, then reach the Last Room and walk out of the exit.")
 
-    print("\nPROGRESSION")
+    section("The Six Rooms (one room per difficulty)")
+    print("  Entrance -> Weak -> Intermediate -> Strong -> Boss -> Exit")
+    print("- Use Travel to move to a connected room. A room opens only when")
+    print("  the room before it is cleared, so rooms cannot be skipped.")
+    print("- The Last Room stays sealed until the Boss is defeated.")
+    print("- The game ends only when you step through the exit.")
+
+    section("Progression")
     print("- Beginner (0-2 wins): Weak enemies")
     print("- Adventurer (3-5 wins): Weak and Intermediate")
     print("- Elite (6-8 wins): Weak, Intermediate, and Strong")
     print("- Master (9+ wins): All enemies including the Boss")
     print(f"- Clearing a whole level gives +{ATTACK_BONUS_PER_LEVEL} ATK "
           f"and +{MAX_HP_BONUS_PER_LEVEL} Max HP")
+    print("  and upgrades your free Standard-Issue Sword, Shield and Armor.")
 
-    print("\nDUNGEON MAP")
-    print("- Rooms connect through passages. You can only reach a room")
-    print("  next to the entrance or next to a room you have cleared.")
-    print("- Enemies in your queue count as planned clears, so you can")
-    print("  plan a route several rooms ahead.")
-
-    print("\nENCOUNTER QUEUE")
-    print("- The first enemy added is the first one you face (FIFO).")
+    section("Encounter Queue (FIFO)")
+    print("- Add enemies of the room you stand in. The first enemy added is")
+    print("  the first one you face.")
+    print("- Retreating keeps the enemy at its place in the queue")
+    print("  and restores its HP. Only a victory removes it.")
     print("- Your queue is saved when you leave the dungeon or log out.")
 
-    print("\nBATTLE (every action uses your turn)")
+    section("Battle (every action uses your turn)")
     print("- Attack  : can miss or land a critical hit")
     print(f"- Defend  : take {int(DEFEND_DAMAGE_TAKEN * 100)}% damage, "
           f"next attack +{DEFEND_COUNTER_BONUS}%")
     print("- Items   : using an item also lets the enemy strike back")
-    print("- Question: one per battle, correct = sure hit with bonus damage,")
-    print("            wrong = you lose the turn")
-    print(f"- Flee    : {FLEE_CHANCE}% chance, the enemy keeps full HP")
+    print("- Challenge: each enemy has its own question (10 in total).")
+    print("             Weak -> Intermediate -> Strong -> Boss: bigger bonus.")
+    print("             The 'Papasa ba' question appears only for the Boss.")
+    print("             Correct = guaranteed hit with bonus damage for this attack.")
+    print("             Wrong = you lose the turn. Challenges award no Gold.")
+    print("- Retreat : leave the battle for free; the enemy fully heals")
     print("- The Boss becomes ENRAGED below half health.")
 
-    print("\nCAMP (between battles)")
+    section("Undo (Stack)")
+    print("- Each reversible action (attack, defend, item, challenge,")
+    print("  purchase, equip, rest) pushes a snapshot on the Undo Stack.")
+    print("- Undo pops the newest snapshot first (LIFO) and restores HP, gold,")
+    print("  score, items, equipment, enemy HP and battle effects.")
+    print("- Victories, defeats, retreats, travel and starting a battle cannot")
+    print("  be undone, so the Undo Stack is emptied by them.")
+
+    section("Camp (between battles)")
     print("- HP does NOT refill after a battle.")
     print(f"- Rest at Camp heals {REST_HEAL_PERCENT}% Max HP "
           f"for {REST_COST} Gold.")
-    print("- The Dungeon Shop sells items. Each item has a carry limit.")
+    print("- Treasure chests (one per fighting room) pay Gold once the room")
+    print("  is cleared. Use Open Treasure Chest while standing in the room.")
+    print("- The Dungeon Shop sells potions and current-level upgrades.")
+    print("  Future equipment stays hidden until you clear the level.")
 
-    print("\nDEFEAT")
+    section("Defeat")
     print(f"- You lose {DEFEAT_GOLD_LOSS_PERCENT}% of your Gold, wake up "
-          f"with {DEFEAT_REVIVE_PERCENT}% HP and your queue is cleared.")
+          f"at the entrance with {DEFEAT_REVIVE_PERCENT}% HP and your")
+    print("  queue is cleared.")
     print(f"- The enemy keeps its wounds but regenerates "
           f"{ENEMY_REGEN_PERCENT}% of its Max HP.")
-    print("- Fleeing lets the enemy recover completely.")
 
-    print("\nITEMS")
+    section("Items")
     for item in item_records.values():
         print(f"- {item['name']} ({item['price']} Gold, carry "
               f"{item['max_carry']}): {describe_item_effect(item)}")
+
+    section("Standard-Issue Equipment (free, automatic)")
+    print("- Everyone starts in Weak with a free sword, shield and armor.")
+    print("- Finishing Weak / Intermediate / Strong automatically equips")
+    print("  the next level's three free pieces. Old purchases stay owned.")
+    print("- Shop gear is optional; two choices per equipment type per tier.")
+    print("- Sword SPD raises critical hit chance and reduces missed attacks.")
+
+    print(f"- Your current gear level: {current_equipment_tier()}")
+    for slot in EQUIPMENT_SLOTS:
+        piece = equipped_piece(slot)
+        print(f"- {slot.title()}: {piece['name']} ({describe_piece(piece)})")
+    print("- Which weapons lie beyond the next gate? Keep exploring to find out.")
+
+    section("Optional Shop Equipment (costs Gold)")
+    print("- Shop reveals only the upgrades for your current level.")
+    print("- Old-tier purchases are archived in Inventory, not sold again.")
 
     pause()
 
@@ -2247,9 +3078,13 @@ def show_instructions():
 # ENCOUNTER QUEUE (FIFO)
 # ---------------------------------------------------------------
 
-def display_encounter_lineup(pause_after=False):
-    # Shows the enemies from front to rear
-    header("Dungeon Encounter Queue")
+def display_encounter_lineup(pause_after=False, show_header=True):
+    # Shows the enemies from front to rear. Screens that already show a
+    # main title (Add Enemy, Start Battle) get a sub-heading instead.
+    if show_header:
+        header("Dungeon Encounter Queue")
+    else:
+        section("Dungeon Encounter Queue")
 
     if not encounter_lineup:
         print("No enemy is available in the Encounter Queue.")
@@ -2281,10 +3116,17 @@ def lineup_line():
 
 
 def add_enemy_to_lineup():
-    # ENQUEUE: lets the player choose an enemy for the expedition
+    # ENQUEUE: lets the player choose an enemy of the current room
     header("Add Enemy to Encounter Queue")
 
-    view_enemy_records(pause_after=False, only_available=True)
+    if current_room_id() in (ENTRANCE_ROOM_ID, EXIT_ROOM_ID):
+        print(f"There are no enemies in {room_name(current_room_id())}.")
+        print("Use Travel to Connected Room to find the next enemy room.")
+        pause()
+        return
+
+    view_enemy_records(pause_after=False, only_available=True,
+                       show_header=False)
 
     enemy_id = input("\nEnter Enemy ID: ").strip().upper()
 
@@ -2321,10 +3163,15 @@ def add_enemy_to_lineup():
         pause()
         return
 
+    if mob["room"] != current_room_id():
+        print(f"\n{mob['name']} lurks in {room_name(mob['room'])}.")
+        print("You can only face enemies of the room you are standing in.")
+        print("Use Travel to Connected Room to get there.")
+        pause()
+        return
+
     if not is_enemy_reachable(mob):
         print(f"\n{room_name(mob['room'])} cannot be reached yet.")
-        print("Clear (or queue) an enemy in a connected room first.")
-        print("Tip: use Dungeon Map and Routes to plan your path.")
         pause()
         return
 
@@ -2335,7 +3182,7 @@ def add_enemy_to_lineup():
     print("\nEnemy successfully added to the Dungeon Encounter Queue.")
     print(f"Enemy: {mob['name']} ({mob['type']})")
 
-    display_encounter_lineup()
+    display_encounter_lineup(show_header=False)
     pause()
 
 
@@ -2366,34 +3213,11 @@ def view_next_enemy():
 
 
 def remove_front_enemy():
-    # DEQUEUE: removes the enemy at the front after its battle ends
+    # DEQUEUE: removes the enemy at the front after it was defeated
     if not encounter_lineup:
         return None
 
     return encounter_lineup.pop(0)
-
-
-def revalidate_lineup():
-    # After an escape, later queued enemies may no longer be reachable
-    # because the escaped enemy's room is still not cleared
-    planned = set(player["defeated_ids"])
-    kept = []
-    removed = []
-
-    for enemy_id in encounter_lineup:
-        mob = get_enemy_by_id(enemy_id)
-
-        if mob is not None and is_enemy_reachable(mob, planned | set(kept)):
-            kept.append(enemy_id)
-        else:
-            removed.append(enemy_id)
-
-    encounter_lineup[:] = kept
-
-    for enemy_id in removed:
-        mob = get_enemy_by_id(enemy_id)
-        name = mob["name"] if mob else enemy_id
-        print(f"{name} left the queue because its room is unreachable.")
 
 
 # ---------------------------------------------------------------
@@ -2458,8 +3282,12 @@ def display_battle_history(pause_after=False, limit=None):
         print("TOP")
 
         for action in shown:
-            print(f"{action['action_id']} | {action['action_type']} | "
-                  f"{action['description']}")
+            prefix = f"{action['action_id']} | {action['action_type']} | "
+            print(textwrap.fill(
+                action['description'], width=100,
+                initial_indent=prefix, subsequent_indent=" " * len(prefix),
+                break_long_words=False
+            ))
 
         if limit is not None and len(battle_history) > limit:
             print(f"... {len(battle_history) - limit} older actions")
@@ -2483,7 +3311,10 @@ def view_latest_battle_action():
 
     print(f"Action ID : {action['action_id']}")
     print(f"Action    : {action['action_type']}")
-    print(f"Details   : {action['description']}")
+    print(textwrap.fill(action['description'], width=100,
+                        initial_indent="Details   : ",
+                        subsequent_indent=" " * 12,
+                        break_long_words=False))
     print(f"Player HP : {action['player_hp_before']} -> "
           f"{action['player_hp_after']}")
     print(f"Enemy HP  : {action['enemy_hp_before']} -> "
@@ -2496,6 +3327,7 @@ def view_latest_battle_action():
 def remove_latest_log_entry():
     # POP: removes only the latest entry from the battle history stack.
     # It edits the log only; HP, gold and enemies are not rolled back.
+    # (Use "Undo Latest Action" for a real rollback.)
     header("Remove Latest Log Entry")
 
     print("This removes the newest entry from the Action History Stack.")
@@ -2503,7 +3335,7 @@ def remove_latest_log_entry():
     print("your HP, gold and the enemy stay exactly as they are.\n")
 
     if not battle_history:
-        print("The log is empty. There is nothing to remove.")
+        print("No battle action is available to undo.")
         pause()
         return
 
@@ -2519,24 +3351,150 @@ def remove_latest_log_entry():
 
     battle_history.pop()
 
-    print("\nLatest log entry removed from the Stack.")
+    print("\nLatest battle action successfully removed from the Stack.")
     print("Your actual game progress was not changed.")
 
     display_battle_history()
     pause()
 
 
+# ---------------------------------------------------------------
+# UNDO SYSTEM (STACK, LIFO)
+# A snapshot is PUSHED before each reversible action and POPPED by Undo.
+# ---------------------------------------------------------------
+
+def snapshot_state(label):
+    # Saves everything an undo has to restore
+    mob = get_current_enemy()
+
+    return {
+        "label": label,
+        "hp": player["hp"],
+        "gold": player["gold"],
+        "score": player["score"],
+        "inventory": dict(player["inventory"]),
+        "owned_equipment": list(player["owned_equipment"]),
+        "equipped": dict(player["equipped"]),
+        "enemy_id": mob["id"] if mob else None,
+        "enemy_hp": mob["hp"] if mob else None,
+        "effects": (boost_turns_left, boost_percent, guard_bonus_ready,
+                    enemy_stunned_turns, challenge_used,
+                    boss_enrage_announced, battle_turns),
+        "log_size": len(battle_history)
+    }
+
+
+def push_undo(label):
+    # PUSH: remember the state from before the action
+    undo_stack.append(snapshot_state(label))
+
+
+def restore_snapshot(snap):
+    global boost_turns_left, boost_percent, guard_bonus_ready
+    global enemy_stunned_turns, challenge_used, boss_enrage_announced
+    global battle_turns
+
+    player["hp"] = snap["hp"]
+    player["gold"] = snap["gold"]
+    player["score"] = snap["score"]
+    player["inventory"] = dict(snap["inventory"])
+    player["owned_equipment"] = list(snap["owned_equipment"])
+    player["equipped"] = dict(snap["equipped"])
+
+    mob = get_enemy_by_id(snap["enemy_id"]) if snap["enemy_id"] else None
+
+    if mob is not None and snap["enemy_hp"] is not None:
+        mob["hp"] = snap["enemy_hp"]
+
+    (boost_turns_left, boost_percent, guard_bonus_ready,
+     enemy_stunned_turns, challenge_used, boss_enrage_announced,
+     battle_turns) = snap["effects"]
+
+    # The log entries made after the snapshot are popped off (LIFO)
+    while len(battle_history) > snap["log_size"]:
+        battle_history.pop()
+
+
+def display_undo_stack():
+    header("Undo Stack (Saved States)")
+
+    if not undo_stack:
+        print("The Undo Stack is empty. No battle action is available "
+              "to undo.")
+        return
+
+    print("TOP (next undo)")
+
+    for snap in reversed(undo_stack):
+        print(f"- Before: {snap['label']} | HP: {snap['hp']} | "
+              f"Gold: {snap['gold']}")
+
+    print("BOTTOM")
+
+
+def undo_latest_action(pause_after=True):
+    # POP: restores the state from before the most recent reversible action
+    header("Undo Latest Action")
+
+    if not undo_stack:
+        print("No battle action is available to undo.")
+
+        if pause_after:
+            pause()
+
+        return False
+
+    top = undo_stack[-1]  # peek
+
+    # Safety: a snapshot of another battle must never be applied
+    if top["enemy_id"] != current_enemy_id:
+        undo_stack.clear()
+        print("The saved state belongs to a different situation and was "
+              "discarded.")
+
+        if pause_after:
+            pause()
+
+        return False
+
+    print(f"Latest reversible action: {top['label']}")
+
+    snap = undo_stack.pop()
+    restore_snapshot(snap)
+
+    push_battle_action("Undo", f"Undid: {snap['label']}.")
+
+    print("Latest battle action successfully removed from the Stack.")
+    print(f"State restored -> HP: {player['hp']}/{player['max_hp']} | "
+          f"Gold: {player['gold']} | Score: {player['score']}")
+
+    mob = get_current_enemy()
+
+    if mob is not None:
+        print(f"{mob['name']} HP restored to {mob['hp']}/{mob['max_hp']}.")
+
+    print(f"Undo Stack now holds {len(undo_stack)} saved state(s).")
+    save_current_player_account()
+
+    if pause_after:
+        pause()
+
+    return True
+
+
 def battle_log_menu():
-    # Keeps all battle stack options inside one submenu
+    # Keeps all stack options inside one submenu
     while True:
         header("Battle Action History Stack")
 
         print("[1] View Battle Action History Stack")
         print("[2] View Latest Battle Action")
         print("[3] Remove Latest Log Entry (does not undo the action)")
-        print("[4] Back")
+        print("[4] Undo Latest Action (real rollback)")
+        print("[5] View Undo Stack")
+        print("\n[0] Back")
 
-        choice = input("\nEnter choice [1-4]: ").strip()
+        choice = input("\nEnter choice [0-5]: ").strip()
 
         if choice == "1":
             display_battle_history(pause_after=True)
@@ -2545,6 +3503,11 @@ def battle_log_menu():
         elif choice == "3":
             remove_latest_log_entry()
         elif choice == "4":
+            undo_latest_action()
+        elif choice == "5":
+            display_undo_stack()
+            pause()
+        elif choice == "0":
             break
         else:
             invalid_choice()
@@ -2575,7 +3538,7 @@ def start_battle_with_next_enemy():
         pause()
         return
 
-    display_encounter_lineup()
+    display_encounter_lineup(show_header=False)
 
     mob = get_enemy_by_id(encounter_lineup[0])
 
@@ -2586,6 +3549,13 @@ def start_battle_with_next_enemy():
         pause()
         return
 
+    if mob["room"] != current_room_id():
+        encounter_lineup.clear()
+        save_current_player_account()
+        print("\nThe queued enemy is not in this room. The queue was cleared.")
+        pause()
+        return
+
     if not confirm_risky_battle(mob):
         print("\nYou stay back. Rest at camp, buy potions or use the Shop "
               "first.")
@@ -2593,8 +3563,15 @@ def start_battle_with_next_enemy():
         return
 
     current_enemy_id = mob["id"]
+    mob["engaged"] = True
     reset_battle_effects()
+    undo_stack.clear()  # camp actions cannot be undone inside a battle
     set_player_status("In Battle")
+
+    if mob["type"] == "Boss":
+        story_panel("The Final Boss", BOSS_INTRO, "red")
+    else:
+        print(f"\n{color(ENCOUNTER_TEXT[mob['type']], 'yellow')}")
 
     print()
     animate_battle_intro(mob)
@@ -2605,7 +3582,7 @@ def start_battle_with_next_enemy():
     print(f"Difficulty   : {mob['type']}")
     print(f"Room         : {room_name(mob['room'])}")
     print(f"\nYour HP      : {player['hp']}/{player['max_hp']}")
-    print(f"Your Attack  : {player['atk']}")
+    print(f"Your Attack  : {total_atk()}")
 
     push_battle_action(
         "Battle Start",
@@ -2621,12 +3598,12 @@ def estimate_battle(mob):
     # Rough forecast if the player only attacks: how many attacks it
     # takes to win and how much damage the enemy deals meanwhile
     average_hit = (
-        player["atk"]
-        * (100 - PLAYER_MISS_CHANCE) / 100
-        * (1 + PLAYER_CRIT_CHANCE / 100 * (PLAYER_CRIT_MULTIPLIER - 1))
+        total_atk()
+        * (100 - player_miss_chance()) / 100
+        * (1 + player_crit_chance() / 100 * (PLAYER_CRIT_MULTIPLIER - 1))
     )
     attacks = max(1, math.ceil(mob["hp"] / max(1, average_hit)))
-    enemy_hit = get_enemy_attack_power(mob)
+    enemy_hit = mitigate_damage(get_enemy_attack_power(mob))
 
     # The enemy does not strike back after the killing blow
     return attacks, enemy_hit, (attacks - 1) * enemy_hit
@@ -2685,17 +3662,17 @@ def calculate_player_attack(sure_hit=False):
         notes.append(f"Counter +{DEFEND_COUNTER_BONUS}%")
 
     # Small chance for the player's attack to miss
-    if not sure_hit and random.randint(1, 100) <= PLAYER_MISS_CHANCE:
+    if not sure_hit and random.randint(1, 100) <= player_miss_chance():
         return 0, False, True, notes
 
-    atk = player["atk"]
+    atk = total_atk()
     strike = random.randint(
         max(1, atk - PLAYER_DAMAGE_SPREAD),
         atk + PLAYER_DAMAGE_SPREAD
     )
     strike = int(strike * multiplier)
 
-    critical = random.randint(1, 100) <= PLAYER_CRIT_CHANCE
+    critical = random.randint(1, 100) <= player_crit_chance()
 
     if critical:
         strike = int(strike * PLAYER_CRIT_MULTIPLIER)
@@ -2711,7 +3688,7 @@ def get_enemy_attack_power(mob):
 
 
 def calculate_enemy_attack(mob, guarding=False):
-    # Calculates the enemy's damage
+    # Calculates the enemy's damage (armor and shield reduce it)
     atk = get_enemy_attack_power(mob)
 
     damage = random.randint(
@@ -2725,6 +3702,8 @@ def calculate_enemy_attack(mob, guarding=False):
 
     if critical:
         damage = int(damage * ENEMY_CRIT_MULTIPLIER)
+
+    damage = mitigate_damage(damage)
 
     if guarding:
         damage = max(1, int(damage * DEFEND_DAMAGE_TAKEN))
@@ -2822,6 +3801,8 @@ def attack_current_enemy():
     if mob is None:
         return
 
+    push_undo(f"Attack on {mob['name']}")
+
     battle_turns += 1
     enemy_hp_before = mob["hp"]
     print()
@@ -2869,6 +3850,8 @@ def defend_against_enemy():
 
     if mob is None:
         return
+
+    push_undo(f"Defend against {mob['name']}")
 
     battle_turns += 1
     guard_bonus_ready = True
@@ -2929,7 +3912,7 @@ def use_item():
             print(f"[{number}] {item['name']} x{item_quantity(item_id)} - "
                   f"{describe_item_effect(item)}")
 
-        print("[0] Back")
+        print("\n[0] Back")
 
         choice = input(f"\nChoose an item [0-{len(owned)}]: ").strip()
 
@@ -2966,6 +3949,8 @@ def apply_item_effect(item, mob):
         print(f"\n{mob['name']} is already paralyzed.")
         pause()
         return False
+
+    push_undo(f"Use {item['name']}")
 
     battle_turns += 1
     change_item_quantity(item["id"], -1)
@@ -3047,14 +4032,6 @@ def apply_item_effect(item, mob):
             enemy_hp_after=mob["hp"]
         )
 
-    elif effect == "escape":
-        animate_effect("poof! smoke everywhere", "cyan", "~")
-        print(f"You throw the {item['name']} and slip away!")
-        resolve_escape(mob, item["name"])
-        save_current_player_account()
-        pause()
-        return True
-
     finish_player_turn(mob)
     return True
 
@@ -3073,24 +4050,30 @@ def answer_challenge_question():
         pause()
         return
 
-    if not question_records:
-        print("There are no challenge questions available.")
+    question = question_for_enemy(mob)
+    if question is None:
+        print("There is no Challenge question assigned to this enemy.")
         pause()
         return
-
-    question = random.choice(question_records)
     correct_text = question["choices"][question["answer"] - 1]
 
     # The choices are shuffled so players cannot memorise the numbers
     choices = list(question["choices"])
     random.shuffle(choices)
 
-    print(f"\nCHALLENGE: {question['question']}")
+    section(f"Challenge: {mob['type']} Level")
+    print(f"Enemy: {mob['name']}")
+    print(f"Question: {question['question']}")
+    print(f"Attack Bonus: +{question['bonus']} damage on a correct answer")
+    print("Effect: Guaranteed hit with bonus damage (this attack only)")
+    print()
 
     for number, choice in enumerate(choices, 1):
         print(f"  [{number}] {choice}")
 
     picked = ask_int(f"\nYour answer [1-{len(choices)}]: ", 1, len(choices))
+
+    push_undo(f"Challenge question {question['id']}")
 
     battle_turns += 1
     challenge_used = True
@@ -3108,20 +4091,25 @@ def answer_challenge_question():
 
         crit_text = " CRITICAL!" if critical else ""
 
-        print(f"Correct!{crit_text} Player attacked {mob['name']} for "
-              f"{strike} damage (+{question['bonus']} bonus). "
-              f"{mob['name']} HP: {mob['hp']}/{mob['max_hp']}")
+        section("Challenge Success")
+        print(f"Result: Correct!{crit_text}")
+        print(f"Attack Bonus: +{question['bonus']} damage")
+        print(f"Total Damage: {strike}")
+        print(f"Enemy HP: {mob['hp']}/{mob['max_hp']}")
 
         push_battle_action(
             "Challenge",
-            f"Player answered {question['id']} correctly and dealt "
-            f"{strike} damage to {mob['name']}.",
+            f"Player answered {question['id']} correctly and earned "
+            f"+{question['bonus']} challenge attack damage; "
+            f"dealt {strike} total damage to {mob['name']}.",
             enemy=mob,
             enemy_hp_before=enemy_hp_before,
             enemy_hp_after=mob["hp"]
         )
     else:
-        print(f"\nWrong! The answer was {correct_text}. You lose your turn.")
+        print(f"\nIncorrect. The correct answer was: {correct_text}")
+        print("Attack Bonus: +0")
+        print("You lose this turn. No bonus attack damage awarded.")
 
         push_battle_action(
             "Challenge",
@@ -3132,71 +4120,65 @@ def answer_challenge_question():
     finish_player_turn(mob)
 
 
-def attempt_flee():
-    # Tries to run away. A failed attempt gives the enemy a free attack.
-    global battle_turns
-
-    mob = validate_battle_action()
+def retreat_from_battle():
+    # Free retreat: the battle is interrupted, never "won"
+    mob = get_current_enemy()
 
     if mob is None:
-        return
-
-    if mob["type"] == "Boss":
-        print("\nThe throne room doors are sealed. You cannot flee the Boss!")
+        print("\nNo active battle is available.")
         pause()
         return
 
-    battle_turns += 1
+    print(f"\nRetreating leaves {mob['name']} in the Encounter Queue and it "
+          "heals fully.")
 
-    print()
-    animate_effect("You make a run for it", "cyan", ">", frames=5)
-
-    if random.randint(1, 100) <= FLEE_CHANCE:
-        print("You escaped from the battle!")
-        resolve_escape(mob, "running away")
-        save_current_player_account()
+    if not ask_yes_no("Retreat? (Y/N): "):
+        print("\nYou stand your ground.")
         pause()
         return
 
-    print(f"{mob['name']} blocks your escape!")
-    push_battle_action(
-        "Escape Failed",
-        f"Player failed to escape from {mob['name']}.",
-        enemy=mob
-    )
-
-    finish_player_turn(mob)
+    resolve_retreat(mob)
+    save_current_player_account()
+    pause()
 
 
 def end_current_battle():
+    # Every way a battle can end is irreversible, so the Undo Stack is
+    # emptied. Otherwise Undo could duplicate rewards or skip defeats.
     global current_enemy_id
 
+    mob = get_current_enemy()
+
+    if mob is not None:
+        mob["engaged"] = False
+
     current_enemy_id = None
+    undo_stack.clear()
     reset_battle_effects()
 
 
-def resolve_escape(mob, method):
-    # Ends the battle without rewards. The enemy recovers its health.
+def resolve_retreat(mob):
+    # Interrupts the battle. The enemy is NOT defeated and is NOT
+    # dequeued: it keeps its place in the queue with full HP.
     turns = battle_turns
 
     push_battle_action(
-        "Escape",
-        f"Player escaped from {mob['name']} using {method}.",
+        "Retreat",
+        f"Player retreated from {mob['name']}.",
         enemy=mob
     )
 
-    remove_front_enemy()
     mob["hp"] = mob["max_hp"]
+    mob["defeated"] = False
     player["wounds"].pop(mob["id"], None)
-    set_player_status("Escaped")
+    set_player_status("Retreated")
 
     end_current_battle()
-    record_battle_result(mob, "Escaped", 0, 0, turns)
+    record_battle_result(mob, "Retreated", 0, 0, turns)
 
-    print(f"{mob['name']} recovers its health and returns to "
-          f"{room_name(mob['room'])}.")
-
-    revalidate_lineup()
+    print(f"You retreat from {mob['name']}. It was not defeated.")
+    print(f"{mob['name']} recovers its health "
+          f"({mob['hp']}/{mob['max_hp']}) and waits in the queue.")
     print(f"Queue: {lineup_line()}")
 
 
@@ -3221,6 +4203,7 @@ def resolve_enemy_victory(mob):
                        enemy=mob, enemy_hp_after=0)
     push_battle_action("Reward", f"Player received {mob['gold_reward']} gold.",
                        enemy=mob)
+
     push_battle_action("Reward",
                        f"Player earned {mob['score_reward']} score points.",
                        enemy=mob)
@@ -3242,11 +4225,7 @@ def resolve_enemy_victory(mob):
           f"+{mob['gold_reward']} Gold, +{mob['score_reward']} Score")
 
     if level_reward is not None:
-        print(f"LEVEL COMPLETE ({level_reward['difficulty']})! "
-              f"ATK {level_reward['old_atk']} -> {level_reward['new_atk']}, "
-              f"Max HP {level_reward['old_max_hp']} -> "
-              f"{level_reward['new_max_hp']}, "
-              f"+{level_reward['gold_bonus']} Gold")
+        show_level_completion_rewards(level_reward, old_rank, new_rank)
 
     # Shows the queue before and after the defeated enemy is dequeued
     print(f"Queue before dequeue: {lineup_line()}")
@@ -3259,24 +4238,27 @@ def resolve_enemy_victory(mob):
     end_current_battle()
     record_battle_result(
         mob, "Victory",
-        mob["gold_reward"] + (level_reward["gold_bonus"] if level_reward else 0),
+        mob["gold_reward"]
+        + (level_reward["gold_bonus"] if level_reward else 0),
         mob["score_reward"],
         turns
     )
 
     print(f"Queue after dequeue : {lineup_line()}")
 
-    print(f"Progress: HP {player['hp']}/{player['max_hp']} | "
-          f"Wins {player['wins']} | Score {player['score']} | "
-          f"Gold {player['gold']} | ATK {player['atk']}")
+    print(f"Progress: HP: {player['hp']}/{player['max_hp']} | "
+          f"Wins: {player['wins']} | Score: {player['score']} | "
+          f"Gold: {player['gold']} | ATK: {total_atk()}")
 
-    if old_rank["rank"] != new_rank["rank"]:
-        print(f"RANK UP: {old_rank['rank']} -> {new_rank['rank']}. "
+    if old_rank["rank"] != new_rank["rank"] and level_reward is None:
+        print(f"Rank Up: {old_rank['rank']} -> {new_rank['rank']}. "
               f"You can now fight {new_rank['max_difficulty']} enemies.")
 
-    if mob["type"] == "Boss":
-        print("\nThe World Eater has fallen! The dungeon exit is open.")
-        print("Choose 'Escape the Dungeon' at camp to win the game.")
+    # The Boss is only "defeated" when the battle logic really confirmed it
+    if mob["type"] == "Boss" and mob["id"] in player["defeated_ids"]:
+        story_panel("The World Eater Has Fallen", BOSS_DEFEAT, "green")
+        print("The Last Room is unlocked. Use Travel to Connected Room to "
+              "reach the Dungeon Exit.")
 
     save_current_player_account()
 
@@ -3323,20 +4305,64 @@ def resolve_player_defeat(mob):
 
     # The player wakes up at the entrance with part of their health
     player["hp"] = max(1, player["max_hp"] * DEFEAT_REVIVE_PERCENT // 100)
+    player["location"] = ENTRANCE_ROOM_ID
     print(f"You wake up at the entrance with {player['hp']} HP.")
 
     end_current_battle()
     record_battle_result(mob, "Defeat", -gold_lost, 0, turns)
 
+    if HARDCORE_DEFEAT:
+        # Blueprint rule: when the player dies all progress is lost
+        username = player["name"]
+        old = account_records[username]
+        fresh = new_account_data(old["id"], old["password"])
+        fresh["losses"] = player["losses"]
+        account_records[username] = fresh
+        save_all_accounts()
+        load_player_from_account(username)
+        print(color("HARDCORE: all progress was lost. The story restarts "
+                    "from the beginning.", "red"))
+
     save_current_player_account()
 
 
 # ---------------------------------------------------------------
-# CAMP ACTIONS (shop, rest, dungeon exit)
+# CAMP ACTIONS (shop, equipment, rest, travel, dungeon exit)
 # ---------------------------------------------------------------
 
+def shortfall_message(price, what="item"):
+    # Exact amount of Gold still missing for a purchase
+    missing = price - player["gold"]
+    return f"You need {missing} more Gold to purchase this {what}."
+
+
+def show_shortfall(price, what="item"):
+    # Same "not enough Gold" notice for every shop. Nothing is deducted.
+    print(f"\n{color(shortfall_message(price, what), 'red')}")
+    print(f"  Current Gold : {player['gold']}")
+    print(f"  Price        : {price}")
+    print(f"  Missing Gold : {price - player['gold']}")
+
+
+def show_purchase_receipt(title, lines):
+    # Same "purchase successful" notice for every shop
+    print(f"\n{color('Purchase successful!', 'green')}")
+    print(f"  Item         : {title}")
+
+    for line in lines:
+        print(f"  {line}")
+
+    print(f"  Gold left    : {player['gold']}")
+
+
+def shop_entry(number, name, price, tag, detail):
+    # One shop listing: used by both the Supplies and Equipment shops
+    print(f"[{number}] {name} - {price} Gold ({tag})")
+    print(f"    {detail}")
+
+
 def dungeon_shop():
-    # The player can buy items here using Gold between battles
+    # The player can buy items and equipment here between battles
     if current_enemy_id is not None:
         print("\nYou cannot shop during a battle.")
         pause()
@@ -3345,21 +4371,48 @@ def dungeon_shop():
     while True:
         header("Dungeon Shop")
 
-        print(f"Gold: {player['gold']}\n")
+        print(f"Gold: {player['gold']}")
+
+        section("Departments")
+        print("[1] Supplies (potions and battle items)")
+        print("[2] Equipment (two upgrades per slot at current level)")
+        print("\n[0] Back")
+
+        choice = input("\nEnter choice [0-2]: ").strip()
+
+        if choice == "1":
+            supplies_shop()
+        elif choice == "2":
+            equipment_shop()
+        elif choice == "0":
+            print("\nYou leave the Dungeon Shop.")
+            break
+        else:
+            invalid_choice()
+
+
+def supplies_shop():
+    while True:
+        header("Dungeon Shop - Supplies")
+
+        print(f"Gold: {player['gold']}")
+
+        section("Potions and Battle Items")
 
         items = list(item_records.values())
 
         for number, item in enumerate(items, 1):
-            print(f"[{number}] {item['name']} - {item['price']} Gold "
-                  f"(owned {item_quantity(item['id'])}/{item['max_carry']})")
-            print(f"    {describe_item_effect(item)}")
+            shop_entry(
+                number, item["name"], item["price"],
+                f"owned {item_quantity(item['id'])}/{item['max_carry']}",
+                describe_item_effect(item)
+            )
 
-        print("[0] Leave Shop")
+        print("\n[0] Back")
 
         choice = input(f"\nChoose an item [0-{len(items)}]: ").strip()
 
         if choice == "0":
-            print("\nYou leave the Dungeon Shop.")
             break
 
         if not choice.isdigit() or not 1 <= int(choice) <= len(items):
@@ -3368,7 +4421,6 @@ def dungeon_shop():
 
         item = items[int(choice) - 1]
         space = item["max_carry"] - item_quantity(item["id"])
-        affordable = player["gold"] // item["price"] if item["price"] else space
 
         if space <= 0:
             print(f"\nYou cannot carry more than {item['max_carry']} "
@@ -3376,21 +4428,21 @@ def dungeon_shop():
             pause()
             continue
 
-        if affordable <= 0:
-            print("\nYou do not have enough Gold.")
-            print(f"Price: {item['price']} Gold")
-            print(f"Your Gold: {player['gold']} Gold")
+        qty = ask_int(f"How many? [1-{space}] (default 1): ", 1, space, 1)
+        total = item["price"] * qty
+
+        # Not enough Gold: nothing is deducted and nothing is added
+        if player["gold"] < total:
+            show_shortfall(total, "item")
             pause()
             continue
-
-        most = min(space, affordable)
-        qty = ask_int(f"How many? [1-{most}] (default 1): ", 1, most, 1)
-        total = item["price"] * qty
 
         if not ask_yes_no(f"Buy {qty} {item['name']} for {total} Gold? (Y/N): "):
             print("\nPurchase cancelled.")
             pause()
             continue
+
+        push_undo(f"Buy {qty} {item['name']}")
 
         player["gold"] -= total
         change_item_quantity(item["id"], qty)
@@ -3400,12 +4452,252 @@ def dungeon_shop():
         )
         save_current_player_account()
 
-        print("\nPurchase successful!")
-        print(f"Item: {item['name']} x{qty}")
-        print(f"Gold left: {player['gold']}")
-        print(f"Quantity: {item_quantity(item['id'])}")
+        show_purchase_receipt(
+            f"{item['name']} x{qty}",
+            [f"Quantity     : {item_quantity(item['id'])}"]
+        )
 
         pause()
+
+
+def equipment_shop():
+    while True:
+        tier = current_equipment_tier()
+        header(f"Dungeon Shop - {tier} Equipment")
+        print(f"Current Level: {tier} | Gold: {player['gold']}")
+        print("Every level grants free gear. Shop upgrades are optional.")
+
+        section("YOUR CURRENT EQUIPMENT")
+        rows = []
+        for slot in EQUIPMENT_SLOTS:
+            piece = equipped_piece(slot)
+            rows.append([slot.title(), piece["name"], describe_piece(piece),
+                         piece["source"]])
+        print_table(["Slot", "Currently Worn", "Combat Stats", "Origin"],
+                    rows, max_width=29)
+
+        # Filter before numbering: no previous-tier or future locked options.
+        available = [e for e in equipment_records.values()
+                     if e["tier"] == tier]
+        available.sort(key=lambda e: (EQUIPMENT_SLOTS.index(e["slot"]),
+                                      e["bonus"], e.get("speed", 0)))
+
+        choices = []
+        for slot in EQUIPMENT_SLOTS:
+            section(f"{slot.upper()} UPGRADES")
+            rows = []
+            for eq in available:
+                if eq["slot"] != slot:
+                    continue
+                state = equipment_state(eq["id"])
+                worn = equipped_piece(slot)
+                # An inferior unsold piece is a downgrade, not an upgrade.
+                if (state == "Not owned" and eq["bonus"] <= worn["bonus"]
+                        and (slot != "sword" or
+                             eq.get("speed", 0) <= worn.get("speed", 0))):
+                    continue
+                number = "-" if state != "Not owned" else str(len(choices) + 1)
+                if state == "Not owned":
+                    choices.append(eq)
+                rows.append([number, eq["name"], describe_equipment(eq),
+                             compare_text(eq), eq["price"],
+                             "Owned" if state != "Not owned" else "For sale"])
+            if rows:
+                print_table(["Buy", "Upgrade", "Combat Stats", "vs Worn",
+                             "Gold", "Status"], rows, max_width=26)
+            else:
+                print("No upgrades for this slot at your current level.")
+
+        section("A WHISPER FROM THE ARMORY")
+        if tier != "Boss":
+            print("\"Deeper halls hide stronger steel... Clear this level, and")
+            print(" the next set of weapons, shields and armor will awaken.\"")
+        else:
+            print("\"The final chamber is open. Choose your gear wisely;")
+            print(" only the throne knows what awaits.\"")
+
+        if not choices:
+            print("\nYou own every upgrade available at this level.")
+        print("\n[0] Back to Dungeon Shop")
+
+        choice = input(f"\nBuy which upgrade? [0-{len(choices)}]: ").strip()
+        if choice == "0":
+            break
+        if not choice.isdigit() or not 1 <= int(choice) <= len(choices):
+            invalid_choice()
+            continue
+
+        eq = choices[int(choice) - 1]
+        if eq["id"] in player["owned_equipment"]:
+            print("\nYou already own that upgrade.")
+            pause()
+            continue
+        if eq["tier"] != current_equipment_tier():
+            print("\nOnly current-level upgrades can be purchased.")
+            pause()
+            continue
+        if player["gold"] < eq["price"]:
+            show_shortfall(eq["price"], "equipment")
+            pause()
+            continue
+
+        print(f"\n{eq['name']} | {describe_equipment(eq)}")
+        print(f"Compared with your current gear: {compare_text(eq)}")
+        if not ask_yes_no(f"Buy for {eq['price']} Gold? (Y/N): "):
+            print("\nPurchase cancelled.")
+            pause()
+            continue
+
+        push_undo(f"Buy {eq['name']}")
+        worn_before = equipped_piece(eq["slot"])
+        player["gold"] -= eq["price"]
+        player["owned_equipment"].append(eq["id"])
+
+        stronger = eq["bonus"] > worn_before["bonus"]
+        if eq["slot"] == "sword" and eq.get("speed", 0) > worn_before.get("speed", 0):
+            stronger = True
+        if stronger:
+            player["equipped"][eq["slot"]] = eq["id"]
+            equipped_note = f"Equipped     : yes; replaced {worn_before['name']}"
+        else:
+            equipped_note = ("Equipped     : no; use Equipment to choose "
+                             "a previously purchased item")
+
+        push_battle_action(
+            "Purchase", f"Player bought {eq['name']} for {eq['price']} gold."
+        )
+        save_current_player_account()
+        show_purchase_receipt(
+            f"{eq['name']} ({describe_equipment(eq)})", [equipped_note]
+        )
+        pause()
+
+
+def equipment_menu():
+    # Players may equip only their current-level purchases or the free default.
+    if current_enemy_id is not None:
+        print("\nYou cannot change equipment during a battle.")
+        pause()
+        return
+
+    while True:
+        header(f"Equipment - {current_equipment_tier()} Level")
+        print(f"ATK: {total_atk()} | SPD: +{sword_speed()}% | "
+              f"DEF: -{armor_defense()} | BLOCK: {shield_block()}%")
+        print("Previous-level purchases are kept in Inventory but cannot "
+              "replace the current level's gear.")
+        options = []
+
+        for slot in EQUIPMENT_SLOTS:
+            section(slot.upper())
+            std = standard_piece(slot)
+            worn = equipped_piece(slot)
+            options.append((slot, None))
+            state = "Equipped" if worn["id"] is None else "Available"
+            print(f"[{len(options)}] {std['name']} | {describe_piece(std)} "
+                  f"(FREE, {state})")
+            for eid in player["owned_equipment"]:
+                eq = equipment_records.get(eid)
+                if (eq is None or eq["slot"] != slot
+                        or eq["tier"] != current_equipment_tier()):
+                    continue
+                options.append((slot, eid))
+                print(f"[{len(options)}] {eq['name']} | "
+                      f"{describe_equipment(eq)} ({equipment_state(eid)})")
+
+        print("\n[0] Back")
+        choice = input(f"\nWear which piece? [0-{len(options)}]: ").strip()
+        if choice == "0":
+            break
+        if not choice.isdigit() or not 1 <= int(choice) <= len(options):
+            invalid_choice()
+            continue
+
+        slot, eid = options[int(choice) - 1]
+        if eid is None:
+            piece = standard_piece(slot)
+            if equipped_piece(slot)["id"] is None:
+                print(f"\n{piece['name']} is already equipped.")
+                pause()
+                continue
+            push_undo(f"Equip {piece['name']}")
+            player["equipped"].pop(slot, None)
+            push_battle_action("Equip", f"Player equipped {piece['name']}.")
+            save_current_player_account()
+            print(f"\n{piece['name']} equipped. {describe_piece(piece)}")
+            pause()
+            continue
+
+        eq = equipment_records[eid]
+        if eq["tier"] != current_equipment_tier():
+            print("\nThat gear belongs to a previous level.")
+            pause()
+            continue
+        if player["equipped"].get(slot) == eid:
+            print(f"\n{eq['name']} is already equipped.")
+            pause()
+            continue
+        push_undo(f"Equip {eq['name']}")
+        player["equipped"][slot] = eid
+        push_battle_action("Equip", f"Player equipped {eq['name']}.")
+        save_current_player_account()
+        print(f"\n{eq['name']} equipped. {describe_equipment(eq)}")
+        pause()
+
+
+def open_treasure_chest():
+    # Treasure Gold: one chest per fighting room, opened once, only after
+    # every enemy in that room has been defeated.
+    header("Treasure Chest")
+
+    if current_enemy_id is not None:
+        print("You cannot open a chest during a battle.")
+        pause()
+        return
+
+    here = current_room_id()
+    chest = TREASURES.get(here)
+
+    if chest is None:
+        print(f"There is no treasure chest in {room_name(here)}.")
+        print("Chests wait in the Sewers, Bloodstone Hall, Catacombs and "
+              "Throne Room.")
+        pause()
+        return
+
+    name, rarity, gold = chest
+
+    if here in player["treasures"]:
+        print(f"The {name} has already been opened.")
+        pause()
+        return
+
+    remaining = [m for m in get_room_enemies(here) if not m["defeated"]]
+
+    if remaining:
+        print(f"The {name} is guarded.")
+        print(f"Defeat every enemy in {room_name(here)} first "
+              f"({len(remaining)} remaining).")
+        pause()
+        return
+
+    # Opening a chest is final, so older undo states are discarded
+    undo_stack.clear()
+    player["treasures"].append(here)
+    player["gold"] += gold
+    player["score"] += TREASURE_SCORE
+
+    push_battle_action(
+        "Treasure",
+        f"Player opened the {name} ({rarity}) and found {gold} gold."
+    )
+    save_current_player_account()
+
+    print(f"You open the {name} ({rarity} treasure).")
+    print(f"  Gold found : +{gold}")
+    print(f"  Score      : +{TREASURE_SCORE}")
+    print(f"  Gold now   : {player['gold']}")
+    pause()
 
 
 def rest_at_camp():
@@ -3423,8 +4715,8 @@ def rest_at_camp():
         return
 
     if player["gold"] < REST_COST:
-        print(f"Resting costs {REST_COST} Gold. You only have "
-              f"{player['gold']} Gold.")
+        print(f"Resting costs {REST_COST} Gold.")
+        show_shortfall(REST_COST, "rest")
         pause()
         return
 
@@ -3437,6 +4729,8 @@ def rest_at_camp():
         print("\nYou keep moving.")
         pause()
         return
+
+    push_undo("Rest at camp")
 
     player["gold"] -= REST_COST
     player["hp"] = min(player["max_hp"], player["hp"] + heal)
@@ -3458,8 +4752,119 @@ def all_bosses_defeated(defeated_ids):
     return bool(bosses) and all(m["id"] in defeated_ids for m in bosses)
 
 
+def travel_block_reason(destination):
+    # Explains why a connected room cannot be entered yet (or None)
+    if destination in get_accessible_rooms():
+        return None
+
+    if destination == EXIT_ROOM_ID:
+        return ("The Last Room is sealed by the World Eater's power. "
+                "Defeat the Boss first.")
+
+    # The room before it on the route is the one that must be cleared
+    index = ROOM_ORDER.index(destination) if destination in ROOM_ORDER else 0
+    previous = ROOM_ORDER[index - 1] if index > 0 else None
+
+    if previous:
+        return (f"{room_name(destination)} is sealed. Defeat every enemy in "
+                f"{room_name(previous)} first.")
+
+    return f"{room_name(destination)} cannot be reached."
+
+
+def travel_to_room():
+    # Moves the player along a graph edge (passage) to a connected room
+    header("Travel to Connected Room")
+
+    if current_enemy_id is not None:
+        print("You cannot travel during a battle.")
+        pause()
+        return
+
+    here = current_room_id()
+    neighbors = get_neighbors(here)
+
+    print(f"You are in: {room_name(here)}\n")
+
+    if not neighbors:
+        print("This room has no passages.")
+        pause()
+        return
+
+    accessible = get_accessible_rooms()
+
+    for number, (room_id, label) in enumerate(neighbors, 1):
+        state = "open" if room_id in accessible else "SEALED"
+        print(f"[{number}] {room_name(room_id)} via {label} ({state})")
+
+    print("\n[0] Back")
+
+    choice = input(f"\nWhere to? [0-{len(neighbors)}]: ").strip()
+
+    if choice == "0":
+        return
+
+    if not choice.isdigit() or not 1 <= int(choice) <= len(neighbors):
+        invalid_choice()
+        pause()
+        return
+
+    destination, label = neighbors[int(choice) - 1]
+
+    # Locked or invalid movement is rejected
+    reason = travel_block_reason(destination)
+
+    if reason:
+        print(f"\n{color(reason, 'red')}")
+        pause()
+        return
+
+    if encounter_lineup:
+        print("\nThe enemies waiting in your queue stay behind.")
+
+    encounter_lineup.clear()
+    undo_stack.clear()  # moving to a new room cannot be undone
+    player["location"] = destination
+
+    push_battle_action("Travel", f"Player traveled to {room_name(destination)}"
+                                 f" via {label}.")
+    save_current_player_account()
+
+    announce_room(destination)
+
+    if destination == EXIT_ROOM_ID:
+        offer_exit()
+    else:
+        pause()
+
+
+def announce_room(room_id):
+    # Story panel shown when a room is entered
+    tone = "red" if room_id == ROOM_FOR_DIFFICULTY["Boss"] else "cyan"
+    story_panel(room_name(room_id), ROOM_STORY.get(room_id, []), tone)
+
+    enemies = [m for m in get_room_enemies(room_id) if not m["defeated"]]
+
+    if enemies:
+        print(f"Enemies remaining here: "
+              f"{', '.join(m['name'] for m in enemies)}")
+    elif get_room_enemies(room_id):
+        print("This room is cleared.")
+
+
+def offer_exit():
+    # Reaching the Last Room offers the final step
+    print()
+
+    if ask_yes_no("Step through the exit now? (Y/N): "):
+        escape_dungeon()
+    else:
+        print("\nThe exit waits. Choose 'Escape Dungeon' when you are ready.")
+        pause()
+
+
 def escape_dungeon():
-    # Wins the game. Only possible after the Boss is defeated.
+    # Wins the game. Only possible in the Last Room after the Boss falls.
     header("Escape the Dungeon")
 
     if current_enemy_id is not None:
@@ -3478,8 +4883,15 @@ def escape_dungeon():
         pause()
         return False
 
+    if current_room_id() != EXIT_ROOM_ID:
+        print("The exit is open, but you are not there yet.")
+        print(f"Travel to {room_name(EXIT_ROOM_ID)} to leave the dungeon.")
+        pause()
+        return False
+
     player["score"] += ESCAPE_SCORE_BONUS
     player["status"] = "Victorious"
+    undo_stack.clear()
 
     push_battle_action(
         "Dungeon Escape",
@@ -3488,8 +4900,7 @@ def escape_dungeon():
     record_battle_result(None, "Escaped Dungeon", 0, ESCAPE_SCORE_BONUS)
     save_current_player_account()
 
-    print("Sunlight floods the stairway as the exit opens...")
-    print("YOU ESCAPED THE DUNGEON!")
+    story_panel("Escape", ENDING_TEXT, "green")
     print(f"Escape bonus: +{ESCAPE_SCORE_BONUS} Score")
     print(f"Final Score: {player['score']}")
     print(f"Wins / Losses: {player['wins']} / {player['losses']}")
@@ -3515,6 +4926,8 @@ def save_game_transaction():
             for key, value in player.items():
                 game_file.write(f"{key}: {value}\n")
 
+            game_file.write(f"Current Room: {room_name(current_room_id())}\n")
+
             rank = get_player_rank_info()
 
             game_file.write("\nPROGRESSION\n")
@@ -3534,15 +4947,33 @@ def save_game_transaction():
                 name = item_records.get(item_id, {}).get("name", item_id)
                 game_file.write(f"{item_id} | {name} | {qty}\n")
 
+            game_file.write("\nEQUIPMENT\n")
+
+            for slot in EQUIPMENT_SLOTS:
+                worn = equipped_piece(slot)
+                game_file.write(
+                    f"Worn {slot}: {worn['name']} | "
+                    f"{describe_piece(worn)} | {worn['source']}\n"
+                )
+
+            for eid in player["owned_equipment"]:
+                eq = equipment_records.get(eid)
+
+                if eq:
+                    game_file.write(
+                        f"{eid} | {eq['name']} | {eq['tier']} {eq['slot']} | "
+                        f"{equipment_state(eid)}\n"
+                    )
+
             game_file.write("\nENEMY INFORMATION\n")
 
             for mob in mob_list:
                 game_file.write(
                     f"{mob['id']} | {mob['name']} | "
-                    f"HP {mob['hp']}/{mob['max_hp']} | ATK {mob['atk']} | "
-                    f"Difficulty {mob['type']} | Status {enemy_status(mob)} | "
-                    f"Gold {mob['gold_reward']} | Score {mob['score_reward']} | "
-                    f"Room {room_name(mob['room'])}\n"
+                    f"HP: {mob['hp']}/{mob['max_hp']} | ATK: {mob['atk']} | "
+                    f"Difficulty: {mob['type']} | Status: {enemy_status(mob)} | "
+                    f"Gold: {mob['gold_reward']} | Score: {mob['score_reward']} | "
+                    f"Room: {room_name(mob['room'])}\n"
                 )
 
             game_file.write("\nDUNGEON ENCOUNTER QUEUE (FRONT TO REAR)\n")
@@ -3552,7 +4983,7 @@ def save_game_transaction():
                     mob = get_enemy_by_id(enemy_id)
                     game_file.write(
                         f"{mob['id']} | {mob['name']} | "
-                        f"HP {mob['hp']}/{mob['max_hp']}\n"
+                        f"HP: {mob['hp']}/{mob['max_hp']}\n"
                     )
             else:
                 game_file.write("NO ENEMIES WAITING\n")
@@ -3564,6 +4995,14 @@ def save_game_transaction():
                 game_file.write(f"{mob['id']} | {mob['name']}\n")
             else:
                 game_file.write("NO ACTIVE BATTLE\n")
+
+            game_file.write("\nUNDO STACK (TOP TO BOTTOM)\n")
+
+            if undo_stack:
+                for snap in reversed(undo_stack):
+                    game_file.write(f"Before: {snap['label']}\n")
+            else:
+                game_file.write("EMPTY\n")
 
             game_file.write("\nDUNGEON MAP\n")
 
@@ -3615,7 +5054,7 @@ def restore_player_for_new_transaction():
     if player["hp"] <= 0:
         player["hp"] = max(1, player["max_hp"] * DEFEAT_REVIVE_PERCENT // 100)
 
-    if player["status"] in ("Defeated", "Escaped", "In Battle"):
+    if player["status"] in ("Defeated", "Retreated", "Escaped", "In Battle"):
         player["status"] = "Active"
 
     save_current_player_account()
@@ -3627,9 +5066,10 @@ def show_live_panel():
 
     player_bar = color(hp_bar(player["hp"], player["max_hp"]),
                        hp_color(player["hp"], player["max_hp"]))
-    print(f"PLAYER : {player_bar} "
-          f"{player['hp']}/{player['max_hp']} HP | ATK {player['atk']} | "
-          f"Gold {player['gold']}")
+    print(f"PLAYER: {player_bar} "
+          f"HP: {player['hp']}/{player['max_hp']} | ATK: {total_atk()} | "
+          f"SPD: +{sword_speed()}% | DEF: -{armor_defense()} | "
+          f"BLOCK: {shield_block()}% | Gold: {player['gold']}")
 
     if mob:
         enraged = (
@@ -3638,9 +5078,9 @@ def show_live_panel():
         )
         enemy_bar = color(hp_bar(mob["hp"], mob["max_hp"]),
                           hp_color(mob["hp"], mob["max_hp"]))
-        print(f"ENEMY  : {enemy_bar} "
-              f"{mob['hp']}/{mob['max_hp']} HP | {mob['name']} | "
-              f"ATK {get_enemy_attack_power(mob)}{enraged}")
+        print(f"ENEMY:  {enemy_bar} "
+              f"HP: {mob['hp']}/{mob['max_hp']} | Name: {mob['name']} | "
+              f"ATK: {get_enemy_attack_power(mob)}{enraged}")
 
         effects = []
 
@@ -3655,15 +5095,22 @@ def show_live_panel():
 
         print(f"EFFECTS: {', '.join(effects) or 'None'}")
 
-    print(f"ROOM   : {room_name(current_room_id())}")
-    print(f"QUEUE  : {lineup_line()}")
+    print(f"ROOM:    {room_name(current_room_id())}")
+    print(f"QUEUE:   {lineup_line()}")
 
     if battle_history:
         top = battle_history[-1]
-        print(f"STACK  : TOP -> {top['description']} "
-              f"({len(battle_history)} actions)")
+        # Keep the live HUD readable; the full text stays in Action History.
+        preview = textwrap.shorten(
+            f"{top['action_type']}: {top['description']}",
+            width=62, placeholder="..."
+        )
+        print(f"STACK:   TOP -> {preview} ({len(battle_history)} actions)")
     else:
-        print("STACK  : (empty)")
+        print("STACK:   (empty)")
+
+    print(f"UNDO:    {len(undo_stack)} saved state(s)"
+          + (f" | next undo: {undo_stack[-1]['label']}" if undo_stack else ""))
 
 
 def battle_menu():
@@ -3679,21 +5126,24 @@ def battle_menu():
             item_quantity(i) for i, item in item_records.items()
             if item["effect"] == "heal"
         )
-        question = "used" if challenge_used else "ready"
+        question = ("used" if challenge_used else
+                    "ready" if question_for_enemy(get_current_enemy())
+                    else "unavailable")
 
         print()
         print_menu_row("[1] Attack", "[2] Defend", f"[3] Potion (x{potions})",
-                       width=22)
+                       width=32)
         print_menu_row("[4] Other Item", f"[5] Challenge ({question})",
-                       "[6] Flee", width=22)
-        print_menu_row("[7] View Queue", "[8] Action Stack", "[9] Stats",
-                       "[10] Save", width=22)
+                       "[6] Stats", width=32)
+        print_menu_row("[7] View Queue", "[8] Action Stack",
+                       "[9] Undo Last Action", width=32)
+        print_menu_row("[10] Save", "[11] Retreat", width=32)
 
         if notice:
             print(f"\n{notice}")
             notice = ""
 
-        choice = input("\nEnter choice [1-10]: ").strip()
+        choice = input("\nEnter choice [1-11]: ").strip()
 
         if choice == "1":
             attack_current_enemy()
@@ -3706,23 +5156,36 @@ def battle_menu():
         elif choice == "5":
             answer_challenge_question()
         elif choice == "6":
-            attempt_flee()
+            view_stats()
         elif choice == "7":
             display_encounter_lineup(pause_after=True)
         elif choice == "8":
             battle_log_menu()
         elif choice == "9":
-            view_stats()
+            undo_latest_action()
         elif choice == "10":
             save_game_transaction()
+        elif choice == "11":
+            retreat_from_battle()
         else:
             notice = INVALID_CHOICE_TEXT
 
 
 def dungeon_menu():
     # Camp menu between battles. Battles open the battle menu.
+    global intro_shown
+
     restore_player_for_new_transaction()
     notice = ""
+
+    # The opening story plays once for a fresh adventure
+    if not intro_shown and player["wins"] == 0 \
+            and current_room_id() == ENTRANCE_ROOM_ID:
+        story_panel("Dungeon Conquest", STORY_INTRO, "magenta")
+        announce_room(ENTRANCE_ROOM_ID)
+        pause()
+
+    intro_shown = True
 
     while True:
         clear_screen()
@@ -3731,26 +5194,31 @@ def dungeon_menu():
 
         rank = get_player_rank_info()
 
-        print(f"RANK   : {rank['rank']} | Next Goal: {rank['next_unlock']}")
+        print(f"RANK:    {rank['rank']} | Next Goal: {rank['next_unlock']}")
 
-        print("\nEXPLORE AND ENCOUNTER QUEUE")
-        print_menu_row("[1] Add Enemy to Queue",
-                       "[2] View Queue",
-                       "[3] View Next Enemy",
-                       "[4] Start Battle")
-        print("\nCAMP")
-        print_menu_row("[5] Dungeon Shop", f"[6] Rest ({REST_COST} Gold)",
-                       "[7] Dungeon Map")
-        print_menu_row("[8] Action History Stack", "[9] Player Stats",
-                       "[10] Inventory")
-        print_menu_row("[11] Save Game", "[12] Escape Dungeon",
-                       "[13] Leave Dungeon")
+        section("EXPLORE AND BATTLE")
+        print_menu_row("[1] Add Enemy to Queue", "[2] View Queue",
+                       "[3] View Next Enemy", width=32)
+        print_menu_row("[4] Start Battle", "[5] Open Treasure Chest",
+                       "[6] Travel to Room", width=32)
+
+        section("CAMP")
+        print_menu_row("[7] Dungeon Shop", "[8] Equipment",
+                       f"[9] Rest ({REST_COST} Gold)", width=32)
+        print_menu_row("[10] Inventory", "[11] Dungeon Map", width=32)
+
+        section("RECORDS")
+        print_menu_row("[12] Player Stats", "[13] Action History Stack",
+                       "[14] Undo Last Action", width=32)
+        print_menu_row("[15] Save Game", "[16] Escape Dungeon",
+                       width=32)
+        print("\n[0] Save & Exit")
 
         if notice:
             print(f"\n{notice}")
             notice = ""
 
-        choice = input("\nEnter choice [1-13]: ").strip()
+        choice = input("\nEnter choice [0-16]: ").strip()
 
         if choice == "1":
             add_enemy_to_lineup()
@@ -3762,28 +5230,36 @@ def dungeon_menu():
             start_battle_with_next_enemy()
             battle_menu()
         elif choice == "5":
-            dungeon_shop()
+            open_treasure_chest()
         elif choice == "6":
-            rest_at_camp()
+            travel_to_room()
         elif choice == "7":
-            dungeon_map_menu()
+            dungeon_shop()
         elif choice == "8":
-            battle_log_menu()
+            equipment_menu()
         elif choice == "9":
-            view_stats()
+            rest_at_camp()
         elif choice == "10":
             view_inventory()
         elif choice == "11":
-            save_game_transaction()
+            dungeon_map_menu()
         elif choice == "12":
-            if escape_dungeon():
-                break
+            view_stats()
         elif choice == "13":
+            battle_log_menu()
+        elif choice == "14":
+            undo_latest_action()
+        elif choice == "15":
+            save_game_transaction()
+        elif choice == "0":
             # The queue is kept so the expedition can continue later
             save_current_player_account()
 
-            print("\nYou leave the dungeon. Your Encounter Queue is saved.")
+            print("\nGame saved. Your Encounter Queue is saved. See you next time!")
             break
+        elif choice == "16":
+            if escape_dungeon():
+                break
         else:
             notice = INVALID_CHOICE_TEXT
 
@@ -3807,7 +5283,7 @@ def admin_dashboard():
     players = player_accounts()
     results = load_battle_results()
 
-    print("RECORD SUMMARY")
+    section("Record Summary")
     print(f"Player Accounts   : {len(players)}")
     print(f"Admin Accounts    : {len(account_records) - len(players)}")
 
@@ -3817,15 +5293,16 @@ def admin_dashboard():
     )
     print(f"Enemies           : {len(mob_list)} ({tier_counts})")
     print(f"Items             : {len(item_records)}")
+    print(f"Equipment         : {len(equipment_records)}")
     print(f"Rooms / Passages  : {len(room_records)} / {len(room_connections)}")
     print(f"Challenge Quizzes : {len(question_records)}")
 
-    print("\nGAME ACTIVITY")
+    section("Game Activity")
     print(f"Battles Recorded  : {len(results)}")
     print(f"Total Wins        : {sum(d['wins'] for d in players.values())}")
     print(f"Total Losses      : {sum(d['losses'] for d in players.values())}")
-    print(f"Escapes (fled)    : "
-          f"{sum(1 for r in results if r['result'] == 'Escaped')}")
+    print(f"Retreats          : "
+          f"{sum(1 for r in results if r['result'] == 'Retreated')}")
 
     boss_beaten = [
         u for u, d in players.items() if all_bosses_defeated(d["defeated_ids"])
@@ -3867,16 +5344,16 @@ def crud_menu(title, actions, extra=None):
         for number, (label, _) in enumerate(extra, 6):
             print(f"[{number}] {label}")
 
-        back = 6 + len(extra)
-        print(f"[{back}] Back")
+        max_option = 5 + len(extra)
+        print("\n[0] Back")
 
-        choice = input(f"\nEnter choice [1-{back}]: ").strip()
+        choice = input(f"\nEnter choice [0-{max_option}]: ").strip()
 
         if choice in ("1", "2", "3", "4", "5"):
             actions[int(choice) - 1]()
-        elif choice.isdigit() and 6 <= int(choice) < back:
+        elif choice.isdigit() and 6 <= int(choice) <= max_option:
             extra[int(choice) - 6][1]()
-        elif choice == str(back):
+        elif choice == "0":
             break
         else:
             invalid_choice()
@@ -3889,11 +5366,12 @@ def profiling_menu():
         print("[1] Player Account Maintenance")
         print("[2] Enemy Maintenance")
         print("[3] Item Maintenance")
-        print("[4] Room and Passage Maintenance")
-        print("[5] Question and Challenge Maintenance")
-        print("[6] Back")
+        print("[4] Equipment Maintenance")
+        print("[5] Room and Passage Maintenance")
+        print("[6] Question and Challenge Maintenance")
+        print("\n[0] Back")
 
-        choice = input("\nEnter choice [1-6]: ").strip()
+        choice = input("\nEnter choice [0-6]: ").strip()
 
         if choice == "1":
             crud_menu("Player Account Maintenance", [
@@ -3912,6 +5390,12 @@ def profiling_menu():
                 update_item_record, delete_item_record
             ])
         elif choice == "4":
+            crud_menu("Equipment Maintenance", [
+                add_equipment_record, view_equipment_records,
+                search_equipment_record, update_equipment_record,
+                delete_equipment_record
+            ])
+        elif choice == "5":
             crud_menu("Room and Passage Maintenance", [
                 add_room_record, view_room_records, search_room_record,
                 update_room_record, delete_room_record
@@ -3920,13 +5404,13 @@ def profiling_menu():
                 ("Remove Passage", remove_connection_record),
                 ("View Dungeon Map", admin_view_map)
             ])
-        elif choice == "5":
+        elif choice == "6":
             crud_menu("Question and Challenge Maintenance", [
                 add_question_record, view_question_records,
                 search_question_record, update_question_record,
                 delete_question_record
             ])
-        elif choice == "6":
+        elif choice == "0":
             break
         else:
             invalid_choice()
@@ -4028,15 +5512,22 @@ def search_account_record():
                 f"{item_records.get(i, {}).get('name', i)} x{q}"
                 for i, q in data["inventory"].items()
             )
+            gear = "\n".join(
+                equipment_records[e]["name"]
+                for e in data["owned_equipment"] if e in equipment_records
+            )
             rows.append([
                 username,
                 ", ".join(data["defeated_ids"]) or "None",
                 items or "Empty",
+                gear or "None",
+                room_name(data["location"]),
                 ", ".join(data["lineup"]) or "Empty"
             ])
 
         print()
-        print_table(["Username", "Defeated", "Inventory", "Queue"], rows)
+        print_table(["Username", "Defeated", "Inventory", "Equipment",
+                     "Room", "Queue"], rows)
 
     pause()
 
@@ -4113,6 +5604,7 @@ def delete_account_record():
 
 
 # ----- Enemies -----
+# Each enemy lives in the one room that belongs to its difficulty.
 
 def print_enemy_table(mobs):
     print_table(
@@ -4150,26 +5642,6 @@ def find_enemy_record(show_list=True):
     return mob
 
 
-def ask_enemy_room(default=None):
-    rooms = [r for r in room_records if r != ENTRANCE_ROOM_ID]
-
-    for room_id in rooms:
-        print(f"  {room_id} {room_name(room_id)}")
-
-    while True:
-        room_id = input(
-            f"Room ID{f' [{default}]' if default else ''}: "
-        ).strip().upper()
-
-        if not room_id and default:
-            return default
-
-        if room_id in rooms:
-            return room_id
-
-        print("Room record not found (the entrance cannot hold enemies).")
-
-
 def add_enemy_record():
     header("Add Enemy")
 
@@ -4182,13 +5654,14 @@ def add_enemy_record():
     atk = ask_int("Attack Power: ", 1)
     gold = ask_int("Gold Reward: ", 0)
     score = ask_int("Score Reward: ", 0)
-    room = ask_enemy_room()
+    room = ROOM_FOR_DIFFICULTY[enemy_type]
 
     mob_list.append(make_enemy(enemy_id, name, enemy_type, max_hp, atk,
                                gold, score, room))
     save_enemies()
 
     print(f"\nEnemy {enemy_id} {name} added successfully.")
+    print(f"It was placed in {room_name(room)} (the {enemy_type} room).")
     pause()
 
 
@@ -4240,11 +5713,12 @@ def update_enemy_record():
                                  default=mob["gold_reward"])
     mob["score_reward"] = ask_int(f"Score Reward [{mob['score_reward']}]: ",
                                   0, default=mob["score_reward"])
-    mob["room"] = ask_enemy_room(mob["room"])
+    mob["room"] = ROOM_FOR_DIFFICULTY[mob["type"]]
     mob["hp"] = mob["max_hp"]
 
     save_enemies()
     print(f"\nEnemy {mob['id']} updated successfully.")
+    print(f"Room: {room_name(mob['room'])} (set by difficulty).")
     pause()
 
 
@@ -4328,8 +5802,7 @@ def ask_item_fields(item=None):
         "heal": "percent of Max HP healed",
         "boost": "percent extra damage",
         "stun": "enemy turns skipped",
-        "damage": "average damage dealt",
-        "escape": "not used, enter 0"
+        "damage": "average damage dealt"
     }
     power = ask_int(f"Power ({hints[effect]}){keep_hint(item.get('power'))}: ",
                     0, default=item.get("power"))
@@ -4441,6 +5914,166 @@ def delete_item_record():
     pause()
 
 
+# ----- Equipment -----
+
+def print_equipment_table(items):
+    print_table(
+        ["ID", "Name", "Slot", "Tier", "Effect", "Price", "Description"],
+        [
+            [e["id"], e["name"], e["slot"], e["tier"], describe_equipment(e),
+             e["price"], e["description"]]
+            for e in items
+        ],
+        max_width=30
+    )
+
+
+def find_equipment_record():
+    print("EXISTING EQUIPMENT")
+
+    for eq in equipment_records.values():
+        print(f"  {eq['id']} | {eq['name']} ({eq['tier']} {eq['slot']})")
+
+    print()
+
+    eid = input("Enter Equipment ID: ").strip().upper()
+
+    if not eid:
+        print("\nEquipment ID must not be blank.")
+        return None
+
+    if eid not in equipment_records:
+        print("\nEquipment record not found.")
+        return None
+
+    return equipment_records[eid]
+
+
+def ask_equipment_fields(eq=None):
+    eq = eq or {}
+
+    name = ask_text(f"Name{keep_hint(eq.get('name'))}: ", eq.get("name"))
+    slot = ask_option("Slot:", EQUIPMENT_SLOTS, eq.get("slot"))
+    tier = ask_option("Tier:", list(TIER_UNLOCK_REQUIREMENT), eq.get("tier"))
+    hint = {"sword": "attack bonus", "shield": "percent blocked (max 75)",
+            "armor": "damage removed per hit"}[slot]
+    bonus = ask_int(f"Bonus ({hint}){keep_hint(eq.get('bonus'))}: ", 1,
+                    75 if slot == "shield" else None, eq.get("bonus"))
+    speed = (ask_int(f"Speed bonus (%) {keep_hint(eq.get('speed', 0))}: ",
+                     0, 25, eq.get('speed', 0)) if slot == "sword" else 0)
+    price = ask_int(f"Price{keep_hint(eq.get('price'))}: ", 0,
+                    default=eq.get("price"))
+    description = ask_text(
+        f"Description{keep_hint(eq.get('description'))}: ",
+        eq.get("description")
+    )
+
+    return {"name": name, "slot": slot, "tier": tier, "bonus": bonus,
+            "price": price, "description": description, "speed": speed}
+
+
+def add_equipment_record():
+    header("Add Equipment")
+
+    eid = next_record_id("EQP", list(equipment_records))
+    print(f"New Equipment ID: {eid}")
+
+    fields = ask_equipment_fields()
+    equipment_records[eid] = {"id": eid, **fields}
+    save_equipment()
+
+    print(f"\nEquipment {eid} {fields['name']} added successfully.")
+    pause()
+
+
+def view_equipment_records():
+    header("All Equipment")
+
+    print_equipment_table(equipment_records.values())
+
+    print(f"\nTotal records: {len(equipment_records)}")
+    pause()
+
+
+def search_equipment_record():
+    header("Search Equipment")
+
+    key = ask_text("Enter part of an ID, name, slot or tier: ").lower()
+    matches = [
+        e for e in equipment_records.values()
+        if key in e["id"].lower() or key in e["name"].lower()
+        or key in e["slot"] or key in e["tier"].lower()
+    ]
+
+    if not matches:
+        print("\nEquipment record not found.")
+    else:
+        print_equipment_table(matches)
+
+    pause()
+
+
+def update_equipment_record():
+    header("Update Equipment")
+
+    eq = find_equipment_record()
+
+    if eq is None:
+        pause()
+        return
+
+    print("Press Enter to keep the current value.\n")
+    old_slot = eq["slot"]
+    eq.update(ask_equipment_fields(eq))
+
+    # A changed slot would break equipped pieces, so they are unequipped
+    if eq["slot"] != old_slot:
+        for data in account_records.values():
+            data["equipped"] = {
+                s: e for s, e in data["equipped"].items() if e != eq["id"]
+            }
+
+    save_equipment()
+    save_all_accounts()
+
+    print(f"\nEquipment {eq['id']} updated successfully.")
+    pause()
+
+
+def delete_equipment_record():
+    header("Delete Equipment")
+
+    eq = find_equipment_record()
+
+    if eq is None:
+        pause()
+        return
+
+    print_equipment_table([eq])
+
+    if not ask_yes_no("\nDelete this equipment? It is removed from every "
+                      "player. (Y/N): "):
+        print("\nNothing was deleted.")
+        pause()
+        return
+
+    del equipment_records[eq["id"]]
+
+    for data in account_records.values():
+        data["owned_equipment"] = [
+            e for e in data["owned_equipment"] if e != eq["id"]
+        ]
+        data["equipped"] = {
+            s: e for s, e in data["equipped"].items() if e != eq["id"]
+        }
+
+    save_equipment()
+    save_all_accounts()
+
+    print(f"\nEquipment {eq['id']} deleted.")
+    pause()
+
+
 # ----- Rooms and passages -----
 
 def print_room_table(rooms):
@@ -4469,20 +6102,13 @@ def find_room_record():
 
 
 def add_room_record():
+    # The dungeon is fixed at exactly six rooms
     header("Add Room")
 
-    room_id = next_record_id("ROOM", list(room_records), start=0)
-    print(f"New Room ID: {room_id}")
-
-    name = ask_text("Name: ")
-    description = ask_text("Description: ")
-
-    room_records[room_id] = {"id": room_id, "name": name,
-                             "description": description}
-    save_rooms()
-
-    print(f"\nRoom {room_id} {name} added successfully.")
-    print("Remember to add a passage so players can reach it.")
+    print("The dungeon has exactly six rooms:")
+    print("  Entrance -> Weak -> Intermediate -> Strong -> Boss -> Exit")
+    print("New rooms cannot be added. Use Update Record to rename or")
+    print("redescribe an existing room.")
     pause()
 
 
@@ -4534,41 +6160,11 @@ def update_room_record():
 
 
 def delete_room_record():
+    # Rooms cannot be deleted because the route needs all six
     header("Delete Room")
 
-    room = find_room_record()
-
-    if room is None:
-        pause()
-        return
-
-    if room["id"] == ENTRANCE_ROOM_ID:
-        print("\nThe Dungeon Entrance cannot be deleted.")
-        pause()
-        return
-
-    if get_room_enemies(room["id"]):
-        print("\nThis room still holds enemies. Move or delete them first.")
-        pause()
-        return
-
-    print_room_table([room])
-
-    if not ask_yes_no("\nDelete this room and all its passages? (Y/N): "):
-        print("\nNothing was deleted.")
-        pause()
-        return
-
-    del room_records[room["id"]]
-    room_connections[:] = [
-        c for c in room_connections
-        if room["id"] not in (c["a"], c["b"])
-    ]
-
-    save_rooms()
-    save_connections()
-
-    print(f"\nRoom {room['id']} deleted.")
+    print("The six-room route (Entrance, Weak, Intermediate, Strong, Boss,")
+    print("Exit) cannot be shortened. No room can be deleted.")
     pause()
 
 
@@ -4583,6 +6179,12 @@ def validate_connection(room_a, room_b):
     for link in room_connections:
         if {link["a"], link["b"]} == {room_a, room_b}:
             return "These rooms are already connected."
+
+    # Passages may only join neighbouring rooms of the six-room route,
+    # so a passage can never be used to skip a room
+    if abs(ROOM_ORDER.index(room_a) - ROOM_ORDER.index(room_b)) != 1:
+        return ("Passages may only join neighbouring rooms of the route "
+                "(rooms cannot be skipped).")
 
     return None
 
@@ -4667,18 +6269,19 @@ def admin_view_map():
 
 def print_question_table(questions):
     rows = []
-
     for question in questions:
         choices = "\n".join(
             f"[{number}] {choice}"
             + (" *" if number == question["answer"] else "")
             for number, choice in enumerate(question["choices"], 1)
         )
-        rows.append([question["id"], question["question"], choices,
-                     f"+{question['bonus']}"])
-
-    print_table(["ID", "Question", "Choices (* = correct)", "Bonus"], rows,
-                max_width=30)
+        mob = get_enemy_by_id(question.get("enemy_id", ""))
+        enemy = (f"{mob['name']}\n({mob['type']})" if mob else
+                 "Unassigned")
+        rows.append([question["id"], enemy, question["question"],
+                     choices, f"+{question['bonus']}"])
+    print_table(["ID", "Assigned Enemy", "Question", "Choices (* = correct)",
+                 "ATK Bonus"], rows, max_width=26)
 
 
 def find_question_record():
@@ -4704,7 +6307,7 @@ def find_question_record():
     return None
 
 
-def ask_question_fields(question=None):
+def ask_question_fields(question=None, enemy_id=None):
     question = question or {"choices": []}
     old_choices = question["choices"] + [None] * (4 - len(question["choices"]))
 
@@ -4722,16 +6325,31 @@ def ask_question_fields(question=None):
                     0, default=question.get("bonus"))
 
     return {"question": text, "choices": choices, "answer": answer,
-            "bonus": bonus}
+            "bonus": bonus,
+            "enemy_id": enemy_id if enemy_id is not None else
+                        question.get("enemy_id", "")}
 
 
 def add_question_record():
     header("Add Question")
 
+    assigned = {q.get("enemy_id") for q in question_records}
+    available = [mob for mob in mob_list
+                 if mob["id"] not in assigned and mob["type"] != "Boss"]
+    if not available:
+        print("Every enemy already has its own Challenge question.")
+        print("Use Update Question to modify a question or its ATK bonus.")
+        pause()
+        return
+
+    options = [f"{mob['id']} - {mob['name']} ({mob['type']})"
+               for mob in available]
+    selection = ask_option("Select an enemy for this question:", options)
+    enemy_id = selection.split(" - ", 1)[0]
+
     qid = next_record_id("QST", [q["id"] for q in question_records])
     print(f"New Question ID: {qid}")
-
-    question_records.append({"id": qid, **ask_question_fields()})
+    question_records.append({"id": qid, **ask_question_fields(enemy_id=enemy_id)})
     save_questions()
 
     print(f"\nQuestion {qid} added successfully.")
@@ -4774,6 +6392,11 @@ def update_question_record():
         pause()
         return
 
+    if question["id"] == BOSS_CHALLENGE_ID:
+        print("The final Boss question is reserved and cannot be changed.")
+        pause()
+        return
+
     print("Press Enter to keep the current value.\n")
     question.update(ask_question_fields(question))
     save_questions()
@@ -4788,6 +6411,11 @@ def delete_question_record():
     question = find_question_record()
 
     if question is None:
+        pause()
+        return
+
+    if question["id"] == BOSS_CHALLENGE_ID:
+        print("The final Boss question is required and cannot be deleted.")
         pause()
         return
 
@@ -4837,13 +6465,20 @@ def view_player_progress():
     print()
     print_account_table([(username, data)])
     print(f"Rank            : {rank['rank']} ({rank['next_unlock']})")
+    print(f"Location        : {room_name(data['location'])}")
     print(f"Completed Levels: {', '.join(data['completed_levels']) or 'None'}")
     print(f"Defeated Enemies: {len(data['defeated_ids'])}/{len(mob_list)}")
     print(f"Saved Queue     : {', '.join(data['lineup']) or 'Empty'}")
+    print("Equipment       : " + (", ".join(
+        f"{equipment_records[e]['name']}"
+        f"{' (worn)' if data['equipped'].get(equipment_records[e]['slot']) == e else ''}"
+        for e in data["owned_equipment"] if e in equipment_records
+    ) or "None"))
+    print(f"Treasure Opened : {len(data['treasures'])}/{len(TREASURES)}")
     print(f"Boss Defeated   : "
           f"{'Yes' if all_bosses_defeated(data['defeated_ids']) else 'No'}")
 
-    print("\nDUNGEON MAP FOR THIS PLAYER")
+    section("Dungeon Map For This Player")
 
     for line in dungeon_map_lines(data["defeated_ids"], data["lineup"]):
         print(line)
@@ -4921,6 +6556,7 @@ def set_enemy_difficulty():
         return
 
     mob["type"] = ask_option("New difficulty:", LEVEL_ORDER, mob["type"])
+    mob["room"] = ROOM_FOR_DIFFICULTY[mob["type"]]
     percent = ask_int("Scale HP and Attack by percent (100 = unchanged): ",
                       10, 500, 100)
 
@@ -4930,7 +6566,7 @@ def set_enemy_difficulty():
 
     save_enemies()
 
-    print("\nEnemy updated:")
+    print("\nEnemy updated (it moved to the room of its new difficulty):")
     print_enemy_table([mob])
     pause()
 
@@ -4979,9 +6615,9 @@ def game_setup_menu():
         print("[3] Assign Starting Items")
         print("[4] Set Enemy Difficulty")
         print("[5] View Battle History")
-        print("[6] Back")
+        print("\n[0] Back")
 
-        choice = input("\nEnter choice [1-6]: ").strip()
+        choice = input("\nEnter choice [0-5]: ").strip()
 
         if choice == "1":
             view_player_progress()
@@ -4993,7 +6629,7 @@ def game_setup_menu():
             set_enemy_difficulty()
         elif choice == "5":
             view_battle_history()
-        elif choice == "6":
+        elif choice == "0":
             break
         else:
             invalid_choice()
@@ -5007,11 +6643,12 @@ def game_setup_menu():
 
 def report_player_statistics():
     lines = table_lines(
-        ["ID", "Username", "HP", "ATK", "Gold", "Score", "Rank", "Status"],
+        ["ID", "Username", "HP", "ATK", "Gold", "Score", "Rank", "Room",
+         "Status"],
         [
             [d["id"], username, f"{d['hp']}/{d['max_hp']}", d["atk"],
              d["gold"], d["score"], get_rank_info(d["wins"])["rank"],
-             d["status"]]
+             room_name(d["location"]), d["status"]]
             for username, d in player_accounts().items()
         ]
     )
@@ -5110,6 +6747,132 @@ def report_available_items():
     )
 
 
+def report_equipment():
+    rows = []
+
+    for eq in equipment_records.values():
+        owners = [
+            u for u, d in player_accounts().items()
+            if eq["id"] in d["owned_equipment"]
+        ]
+        rows.append([eq["id"], eq["name"], eq["slot"], eq["tier"],
+                     describe_equipment(eq), eq["price"],
+                     ", ".join(owners) or "none"])
+
+    lines = ["OPTIONAL SHOP EQUIPMENT (costs Gold)"]
+    lines += table_lines(
+        ["ID", "Name", "Slot", "Tier", "Effect", "Price", "Owned By"],
+        rows,
+        max_width=30
+    )
+
+    lines += ["", "STANDARD-ISSUE EQUIPMENT (free, upgrades per cleared level)"]
+    lines += table_lines(
+        ["Level", "Unlocked By", "Sword", "Shield", "Armor"],
+        [
+            [f"Lv.{level + 1}",
+             "Start" if level == 0 else
+             f"Clear {STANDARD_UPGRADE_LEVELS[level - 1]} level",
+             *[f"{STANDARD_EQUIPMENT[slot][level][0]} "
+               f"({describe_piece(standard_piece(slot, level))})"
+               for slot in EQUIPMENT_SLOTS]]
+            for level in range(len(STANDARD_UPGRADE_LEVELS) + 1)
+        ],
+        max_width=34
+    )
+    return lines
+
+
+def report_gold_economy():
+    # Challenge answers grant attack damage only, never Gold.
+    # This report includes only the game's real Gold sources.
+    shop_cost = {
+        tier: sum(e["price"] for e in equipment_records.values()
+                  if e["tier"] == tier)
+        for tier in TIER_UNLOCK_REQUIREMENT
+    }
+
+    rows = []
+    running = STARTING_STATS["gold"]
+    earned_at_start_of = {}
+    total_enemy = total_level = total_treasure = 0
+
+    for tier in LEVEL_ORDER:
+        mobs = [m for m in mob_list if m["type"] == tier]
+        room = ROOM_FOR_DIFFICULTY[tier]
+        enemy_gold = sum(m["gold_reward"] for m in mobs)
+        level_gold = LEVEL_COMPLETION_GOLD.get(tier, 0)
+        treasure = TREASURES.get(room, ("", "", 0))[2]
+        stage = enemy_gold + level_gold + treasure
+
+        earned_at_start_of[tier] = running
+        running += stage
+        total_enemy += enemy_gold
+        total_level += level_gold
+        total_treasure += treasure
+        rows.append([tier, len(mobs), enemy_gold, level_gold, treasure,
+                     stage, running])
+
+    lines = [
+        "GOLD INCOME BY LEVEL (defeat all enemies and open every chest)",
+        f"Starting Gold: {STARTING_STATS['gold']} | "
+        "Challenge questions grant bonus attack damage, not Gold."
+    ]
+    lines += table_lines(
+        ["Level", "Enemies", "Enemy Gold", "Level Bonus", "Treasure",
+         "Level Total", "Running Total"],
+        rows
+    )
+
+    lines += ["", "OPTIONAL EQUIPMENT COST BY SHOP TIER"]
+    cumulative = 0
+    cost_rows = []
+
+    for tier in TIER_UNLOCK_REQUIREMENT:
+        cumulative += shop_cost[tier]
+        required = TIER_UNLOCK_REQUIREMENT[tier]
+        opens_with = earned_at_start_of.get(tier, 0)
+        cost_rows.append([
+            tier, "Start" if required is None else f"Clear {required} level",
+            shop_cost[tier], cumulative, opens_with
+        ])
+
+    lines += table_lines(
+        ["Shop Tier", "Opens", "Tier Cost", "Cost So Far",
+         "Gold Earned Before Tier Opens*"],
+        cost_rows
+    )
+    lines.append("*Gold earned up to the moment the tier opens, before any "
+                 "spending, rest or potions. Tier N opens when the previous "
+                 "level is cleared, so it is shown at the start of the level "
+                 "being fought.")
+
+    total_income = running
+    total_gear = sum(shop_cost.values())
+    potion = item_records.get("ITM-001", {}).get("price", 0)
+
+    lines += ["", "SUMMARY"]
+    lines += table_lines(
+        ["Measure", "Gold"],
+        [
+            ["Total income (whole playthrough)", total_income],
+            ["  from enemies", total_enemy],
+            ["  from level-clear bonuses", total_level],
+            ["  from treasure chests", total_treasure],
+            ["  starting Gold", STARTING_STATS["gold"]],
+            ["Every optional equipment piece", total_gear],
+            ["Left for potions, supplies and rest if everything is bought",
+             total_income - total_gear],
+            ["Income before the Boss (levels up to Strong)",
+             total_income - rows[-1][5] if rows else 0],
+            [f"Health Potions that income could buy ({potion} Gold each)",
+             (total_income // potion) if potion else 0]
+        ],
+        max_width=60
+    )
+    return lines
+
+
 def report_enemy_difficulty():
     lines = []
 
@@ -5158,6 +6921,8 @@ REPORTS = [
     ("Boss Defeat Status Report", report_boss_status),
     ("Battle History Report", battle_history_lines),
     ("Available Items Report", report_available_items),
+    ("Equipment Report", report_equipment),
+    ("Gold Economy Report", report_gold_economy),
     ("Enemy Difficulty Report", report_enemy_difficulty),
     ("Dungeon Map Report", report_dungeon_map)
 ]
@@ -5194,15 +6959,14 @@ def report_menu():
         for number, (title, _) in enumerate(REPORTS, 1):
             print(f"[{number}] {title}")
 
-        back = len(REPORTS) + 1
-        print(f"[{back}] Back")
+        print("\n[0] Back")
 
-        choice = input(f"\nEnter choice [1-{back}]: ").strip()
+        choice = input(f"\nEnter choice [0-{len(REPORTS)}]: ").strip()
 
         if choice.isdigit() and 1 <= int(choice) <= len(REPORTS):
             title, builder = REPORTS[int(choice) - 1]
             show_report(title, builder())
-        elif choice == str(back):
+        elif choice == "0":
             break
         else:
             invalid_choice()
@@ -5219,9 +6983,9 @@ def admin_menu():
         print("[2] Profiling (File Maintenance)")
         print("[3] Transactions (Game Setup and Management)")
         print("[4] Report Generation")
-        print("[5] Logout")
+        print("\n[0] Logout")
 
-        choice = input("\nEnter choice [1-5]: ").strip()
+        choice = input("\nEnter choice [0-4]: ").strip()
 
         if choice == "1":
             admin_dashboard()
@@ -5231,7 +6995,7 @@ def admin_menu():
             game_setup_menu()
         elif choice == "4":
             report_menu()
-        elif choice == "5":
+        elif choice == "0":
             reset_session_state()
             print("\nLogging out...")
             break

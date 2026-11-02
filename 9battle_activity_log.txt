@@ -1,25 +1,4 @@
 DUNGEON BATTLE LOG
-Saved At: 2026-10-31 17:01:10
+Saved At: 2026-11-02 21:22:22
 
-ACT-001 | 2026-10-31 16:59:52 | Purchase | Player PLY-002 | Enemy N/A | Player bought 2 Health Potion for 60 gold.
-    Player HP: 100 -> 100 | Enemy HP: None -> None
-ACT-002 | 2026-10-31 17:00:25 | Battle Start | Player PLY-002 | Enemy ENM-001 | Battle started with Gravefang Rat.
-    Player HP: 100 -> 100 | Enemy HP: 55 -> 55
-ACT-003 | 2026-10-31 17:00:30 | Attack | Player PLY-002 | Enemy ENM-001 | Player attacked Gravefang Rat for 17 damage.
-    Player HP: 100 -> 100 | Enemy HP: 55 -> 38
-ACT-004 | 2026-10-31 17:00:32 | Enemy Attack | Player PLY-002 | Enemy ENM-001 | Gravefang Rat attacked Player for 8 damage.
-    Player HP: 100 -> 92 | Enemy HP: 38 -> 38
-ACT-005 | 2026-10-31 17:00:36 | Attack | Player PLY-002 | Enemy ENM-001 | Player attacked Gravefang Rat for 22 damage (critical).
-    Player HP: 92 -> 92 | Enemy HP: 38 -> 16
-ACT-006 | 2026-10-31 17:00:37 | Enemy Attack | Player PLY-002 | Enemy ENM-001 | Gravefang Rat attacked Player for 8 damage.
-    Player HP: 92 -> 84 | Enemy HP: 16 -> 16
-ACT-007 | 2026-10-31 17:00:40 | Attack | Player PLY-002 | Enemy ENM-001 | Player attacked Gravefang Rat for 16 damage.
-    Player HP: 84 -> 84 | Enemy HP: 16 -> 0
-ACT-008 | 2026-10-31 17:00:40 | Victory | Player PLY-002 | Enemy ENM-001 | Player defeated Gravefang Rat.
-    Player HP: 84 -> 84 | Enemy HP: 0 -> 0
-ACT-009 | 2026-10-31 17:00:40 | Reward | Player PLY-002 | Enemy ENM-001 | Player received 25 gold.
-    Player HP: 84 -> 84 | Enemy HP: 0 -> 0
-ACT-010 | 2026-10-31 17:00:40 | Reward | Player PLY-002 | Enemy ENM-001 | Player earned 40 score points.
-    Player HP: 84 -> 84 | Enemy HP: 0 -> 0
-ACT-011 | 2026-10-31 17:01:03 | Battle Start | Player PLY-002 | Enemy ENM-002 | Battle started with Hollowbone Goblin.
-    Player HP: 84 -> 84 | Enemy HP: 70 -> 70
+NO BATTLE ACTIONS RECORDED

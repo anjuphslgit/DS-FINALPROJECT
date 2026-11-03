@@ -1087,7 +1087,7 @@ def parse_account_row(parts):
 
 
 def parse_legacy_account_row(parts):
-    # Reads player records with fixed inventory columns
+    # Reads account rows containing fixed inventory fields
     data = new_account_data(parts[1], parts[2])
     data.update({
         "hp": int(parts[3]),
@@ -1527,7 +1527,7 @@ def load_questions():
             changed = True
 
         # Apply standard bonuses only to matching question records.
-        # Customized questions and bonus values remain unchanged.
+        # Preserve question text and configured bonus values.
         if (default and len(parts) == 5
                 and parts[1] == default[1]
                 and choices == default[2] and answer == default[3]
@@ -1564,7 +1564,7 @@ def load_questions():
             })
             changed = True
         if not any(q.get("enemy_id") == "ENM-009" for q in question_records):
-            default = DEFAULT_QUESTION_BY_ID["QST-010"]
+            default = DEFAULT_QUESTION_BY_ID["QST-009"]
             ids = {q["id"] for q in question_records}
             qid = (default[0] if default[0] not in ids else
                    next_record_id("QST", ids))
@@ -2065,7 +2065,7 @@ def process_level_completion(difficulty, enemy):
     push_battle_action("Level Complete", description, enemy=enemy)
 
     # Equip the standard gear set whenever the next difficulty is unlocked.
-    # Previous purchases remain in inventory, with no additional charges.
+    # Owned equipment remains available without additional charges.
     gear_notes = []
     gear_changes = []
     if current_equipment_tier() != old_tier:
@@ -2414,7 +2414,8 @@ def room_box_lines(room_id, status, defeated_ids, lineup_ids, box_width,
     ]
 
 
-def dungeon_drawing_lines(defeated_ids, lineup_ids=(), here=None):
+def dungeon_drawing_lines(defeated_ids, lineup_ids=(), here=None,
+                          color_current=False):
     # Draws the dungeon graph as rows of room boxes joined by lines.
     # Everything is generated from the live room and passage records.
     levels = get_room_levels()
@@ -2462,7 +2463,12 @@ def dungeon_drawing_lines(defeated_ids, lineup_ids=(), here=None):
                 start = centre[room_id] - box_width // 2
                 text[start:start + box_width] = box[row]
 
-            lines.append("".join(text).rstrip())
+            line = "".join(text).rstrip()
+            if color_current and here in level:
+                start = centre[here] - box_width // 2
+                end = start + box_width
+                line = line[:start] + color(line[start:end], "green") + line[end:]
+            lines.append(line)
 
         if number + 1 == len(levels):
             break
@@ -2526,7 +2532,8 @@ def display_dungeon_map(pause_after=True):
     header("Dungeon Map (Graph)")
 
     for line in dungeon_drawing_lines(
-        player["defeated_ids"], encounter_lineup, current_room_id()
+        player["defeated_ids"], encounter_lineup, current_room_id(),
+        color_current=True
     ):
         print(line)
 
@@ -2695,7 +2702,7 @@ def login_screen():
                 username in account_records
                 and account_records[username]["password"] == password
             ):
-                # Clears the previous player's temporary battle data
+                # Clears temporary data from the last login session
                 reset_session_state()
                 load_player_from_account(username)
 
@@ -3022,11 +3029,14 @@ def show_instructions():
     print("  and upgrades your free Standard-Issue Sword, Shield and Armor.")
 
     section("Encounter Queue (FIFO)")
-    print("- Add enemies of the room you stand in. The first enemy added is")
-    print("  the first one you face.")
-    print("- Retreating keeps the enemy at its place in the queue")
-    print("  and restores its HP. Only a victory removes it.")
-    print("- Your queue is saved when you leave the dungeon or log out.")
+    print("- Start Battle fights the first queued enemy.")
+    print("  If the queue is empty, the first available enemy is chosen.")
+    print("- Add Enemy to Queue lets you choose the fighting order.")
+    print("  Enemies are fought in the order they were added (FIFO).")
+    print("- View Queue shows queued and available enemies.")
+    print("- View Next Enemy shows who you will fight next.")
+    print("- Victory removes the first queued enemy; retreat keeps it.")
+    print("- The queue is saved with your progress.")
 
     section("Battle (every action uses your turn)")
     print("- Attack  : can miss or land a critical hit")
@@ -3094,29 +3104,52 @@ def show_instructions():
 # ENCOUNTER QUEUE (FIFO)
 # ---------------------------------------------------------------
 
+def available_room_enemies():
+    # Finds eligible enemies not in the queue, ordered by enemy ID.
+    return sorted(
+        (mob for mob in mob_list
+         if mob["room"] == current_room_id()
+         and not mob["defeated"]
+         and mob["id"] not in encounter_lineup
+         and can_player_select_enemy(mob)
+         and is_enemy_reachable(mob)),
+        key=lambda mob: mob["id"]
+    )
+
+
 def display_encounter_lineup(pause_after=False, show_header=True):
-    # Shows the enemies from front to rear. Screens that already show a
-    # main title (Add Enemy, Start Battle) get a sub-heading instead.
+    # Displays the queue and eligible enemies in the current room.
     if show_header:
         header("Dungeon Encounter Queue")
     else:
         section("Dungeon Encounter Queue")
 
     if not encounter_lineup:
-        print("No enemy is available in the Encounter Queue.")
+        print("Queue: Empty")
     else:
-        print("FRONT")
-
         for position, enemy_id in enumerate(encounter_lineup, 1):
             mob = get_enemy_by_id(enemy_id)
-            marker = " <- CURRENT BATTLE" if enemy_id == current_enemy_id else ""
+            if mob is None:
+                continue
 
-            print(
-                f"{position}. {mob['id']} | {mob['name']} | {mob['type']} | "
-                f"HP {mob['hp']}/{mob['max_hp']}{marker}"
-            )
+            labels = []
+            if position == 1:
+                labels.append("FRONT")
+            if position == len(encounter_lineup):
+                labels.append("REAR")
+            label = f"  <- {' / '.join(labels)}" if labels else ""
+            print(f"{position}. {mob['id']} | {mob['name']} | "
+                  f"HP {mob['hp']}/{mob['max_hp']}{label}")
 
-        print("REAR")
+    section("Available Room Enemies")
+    remaining = available_room_enemies()
+    if not remaining:
+        print("None")
+    else:
+        for position, mob in enumerate(remaining, 1):
+            marker = "  <- NEXT" if not encounter_lineup and position == 1 else ""
+            print(f"{position}. {mob['id']} | {mob['name']} | "
+                  f"HP {mob['hp']}/{mob['max_hp']}{marker}")
 
     if pause_after:
         pause()
@@ -3195,26 +3228,31 @@ def add_enemy_to_lineup():
     encounter_lineup.append(mob["id"])
     save_current_player_account()
 
-    print("\nEnemy successfully added to the Dungeon Encounter Queue.")
-    print(f"Enemy: {mob['name']} ({mob['type']})")
-
-    display_encounter_lineup(show_header=False)
+    print(f"\nAdded to Queue: {mob['id']} | {mob['name']}")
+    print(f"Queue: {lineup_line()}")
     pause()
 
 
 def view_next_enemy():
-    # PEEK: shows the next enemy without removing it from the queue
-    header("Next Enemy Encounter")
+    # Shows the next opponent without changing the queue.
+    header("Next Enemy")
 
-    if not encounter_lineup:
-        print("No enemy is available in the Encounter Queue.")
+    if encounter_lineup:
+        mob = get_enemy_by_id(encounter_lineup[0])
+        selection = "Queued"
+    else:
+        remaining = available_room_enemies()
+        mob = remaining[0] if remaining else None
+        selection = "Room order"
+
+    if mob is None:
+        print("No available enemy in this room.")
         pause()
         return
 
-    mob = get_enemy_by_id(encounter_lineup[0])
-
-    print(f"Next enemy: {mob['name']}.")
+    print(f"Enemy        : {mob['name']}")
     print(f"Enemy ID     : {mob['id']}")
+    print(f"Selection    : {selection}")
     print(f"Health       : {mob['hp']}/{mob['max_hp']}")
     print(f"Attack Power : {mob['atk']}")
     print(f"Difficulty   : {mob['type']}")
@@ -3534,7 +3572,7 @@ def battle_log_menu():
 # ---------------------------------------------------------------
 
 def start_battle_with_next_enemy():
-    # Starts a battle with the enemy at the front of the queue
+    # Uses the queue front or enqueues the first eligible room enemy.
     global current_enemy_id
 
     header("Start Battle with Next Enemy")
@@ -3544,17 +3582,24 @@ def start_battle_with_next_enemy():
         pause()
         return
 
-    if not encounter_lineup:
-        print("No enemy is available in the Encounter Queue.")
-        pause()
-        return
-
     if player["hp"] <= 0:
         print("Your health must be above 0. Rest at camp first.")
         pause()
         return
 
-    display_encounter_lineup(show_header=False)
+    if not encounter_lineup:
+        remaining = available_room_enemies()
+        next_enemy = remaining[0] if remaining else None
+
+        if next_enemy is None:
+            print("No available enemies remain in this room.")
+            print("Travel to a room with undefeated enemies to continue.")
+            pause()
+            return
+
+        encounter_lineup.append(next_enemy["id"])
+        save_current_player_account()
+        print(f"\nOpponent: {next_enemy['id']} | {next_enemy['name']}")
 
     mob = get_enemy_by_id(encounter_lineup[0])
 
@@ -4684,7 +4729,7 @@ def open_treasure_chest():
         pause()
         return
 
-    # Opening a chest is final, so older undo states are discarded
+    # Opening a chest clears reversible states from other actions
     undo_stack.clear()
     player["treasures"].append(here)
     player["gold"] += gold
@@ -5203,11 +5248,10 @@ def dungeon_menu():
         print(f"RANK:    {rank['rank']} | Next Goal: {rank['next_unlock']}")
 
         section("EXPLORE AND BATTLE")
-        print_menu_row("[1] Add Enemy to Queue", "[2] View Queue",
-                       "[3] View Next Enemy", width=32)
-        print_menu_row("[4] Start Battle", "[5] Open Treasure Chest",
-                       "[6] Travel to Room", width=32)
-
+        print_menu_row("[1] Start Battle", "[2] Add Enemy to Queue",
+                       "[3] View Queue", width=32)
+        print_menu_row("[4] View Next Enemy", "[5] Travel to Room",
+                       "[6] Open Treasure Chest", width=32)
         section("CAMP")
         print_menu_row("[7] Dungeon Shop", "[8] Equipment",
                        f"[9] Rest ({REST_COST} Gold)", width=32)
@@ -5226,19 +5270,19 @@ def dungeon_menu():
         choice = input("\nEnter choice [1-17]: ").strip()
 
         if choice == "1":
-            add_enemy_to_lineup()
-        elif choice == "2":
-            display_encounter_lineup(pause_after=True)
-        elif choice == "3":
-            view_next_enemy()
-        elif choice == "4":
             start_battle_with_next_enemy()
             battle_menu()
+        elif choice == "2":
+            add_enemy_to_lineup()
+        elif choice == "3":
+            display_encounter_lineup(pause_after=True)
+        elif choice == "4":
+            view_next_enemy()
         elif choice == "5":
-            open_treasure_chest()
-        elif choice == "6":
             if travel_to_room():
                 return True
+        elif choice == "6":
+            open_treasure_chest()
         elif choice == "7":
             dungeon_shop()
         elif choice == "8":

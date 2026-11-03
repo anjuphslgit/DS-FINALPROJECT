@@ -12,3 +12,14 @@
   2026-11-03 01:12:14 | PLY-005   | angel    | ENM-004  | Ironjaw Reaver          | Victory         | 4     | 50   | 100
   2026-11-03 01:12:42 | PLY-005   | angel    | ENM-005  | Boneguard Executioner   | Victory         | 5     | 60   | 120
   2026-11-03 01:13:00 | PLY-005   | angel    | ENM-006  | Hellchain Marauder      | Defeat          | 2     | -65  | 0
+  2026-11-03 23:41:16 | PLY-004   | jeo      | ENM-007  | Dreadfang Berserker     | Victory         | 5     | 85   | 180
+  2026-11-04 00:21:13 | PLY-004   | jeo      | ENM-009  | Soulreaper Wraith       | Victory         | 5     | 110  | 220
+  2026-11-04 00:22:25 | PLY-004   | jeo      | ENM-008  | Abyssal Death Knight    | Victory         | 5     | 245  | 200
+  2026-11-04 00:45:43 | PLY-004   | jeo      | ENM-010  | Vharok, the World Eater | Retreated       | 1     | 0    | 0
+  2026-11-04 00:49:21 | PLY-004   | jeo      | ENM-010  | Vharok, the World Eater | Victory         | 5     | 300  | 600
+  2026-11-04 00:49:45 | PLY-004   | jeo      | N/A      | Dungeon Exit            | Escaped Dungeon | 0     | 0    | 500
+  2026-11-04 01:31:56 | PLY-022   | green    | ENM-001  | Gravefang Rat           | Victory         | 4     | 25   | 40
+  2026-11-04 01:42:20 | PLY-022   | green    | ENM-002  | Hollowbone Goblin       | Victory         | 4     | 30   | 60
+  2026-11-04 01:42:46 | PLY-022   | green    | ENM-003  | Ashen Ghoul             | Victory         | 6     | 75   | 80
+  2026-11-04 01:43:21 | PLY-022   | green    | ENM-004  | Ironjaw Reaver          | Victory         | 5     | 50   | 100
+  2026-11-04 01:43:45 | PLY-022   | green    | ENM-005  | Boneguard Executioner   | Defeat          | 5     | -60  | 0

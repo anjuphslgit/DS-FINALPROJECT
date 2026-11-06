@@ -1,0 +1,39 @@
+GOLD ECONOMY REPORT
+Generated: 2026-11-07 06:26:44
+
+GOLD INCOME BY LEVEL (defeat all enemies and open every chest)
+Starting Gold: 60 | Challenge questions grant bonus attack damage, not Gold.
++--------------+---------+------------+-------------+----------+-------------+---------------+
+| Level        | Enemies | Enemy Gold | Level Bonus | Treasure | Level Total | Running Total |
++==============+=========+============+=============+==========+=============+===============+
+| Weak         |       3 |         90 |          40 |       25 |         155 |           215 |
+| Intermediate |       3 |        180 |          80 |       40 |         300 |           515 |
+| Strong       |       3 |        290 |         150 |       50 |         490 |          1005 |
+| Boss         |       1 |        300 |           0 |       75 |         375 |          1380 |
++--------------+---------+------------+-------------+----------+-------------+---------------+
+
+OPTIONAL EQUIPMENT COST BY SHOP TIER
++--------------+--------------------------+-----------+-------------+--------------------------------+
+| Shop Tier    | Opens                    | Tier Cost | Cost So Far | Gold Earned Before Tier Opens* |
++==============+==========================+===========+=============+================================+
+| Weak         | Start                    |       320 |         320 |                             60 |
+| Intermediate | Clear Weak level         |       680 |        1000 |                            215 |
+| Strong       | Clear Intermediate level |      1225 |        2225 |                            515 |
+| Boss         | Clear Strong level       |      2025 |        4250 |                           1005 |
++--------------+--------------------------+-----------+-------------+--------------------------------+
+*Gold earned up to the moment the tier opens, before any spending, rest or potions. Tier N opens when the previous level is cleared, so it is shown at the start of the level being fought.
+
+SUMMARY
++-------------------------------------------------------------+-------+
+| Measure                                                     | Gold  |
++=============================================================+=======+
+| Total income (whole playthrough)                            |  1380 |
+|   from enemies                                              |   860 |
+|   from level-clear bonuses                                  |   270 |
+|   from treasure chests                                      |   190 |
+|   starting Gold                                             |    60 |
+| Every optional equipment piece                              |  4250 |
+| Left for potions, supplies and rest if everything is bought | -2870 |
+| Income before the Boss (levels up to Strong)                |  1005 |
+| Health Potions that income could buy (30 Gold each)         |    46 |
++-------------------------------------------------------------+-------+

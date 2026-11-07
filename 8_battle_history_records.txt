@@ -1,0 +1,9 @@
+# DREADVEIL: THE LAST GATE BATTLE HISTORY
+# date_time           | player_id | username | enemy_id | enemy_name            | result  | turns | gold | score
+  2026-11-07 16:46:02 | PLY-001   | player   | ENM-001  | Gravefang Rat         | Victory | 5     | 25   | 40
+  2026-11-07 16:46:32 | PLY-001   | player   | ENM-002  | Hollowbone Goblin     | Victory | 6     | 30   | 60
+  2026-11-07 16:47:13 | PLY-001   | player   | ENM-003  | Ashen Ghoul           | Victory | 6     | 75   | 80
+  2026-11-07 17:05:31 | PLY-001   | player   | ENM-004  | Ironjaw Reaver        | Victory | 5     | 50   | 100
+  2026-11-07 17:06:11 | PLY-001   | player   | ENM-005  | Boneguard Executioner | Defeat  | 4     | -60  | 0
+  2026-11-07 17:08:34 | PLY-001   | player   | ENM-005  | Boneguard Executioner | Victory | 5     | 60   | 120
+  2026-11-07 17:09:25 | PLY-001   | player   | ENM-006  | Hellchain Marauder    | Victory | 6     | 150  | 140

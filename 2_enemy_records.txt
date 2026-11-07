@@ -9,4 +9,4 @@
   ENM-007  | Dreadfang Berserker     | Strong       | 150    | 16  | 85          | 180          | ROOM-003
   ENM-008  | Abyssal Death Knight    | Strong       | 165    | 17  | 95          | 200          | ROOM-003
   ENM-009  | Soulreaper Wraith       | Strong       | 180    | 18  | 110         | 220          | ROOM-003
-  ENM-010  | Vharok, the World Eater | Boss         | 320    | 22  | 300         | 600          | ROOM-004
+  BS-001   | Vharok, the World Eater | Boss         | 320    | 22  | 300         | 600          | ROOM-004

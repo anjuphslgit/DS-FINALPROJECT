@@ -164,3 +164,95 @@ ACT-000082 | 2026-11-07 06:19:48 | Reward | Player PLY-003 | Enemy ENM-005 | Pla
     Player HP: 4 -> 4 | Enemy HP: 0 -> 0
 ACT-000083 | 2026-11-07 06:19:48 | Reward | Player PLY-003 | Enemy ENM-005 | Player earned 120 score points.
     Player HP: 4 -> 4 | Enemy HP: 0 -> 0
+ACT-000084 | 2026-11-07 13:44:54 | Travel | Player PLY-004 | Enemy N/A | Player traveled to Rotting Sewers via Rusted Grate.
+    Player HP: 100 -> 100 | Enemy HP: None -> None
+ACT-000085 | 2026-11-07 13:45:54 | Enqueue | Player PLY-004 | Enemy N/A | Added Ashen Ghoul to the Encounter Queue.
+    Player HP: 100 -> 100 | Enemy HP: None -> None
+ACT-000086 | 2026-11-07 13:47:05 | Enqueue | Player PLY-004 | Enemy N/A | Added Hollowbone Goblin to the Encounter Queue.
+    Player HP: 100 -> 100 | Enemy HP: None -> None
+ACT-000087 | 2026-11-07 13:47:32 | Dequeue | Player PLY-004 | Enemy N/A | Removed Ashen Ghoul from the Encounter Queue.
+    Player HP: 100 -> 100 | Enemy HP: None -> None
+ACT-000088 | 2026-11-07 13:47:44 | Enqueue | Player PLY-004 | Enemy N/A | Added Gravefang Rat to the Encounter Queue.
+    Player HP: 100 -> 100 | Enemy HP: None -> None
+ACT-000089 | 2026-11-07 13:47:56 | Battle Start | Player PLY-004 | Enemy ENM-002 | Battle started with Hollowbone Goblin.
+    Player HP: 100 -> 100 | Enemy HP: 70 -> 70
+ACT-000090 | 2026-11-07 13:48:14 | Attack | Player PLY-004 | Enemy ENM-002 | Player attacked Hollowbone Goblin for 13 damage.
+    Player HP: 100 -> 100 | Enemy HP: 70 -> 57
+ACT-000091 | 2026-11-07 13:48:15 | Enemy Attack | Player PLY-004 | Enemy ENM-002 | Hollowbone Goblin attacked Player for 7 damage.
+    Player HP: 100 -> 93 | Enemy HP: 57 -> 57
+ACT-000092 | 2026-11-07 13:48:20 | Attack | Player PLY-004 | Enemy ENM-002 | Player attacked Hollowbone Goblin for 16 damage.
+    Player HP: 93 -> 93 | Enemy HP: 57 -> 41
+ACT-000093 | 2026-11-07 13:48:21 | Enemy Attack | Player PLY-004 | Enemy ENM-002 | Hollowbone Goblin attacked Player for 7 damage.
+    Player HP: 93 -> 86 | Enemy HP: 41 -> 41
+ACT-000094 | 2026-11-07 13:48:26 | Attack | Player PLY-004 | Enemy ENM-002 | Player attacked Hollowbone Goblin for 15 damage.
+    Player HP: 86 -> 86 | Enemy HP: 41 -> 26
+ACT-000095 | 2026-11-07 13:48:28 | Enemy Attack | Player PLY-004 | Enemy ENM-002 | Hollowbone Goblin attacked Player for 6 damage.
+    Player HP: 86 -> 80 | Enemy HP: 26 -> 26
+ACT-000096 | 2026-11-07 13:48:36 | Attack | Player PLY-004 | Enemy ENM-002 | Player attacked Hollowbone Goblin for 18 damage.
+    Player HP: 80 -> 80 | Enemy HP: 26 -> 8
+ACT-000097 | 2026-11-07 13:48:37 | Enemy Attack | Player PLY-004 | Enemy ENM-002 | Hollowbone Goblin attacked Player for 8 damage.
+    Player HP: 80 -> 72 | Enemy HP: 8 -> 8
+ACT-000098 | 2026-11-07 13:49:11 | Attack | Player PLY-004 | Enemy ENM-002 | Player attacked Hollowbone Goblin for 17 damage.
+    Player HP: 72 -> 72 | Enemy HP: 8 -> 0
+ACT-000099 | 2026-11-07 13:49:11 | Victory | Player PLY-004 | Enemy ENM-002 | Player defeated Hollowbone Goblin.
+    Player HP: 72 -> 72 | Enemy HP: 0 -> 0
+ACT-000100 | 2026-11-07 13:49:11 | Reward | Player PLY-004 | Enemy ENM-002 | Player received 30 gold.
+    Player HP: 72 -> 72 | Enemy HP: 0 -> 0
+ACT-000101 | 2026-11-07 13:49:11 | Reward | Player PLY-004 | Enemy ENM-002 | Player earned 60 score points.
+    Player HP: 72 -> 72 | Enemy HP: 0 -> 0
+ACT-000102 | 2026-11-07 13:50:10 | Battle Start | Player PLY-004 | Enemy ENM-001 | Battle started with Gravefang Rat.
+    Player HP: 72 -> 72 | Enemy HP: 55 -> 55
+ACT-000103 | 2026-11-07 13:50:17 | Attack | Player PLY-004 | Enemy ENM-001 | Player attacked Gravefang Rat for 16 damage.
+    Player HP: 72 -> 72 | Enemy HP: 55 -> 39
+ACT-000104 | 2026-11-07 13:50:19 | Enemy Attack | Player PLY-004 | Enemy ENM-001 | Gravefang Rat attacked Player for 6 damage.
+    Player HP: 72 -> 66 | Enemy HP: 39 -> 39
+ACT-000105 | 2026-11-07 13:50:21 | Attack | Player PLY-004 | Enemy ENM-001 | Player attacked Gravefang Rat for 18 damage.
+    Player HP: 66 -> 66 | Enemy HP: 39 -> 21
+ACT-000106 | 2026-11-07 13:50:23 | Enemy Attack | Player PLY-004 | Enemy ENM-001 | Gravefang Rat attacked Player for 3 damage.
+    Player HP: 66 -> 63 | Enemy HP: 21 -> 21
+ACT-000107 | 2026-11-07 13:51:38 | Undo | Player PLY-004 | Enemy ENM-001 | Undid: Attack on Gravefang Rat.
+    Player HP: 66 -> 66 | Enemy HP: 39 -> 39
+ACT-000108 | 2026-11-07 13:51:47 | Attack | Player PLY-004 | Enemy ENM-001 | Player attacked Gravefang Rat for 26 damage (critical).
+    Player HP: 66 -> 66 | Enemy HP: 39 -> 13
+ACT-000109 | 2026-11-07 13:51:49 | Enemy Attack | Player PLY-004 | Enemy ENM-001 | Gravefang Rat attacked Player for 3 damage.
+    Player HP: 66 -> 63 | Enemy HP: 13 -> 13
+ACT-000110 | 2026-11-07 13:51:52 | Attack | Player PLY-004 | Enemy ENM-001 | Player attacked Gravefang Rat for 13 damage.
+    Player HP: 63 -> 63 | Enemy HP: 13 -> 0
+ACT-000111 | 2026-11-07 13:51:52 | Victory | Player PLY-004 | Enemy ENM-001 | Player defeated Gravefang Rat.
+    Player HP: 63 -> 63 | Enemy HP: 0 -> 0
+ACT-000112 | 2026-11-07 13:51:52 | Reward | Player PLY-004 | Enemy ENM-001 | Player received 25 gold.
+    Player HP: 63 -> 63 | Enemy HP: 0 -> 0
+ACT-000113 | 2026-11-07 13:51:52 | Reward | Player PLY-004 | Enemy ENM-001 | Player earned 40 score points.
+    Player HP: 63 -> 63 | Enemy HP: 0 -> 0
+ACT-000114 | 2026-11-07 13:52:12 | Battle Start | Player PLY-004 | Enemy ENM-003 | Battle started with Ashen Ghoul.
+    Player HP: 63 -> 63 | Enemy HP: 85 -> 85
+ACT-000115 | 2026-11-07 13:52:15 | Attack | Player PLY-004 | Enemy ENM-003 | Player attacked Ashen Ghoul for 19 damage.
+    Player HP: 63 -> 63 | Enemy HP: 85 -> 66
+ACT-000116 | 2026-11-07 13:52:17 | Enemy Attack | Player PLY-004 | Enemy ENM-003 | Ashen Ghoul attacked Player for 10 damage.
+    Player HP: 63 -> 53 | Enemy HP: 66 -> 66
+ACT-000117 | 2026-11-07 13:52:20 | Attack | Player PLY-004 | Enemy ENM-003 | Player attacked Ashen Ghoul for 31 damage (critical).
+    Player HP: 53 -> 53 | Enemy HP: 66 -> 35
+ACT-000118 | 2026-11-07 13:52:22 | Enemy Attack | Player PLY-004 | Enemy ENM-003 | Ashen Ghoul attacked Player for 8 damage.
+    Player HP: 53 -> 45 | Enemy HP: 35 -> 35
+ACT-000119 | 2026-11-07 13:52:24 | Attack | Player PLY-004 | Enemy ENM-003 | Player attacked Ashen Ghoul for 18 damage.
+    Player HP: 45 -> 45 | Enemy HP: 35 -> 17
+ACT-000120 | 2026-11-07 13:52:26 | Enemy Attack | Player PLY-004 | Enemy ENM-003 | Ashen Ghoul attacked Player for 16 damage.
+    Player HP: 45 -> 29 | Enemy HP: 17 -> 17
+ACT-000121 | 2026-11-07 13:52:29 | Attack | Player PLY-004 | Enemy ENM-003 | Player attacked Ashen Ghoul for 13 damage.
+    Player HP: 29 -> 29 | Enemy HP: 17 -> 4
+ACT-000122 | 2026-11-07 13:52:31 | Enemy Attack | Player PLY-004 | Enemy ENM-003 | Ashen Ghoul attacked Player for 11 damage.
+    Player HP: 29 -> 18 | Enemy HP: 4 -> 4
+ACT-000123 | 2026-11-07 13:52:33 | Attack | Player PLY-004 | Enemy ENM-003 | Player attacked Ashen Ghoul for 14 damage.
+    Player HP: 18 -> 18 | Enemy HP: 4 -> 0
+ACT-000124 | 2026-11-07 13:52:33 | Victory | Player PLY-004 | Enemy ENM-003 | Player defeated Ashen Ghoul.
+    Player HP: 18 -> 18 | Enemy HP: 0 -> 0
+ACT-000125 | 2026-11-07 13:52:33 | Reward | Player PLY-004 | Enemy ENM-003 | Player received 35 gold.
+    Player HP: 18 -> 18 | Enemy HP: 0 -> 0
+ACT-000126 | 2026-11-07 13:52:33 | Reward | Player PLY-004 | Enemy ENM-003 | Player earned 80 score points.
+    Player HP: 18 -> 18 | Enemy HP: 0 -> 0
+ACT-000127 | 2026-11-07 13:52:33 | Level Complete | Player PLY-004 | Enemy ENM-003 | Weak level completed. Attack 14 -> 19, Max HP 100 -> 120. Level completion bonus: 40 Gold.
+    Player HP: 38 -> 38 | Enemy HP: 0 -> 0
+ACT-000128 | 2026-11-07 13:52:33 | Equipment Upgrade | Player PLY-004 | Enemy ENM-003 | Standard-Issue gear upgraded for free: Sword: Rusty Sword -> Bloodstone Sword (ATK: +6 | SPD: +4%); Shield: Wooden Shield -> Iron Shield (BLOCK: 9%); Armor: Cloth Armor -> Chainmail Armor (DEF: -2 per hit).
+    Player HP: 38 -> 38 | Enemy HP: 0 -> 0
+ACT-000129 | 2026-11-07 13:52:33 | Progression | Player PLY-004 | Enemy ENM-003 | Rank increased from Beginner to Adventurer.
+    Player HP: 38 -> 38 | Enemy HP: 0 -> 0

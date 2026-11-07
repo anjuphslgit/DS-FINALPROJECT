@@ -1,19 +1,19 @@
 DREADVEIL: THE LAST GATE - SAVED GAME
-Saved At: 2026-11-07 22:06:39
+Saved At: 2026-11-08 00:34:08
 
 PLAYER INFORMATION
-id: PLY-003
-name: test
+id: PLY-024
+name: thv
 role: Player
-hp: 88
+hp: 85
 max_hp: 100
 atk: 14
-gold: 85
-score: 40
-wins: 1
+gold: 60
+score: 0
+wins: 0
 losses: 0
-status: Active
-defeated_ids: ['ENM-001']
+status: In Battle
+defeated_ids: []
 completed_levels: []
 inventory: {'ITM-001': 1}
 wounds: {}
@@ -26,7 +26,7 @@ Current Room: Rotting Sewers
 PROGRESSION
 Rank: Beginner
 Unlocked Difficulties: Weak
-Next Goal: Intermediate unlocks after 3 Weak victories (1/3)
+Next Goal: Intermediate unlocks after 3 Weak victories (0/3)
 Completed Levels: None
 
 INVENTORY
@@ -38,7 +38,7 @@ Worn shield: Wooden Shield | BLOCK: 4% | Free Weak Gear
 Worn armor: Cloth Armor | DEF: -1 per hit | Free Weak Gear
 
 ENEMY INFORMATION
-ENM-001 | Gravefang Rat | HP: 0/55 | ATK: 7 | Difficulty: Weak | Status: Defeated | Gold: 25 | Score: 40 | Room: Rotting Sewers
+ENM-001 | Gravefang Rat | HP: 1/55 | ATK: 7 | Difficulty: Weak | Status: Fighting | Gold: 25 | Score: 40 | Room: Rotting Sewers
 ENM-002 | Hollowbone Goblin | HP: 70/70 | ATK: 9 | Difficulty: Weak | Status: Active | Gold: 30 | Score: 60 | Room: Rotting Sewers
 ENM-003 | Ashen Ghoul | HP: 85/85 | ATK: 11 | Difficulty: Weak | Status: Active | Gold: 35 | Score: 80 | Room: Rotting Sewers
 ENM-004 | Ironjaw Reaver | HP: 105/105 | ATK: 12 | Difficulty: Intermediate | Status: Active | Gold: 50 | Score: 100 | Room: Bloodstone Hall
@@ -50,13 +50,15 @@ ENM-009 | Soulreaper Wraith | HP: 180/180 | ATK: 18 | Difficulty: Strong | Statu
 BS-001 | Vharok, the World Eater | HP: 320/320 | ATK: 22 | Difficulty: Boss | Status: Active | Gold: 300 | Score: 600 | Room: Throne of Ruin
 
 DUNGEON ENCOUNTER QUEUE (FRONT TO REAR)
-NO ENEMIES WAITING
+ENM-001 | Gravefang Rat | HP: 1/55
 
 CURRENT BATTLE
-NO ACTIVE BATTLE
+ENM-001 | Gravefang Rat
 
 UNDO STACK (TOP TO BOTTOM)
-EMPTY
+Before: Attack on Gravefang Rat
+Before: Attack on Gravefang Rat
+Before: Attack on Gravefang Rat
 
 DUNGEON MAP
 Legend: [E] Entrance  [O] Open  [Q] Quota met/optional foes  [C] Cleared all  [L] Locked
@@ -64,7 +66,7 @@ Legend: [E] Entrance  [O] Open  [Q] Quota met/optional foes  [C] Cleared all  [L
 [E] ROOM-000 Dreadveil Entrance (Entrance)
       Link  : <-> ROOM-001 Rotting Sewers via Rusted Grate
 [O] ROOM-001 Rotting Sewers (Open)
-      Enemy : ENM-001 Gravefang Rat (Weak, Defeated)
+      Enemy : ENM-001 Gravefang Rat (Weak, In Queue)
       Enemy : ENM-002 Hollowbone Goblin (Weak, Active)
       Enemy : ENM-003 Ashen Ghoul (Weak, Active)
       Link  : <-> ROOM-000 Dreadveil Entrance via Rusted Grate

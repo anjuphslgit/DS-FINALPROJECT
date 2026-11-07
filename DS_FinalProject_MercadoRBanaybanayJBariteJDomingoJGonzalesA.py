@@ -6340,8 +6340,7 @@ def travel_block_reason(destination):
                    int(all_bosses_defeated(player.get("defeated_ids", []))))
         return (f"{room_name(destination)} is sealed. Defeat {required} "
                 f"{previous_difficulty} guardian(s) in {room_name(previous)} "
-                f"to open this passage ({min(current, required)}/{required}). "
-                "Any extra enemies are optional after the requirement.")
+                f"to open this passage ({min(current, required)}/{required}).")
 
     return f"{room_name(destination)} cannot be reached."
 

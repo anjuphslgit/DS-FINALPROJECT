@@ -654,3 +654,1739 @@ ACT-000327 | 2026-11-07 22:06:24 | Reward | Player PLY-003 | Enemy ENM-001 | Pla
     Player HP: 88 -> 88 | Enemy HP: 0 -> 0
 ACT-000328 | 2026-11-07 22:06:24 | Reward | Player PLY-003 | Enemy ENM-001 | Player earned 40 score points.
     Player HP: 88 -> 88 | Enemy HP: 0 -> 0
+ACT-000329 | 2026-11-07 22:44:59 | Travel | Player PLY-005 | Enemy N/A | Player traveled to Rotting Sewers via Rusted Grate.
+    Player HP: 100 -> 100 | Enemy HP: None -> None
+ACT-000330 | 2026-11-07 22:45:07 | Battle Start | Player PLY-005 | Enemy ENM-001 | Battle started with Gravefang Rat.
+    Player HP: 100 -> 100 | Enemy HP: 55 -> 55
+ACT-000331 | 2026-11-07 22:45:12 | Attack | Player PLY-005 | Enemy ENM-001 | Player attacked Gravefang Rat for 17 damage.
+    Player HP: 100 -> 100 | Enemy HP: 55 -> 38
+ACT-000332 | 2026-11-07 22:45:14 | Enemy Attack | Player PLY-005 | Enemy ENM-001 | Gravefang Rat attacked Player for 3 damage.
+    Player HP: 100 -> 97 | Enemy HP: 38 -> 38
+ACT-000333 | 2026-11-07 22:45:19 | Attack | Player PLY-005 | Enemy ENM-001 | Player attacked Gravefang Rat for 15 damage.
+    Player HP: 97 -> 97 | Enemy HP: 38 -> 23
+ACT-000334 | 2026-11-07 22:45:21 | Enemy Attack | Player PLY-005 | Enemy ENM-001 | Gravefang Rat attacked Player for 5 damage.
+    Player HP: 97 -> 92 | Enemy HP: 23 -> 23
+ACT-000335 | 2026-11-07 22:45:45 | Attack | Player PLY-005 | Enemy ENM-001 | Player attacked Gravefang Rat for 18 damage.
+    Player HP: 92 -> 92 | Enemy HP: 23 -> 5
+ACT-000336 | 2026-11-07 22:45:47 | Enemy Attack | Player PLY-005 | Enemy ENM-001 | Gravefang Rat attacked Player for 3 damage.
+    Player HP: 92 -> 89 | Enemy HP: 5 -> 5
+ACT-000337 | 2026-11-07 22:45:49 | Attack | Player PLY-005 | Enemy ENM-001 | Player attacked Gravefang Rat for 16 damage.
+    Player HP: 89 -> 89 | Enemy HP: 5 -> 0
+ACT-000338 | 2026-11-07 22:45:49 | Victory | Player PLY-005 | Enemy ENM-001 | Player defeated Gravefang Rat.
+    Player HP: 89 -> 89 | Enemy HP: 0 -> 0
+ACT-000339 | 2026-11-07 22:45:49 | Reward | Player PLY-005 | Enemy ENM-001 | Player received 25 gold.
+    Player HP: 89 -> 89 | Enemy HP: 0 -> 0
+ACT-000340 | 2026-11-07 22:45:49 | Reward | Player PLY-005 | Enemy ENM-001 | Player earned 40 score points.
+    Player HP: 89 -> 89 | Enemy HP: 0 -> 0
+ACT-000341 | 2026-11-07 22:45:52 | Battle Start | Player PLY-005 | Enemy ENM-002 | Battle started with Hollowbone Goblin.
+    Player HP: 89 -> 89 | Enemy HP: 70 -> 70
+ACT-000342 | 2026-11-07 22:45:54 | Attack | Player PLY-005 | Enemy ENM-002 | Player attacked Hollowbone Goblin but missed.
+    Player HP: 89 -> 89 | Enemy HP: 70 -> 70
+ACT-000343 | 2026-11-07 22:45:55 | Enemy Attack | Player PLY-005 | Enemy ENM-002 | Hollowbone Goblin attacked Player for 7 damage.
+    Player HP: 89 -> 82 | Enemy HP: 70 -> 70
+ACT-000344 | 2026-11-07 22:45:58 | Attack | Player PLY-005 | Enemy ENM-002 | Player attacked Hollowbone Goblin for 15 damage.
+    Player HP: 82 -> 82 | Enemy HP: 70 -> 55
+ACT-000345 | 2026-11-07 22:45:59 | Enemy Attack | Player PLY-005 | Enemy ENM-002 | Hollowbone Goblin attacked Player for 8 damage.
+    Player HP: 82 -> 74 | Enemy HP: 55 -> 55
+ACT-000346 | 2026-11-07 22:46:01 | Attack | Player PLY-005 | Enemy ENM-002 | Player attacked Hollowbone Goblin for 19 damage.
+    Player HP: 74 -> 74 | Enemy HP: 55 -> 36
+ACT-000347 | 2026-11-07 22:46:03 | Enemy Attack | Player PLY-005 | Enemy ENM-002 | Hollowbone Goblin attacked Player for 7 damage.
+    Player HP: 74 -> 67 | Enemy HP: 36 -> 36
+ACT-000348 | 2026-11-07 22:46:04 | Attack | Player PLY-005 | Enemy ENM-002 | Player attacked Hollowbone Goblin for 18 damage.
+    Player HP: 67 -> 67 | Enemy HP: 36 -> 18
+ACT-000349 | 2026-11-07 22:46:06 | Enemy Attack | Player PLY-005 | Enemy ENM-002 | Hollowbone Goblin attacked Player for 6 damage.
+    Player HP: 67 -> 61 | Enemy HP: 18 -> 18
+ACT-000350 | 2026-11-07 22:46:08 | Attack | Player PLY-005 | Enemy ENM-002 | Player attacked Hollowbone Goblin for 14 damage.
+    Player HP: 61 -> 61 | Enemy HP: 18 -> 4
+ACT-000351 | 2026-11-07 22:46:10 | Enemy Attack | Player PLY-005 | Enemy ENM-002 | Hollowbone Goblin attacked Player for 7 damage.
+    Player HP: 61 -> 54 | Enemy HP: 4 -> 4
+ACT-000352 | 2026-11-07 22:46:12 | Attack | Player PLY-005 | Enemy ENM-002 | Player attacked Hollowbone Goblin for 19 damage.
+    Player HP: 54 -> 54 | Enemy HP: 4 -> 0
+ACT-000353 | 2026-11-07 22:46:12 | Victory | Player PLY-005 | Enemy ENM-002 | Player defeated Hollowbone Goblin.
+    Player HP: 54 -> 54 | Enemy HP: 0 -> 0
+ACT-000354 | 2026-11-07 22:46:12 | Reward | Player PLY-005 | Enemy ENM-002 | Player received 30 gold.
+    Player HP: 54 -> 54 | Enemy HP: 0 -> 0
+ACT-000355 | 2026-11-07 22:46:12 | Reward | Player PLY-005 | Enemy ENM-002 | Player earned 60 score points.
+    Player HP: 54 -> 54 | Enemy HP: 0 -> 0
+ACT-000356 | 2026-11-07 22:46:25 | Enqueue | Player PLY-005 | Enemy N/A | Added Ashen Ghoul to the Encounter Queue.
+    Player HP: 54 -> 54 | Enemy HP: None -> None
+ACT-000357 | 2026-11-07 22:46:34 | Battle Start | Player PLY-005 | Enemy ENM-003 | Battle started with Ashen Ghoul.
+    Player HP: 54 -> 54 | Enemy HP: 85 -> 85
+ACT-000358 | 2026-11-07 22:46:36 | Attack | Player PLY-005 | Enemy ENM-003 | Player attacked Ashen Ghoul but missed.
+    Player HP: 54 -> 54 | Enemy HP: 85 -> 85
+ACT-000359 | 2026-11-07 22:46:38 | Enemy Attack | Player PLY-005 | Enemy ENM-003 | Ashen Ghoul attacked Player for 8 damage.
+    Player HP: 54 -> 46 | Enemy HP: 85 -> 85
+ACT-000360 | 2026-11-07 22:46:40 | Attack | Player PLY-005 | Enemy ENM-003 | Player attacked Ashen Ghoul for 15 damage.
+    Player HP: 46 -> 46 | Enemy HP: 85 -> 70
+ACT-000361 | 2026-11-07 22:46:42 | Enemy Attack | Player PLY-005 | Enemy ENM-003 | Ashen Ghoul attacked Player for 7 damage.
+    Player HP: 46 -> 39 | Enemy HP: 70 -> 70
+ACT-000362 | 2026-11-07 22:46:43 | Attack | Player PLY-005 | Enemy ENM-003 | Player attacked Ashen Ghoul for 13 damage.
+    Player HP: 39 -> 39 | Enemy HP: 70 -> 57
+ACT-000363 | 2026-11-07 22:46:45 | Enemy Attack | Player PLY-005 | Enemy ENM-003 | Ashen Ghoul attacked Player for 11 damage.
+    Player HP: 39 -> 28 | Enemy HP: 57 -> 57
+ACT-000364 | 2026-11-07 22:46:51 | Attack | Player PLY-005 | Enemy ENM-003 | Player attacked Ashen Ghoul for 14 damage.
+    Player HP: 28 -> 28 | Enemy HP: 57 -> 43
+ACT-000365 | 2026-11-07 22:46:52 | Enemy Attack | Player PLY-005 | Enemy ENM-003 | Ashen Ghoul attacked Player for 11 damage.
+    Player HP: 28 -> 17 | Enemy HP: 43 -> 43
+ACT-000366 | 2026-11-07 22:47:06 | Attack | Player PLY-005 | Enemy ENM-003 | Player attacked Ashen Ghoul for 17 damage.
+    Player HP: 17 -> 17 | Enemy HP: 43 -> 26
+ACT-000367 | 2026-11-07 22:47:08 | Enemy Attack | Player PLY-005 | Enemy ENM-003 | Ashen Ghoul attacked Player for 9 damage.
+    Player HP: 17 -> 8 | Enemy HP: 26 -> 26
+ACT-000368 | 2026-11-07 22:47:12 | Defend | Player PLY-005 | Enemy ENM-003 | Player defended against Ashen Ghoul.
+    Player HP: 8 -> 8 | Enemy HP: 26 -> 26
+ACT-000369 | 2026-11-07 22:47:14 | Enemy Attack | Player PLY-005 | Enemy ENM-003 | Ashen Ghoul attacked Player for 2 damage (blocked by your guard).
+    Player HP: 8 -> 6 | Enemy HP: 26 -> 26
+ACT-000370 | 2026-11-07 22:47:17 | Attack | Player PLY-005 | Enemy ENM-003 | Player attacked Ashen Ghoul for 20 damage.
+    Player HP: 6 -> 6 | Enemy HP: 26 -> 6
+ACT-000371 | 2026-11-07 22:47:18 | Enemy Attack | Player PLY-005 | Enemy ENM-003 | Ashen Ghoul attacked Player for 7 damage.
+    Player HP: 6 -> 0 | Enemy HP: 6 -> 6
+ACT-000372 | 2026-11-07 22:47:18 | Player Defeat | Player PLY-005 | Enemy ENM-003 | Player was defeated by Ashen Ghoul and lost 28 gold.
+    Player HP: 0 -> 0 | Enemy HP: 6 -> 6
+ACT-000373 | 2026-11-07 22:47:19 | Enemy Recovery | Player PLY-005 | Enemy ENM-003 | Ashen Ghoul fully recovered after the player's defeat (85/85 HP).
+    Player HP: 0 -> 0 | Enemy HP: 85 -> 85
+ACT-000374 | 2026-11-07 22:47:28 | Travel | Player PLY-005 | Enemy N/A | Player traveled to Rotting Sewers via Rusted Grate.
+    Player HP: 50 -> 50 | Enemy HP: None -> None
+ACT-000375 | 2026-11-07 22:47:30 | Battle Start | Player PLY-005 | Enemy ENM-003 | Battle started with Ashen Ghoul.
+    Player HP: 50 -> 50 | Enemy HP: 85 -> 85
+ACT-000376 | 2026-11-07 22:47:35 | Attack | Player PLY-005 | Enemy ENM-003 | Player attacked Ashen Ghoul for 17 damage.
+    Player HP: 50 -> 50 | Enemy HP: 85 -> 68
+ACT-000377 | 2026-11-07 22:47:37 | Enemy Attack | Player PLY-005 | Enemy ENM-003 | Ashen Ghoul attacked Player for 8 damage.
+    Player HP: 50 -> 42 | Enemy HP: 68 -> 68
+ACT-000378 | 2026-11-07 22:47:50 | Attack | Player PLY-005 | Enemy ENM-003 | Player attacked Ashen Ghoul for 14 damage.
+    Player HP: 42 -> 42 | Enemy HP: 68 -> 54
+ACT-000379 | 2026-11-07 22:47:52 | Enemy Attack | Player PLY-005 | Enemy ENM-003 | Ashen Ghoul attacked Player for 7 damage.
+    Player HP: 42 -> 35 | Enemy HP: 54 -> 54
+ACT-000380 | 2026-11-07 22:47:54 | Defend | Player PLY-005 | Enemy ENM-003 | Player defended against Ashen Ghoul.
+    Player HP: 35 -> 35 | Enemy HP: 54 -> 54
+ACT-000381 | 2026-11-07 22:47:56 | Enemy Attack | Player PLY-005 | Enemy ENM-003 | Ashen Ghoul attacked Player for 4 damage (blocked by your guard).
+    Player HP: 35 -> 31 | Enemy HP: 54 -> 54
+ACT-000382 | 2026-11-07 22:47:59 | Attack | Player PLY-005 | Enemy ENM-003 | Player attacked Ashen Ghoul for 16 damage.
+    Player HP: 31 -> 31 | Enemy HP: 54 -> 38
+ACT-000383 | 2026-11-07 22:48:01 | Enemy Attack | Player PLY-005 | Enemy ENM-003 | Ashen Ghoul attacked Player for 8 damage.
+    Player HP: 31 -> 23 | Enemy HP: 38 -> 38
+ACT-000384 | 2026-11-07 22:48:03 | Attack | Player PLY-005 | Enemy ENM-003 | Player attacked Ashen Ghoul for 15 damage.
+    Player HP: 23 -> 23 | Enemy HP: 38 -> 23
+ACT-000385 | 2026-11-07 22:48:05 | Enemy Attack | Player PLY-005 | Enemy ENM-003 | Ashen Ghoul attacked Player for 16 damage.
+    Player HP: 23 -> 7 | Enemy HP: 23 -> 23
+ACT-000386 | 2026-11-07 22:48:09 | Potion Use | Player PLY-005 | Enemy ENM-003 | Player used one Health Potion and restored 35 HP.
+    Player HP: 7 -> 42 | Enemy HP: 23 -> 23
+ACT-000387 | 2026-11-07 22:48:11 | Enemy Attack | Player PLY-005 | Enemy ENM-003 | Ashen Ghoul attacked Player for 7 damage.
+    Player HP: 42 -> 35 | Enemy HP: 23 -> 23
+ACT-000388 | 2026-11-07 22:48:13 | Attack | Player PLY-005 | Enemy ENM-003 | Player attacked Ashen Ghoul for 15 damage.
+    Player HP: 35 -> 35 | Enemy HP: 23 -> 8
+ACT-000389 | 2026-11-07 22:48:15 | Enemy Attack | Player PLY-005 | Enemy ENM-003 | Ashen Ghoul attacked Player for 9 damage.
+    Player HP: 35 -> 26 | Enemy HP: 8 -> 8
+ACT-000390 | 2026-11-07 22:48:17 | Attack | Player PLY-005 | Enemy ENM-003 | Player attacked Ashen Ghoul but missed.
+    Player HP: 26 -> 26 | Enemy HP: 8 -> 8
+ACT-000391 | 2026-11-07 22:48:18 | Enemy Attack | Player PLY-005 | Enemy ENM-003 | Ashen Ghoul attacked Player for 8 damage.
+    Player HP: 26 -> 18 | Enemy HP: 8 -> 8
+ACT-000392 | 2026-11-07 22:48:24 | Attack | Player PLY-005 | Enemy ENM-003 | Player attacked Ashen Ghoul for 17 damage.
+    Player HP: 18 -> 18 | Enemy HP: 8 -> 0
+ACT-000393 | 2026-11-07 22:48:24 | Victory | Player PLY-005 | Enemy ENM-003 | Player defeated Ashen Ghoul.
+    Player HP: 18 -> 18 | Enemy HP: 0 -> 0
+ACT-000394 | 2026-11-07 22:48:24 | Reward | Player PLY-005 | Enemy ENM-003 | Player received 35 gold.
+    Player HP: 18 -> 18 | Enemy HP: 0 -> 0
+ACT-000395 | 2026-11-07 22:48:24 | Reward | Player PLY-005 | Enemy ENM-003 | Player earned 80 score points.
+    Player HP: 18 -> 18 | Enemy HP: 0 -> 0
+ACT-000396 | 2026-11-07 22:48:24 | Level Complete | Player PLY-005 | Enemy ENM-003 | Weak level completed. Attack 14 -> 19, Max HP 100 -> 120. Level completion bonus: 40 Gold.
+    Player HP: 38 -> 38 | Enemy HP: 0 -> 0
+ACT-000397 | 2026-11-07 22:48:24 | Equipment Upgrade | Player PLY-005 | Enemy ENM-003 | Standard-Issue gear upgraded for free: Sword: Rusty Sword -> Bloodstone Sword (ATK: +6 | SPD: +4%); Shield: Wooden Shield -> Iron Shield (BLOCK: 9%); Armor: Cloth Armor -> Chainmail Armor (DEF: -2 per hit).
+    Player HP: 38 -> 38 | Enemy HP: 0 -> 0
+ACT-000398 | 2026-11-07 22:48:24 | Progression | Player PLY-005 | Enemy ENM-003 | Rank increased from Beginner to Adventurer.
+    Player HP: 38 -> 38 | Enemy HP: 0 -> 0
+ACT-000399 | 2026-11-07 22:48:40 | Travel | Player PLY-005 | Enemy N/A | Player traveled to Bloodstone Hall via Crimson Gate.
+    Player HP: 38 -> 38 | Enemy HP: None -> None
+ACT-000400 | 2026-11-07 22:48:55 | Purchase | Player PLY-005 | Enemy N/A | Player bought 1 Dice of Fate for 100 gold.
+    Player HP: 38 -> 38 | Enemy HP: None -> None
+ACT-000401 | 2026-11-07 22:49:04 | Camp Rest | Player PLY-005 | Enemy N/A | Player rested and restored 60 HP.
+    Player HP: 38 -> 98 | Enemy HP: None -> None
+ACT-000402 | 2026-11-07 22:49:12 | Battle Start | Player PLY-005 | Enemy ENM-004 | Battle started with Ironjaw Reaver.
+    Player HP: 98 -> 98 | Enemy HP: 105 -> 105
+ACT-000403 | 2026-11-07 22:49:16 | Attack | Player PLY-005 | Enemy ENM-004 | Player attacked Ironjaw Reaver for 38 damage (critical).
+    Player HP: 98 -> 98 | Enemy HP: 105 -> 67
+ACT-000404 | 2026-11-07 22:49:18 | Enemy Attack | Player PLY-005 | Enemy ENM-004 | Ironjaw Reaver attacked Player for 10 damage.
+    Player HP: 98 -> 88 | Enemy HP: 67 -> 67
+ACT-000405 | 2026-11-07 22:49:20 | Attack | Player PLY-005 | Enemy ENM-004 | Player attacked Ironjaw Reaver for 23 damage.
+    Player HP: 88 -> 88 | Enemy HP: 67 -> 44
+ACT-000406 | 2026-11-07 22:49:22 | Enemy Attack | Player PLY-005 | Enemy ENM-004 | Ironjaw Reaver attacked Player for 10 damage.
+    Player HP: 88 -> 78 | Enemy HP: 44 -> 44
+ACT-000407 | 2026-11-07 22:49:26 | Attack | Player PLY-005 | Enemy ENM-004 | Player attacked Ironjaw Reaver for 27 damage.
+    Player HP: 78 -> 78 | Enemy HP: 44 -> 17
+ACT-000408 | 2026-11-07 22:49:28 | Enemy Attack | Player PLY-005 | Enemy ENM-004 | Ironjaw Reaver attacked Player for 10 damage.
+    Player HP: 78 -> 68 | Enemy HP: 17 -> 17
+ACT-000409 | 2026-11-07 22:49:30 | Attack | Player PLY-005 | Enemy ENM-004 | Player attacked Ironjaw Reaver for 42 damage (critical).
+    Player HP: 68 -> 68 | Enemy HP: 17 -> 0
+ACT-000410 | 2026-11-07 22:49:30 | Victory | Player PLY-005 | Enemy ENM-004 | Player defeated Ironjaw Reaver.
+    Player HP: 68 -> 68 | Enemy HP: 0 -> 0
+ACT-000411 | 2026-11-07 22:49:30 | Reward | Player PLY-005 | Enemy ENM-004 | Player received 50 gold.
+    Player HP: 68 -> 68 | Enemy HP: 0 -> 0
+ACT-000412 | 2026-11-07 22:49:30 | Reward | Player PLY-005 | Enemy ENM-004 | Player earned 100 score points.
+    Player HP: 68 -> 68 | Enemy HP: 0 -> 0
+ACT-000413 | 2026-11-07 22:49:37 | Battle Start | Player PLY-005 | Enemy ENM-005 | Battle started with Boneguard Executioner.
+    Player HP: 68 -> 68 | Enemy HP: 120 -> 120
+ACT-000414 | 2026-11-07 22:49:40 | Attack | Player PLY-005 | Enemy ENM-005 | Player attacked Boneguard Executioner for 27 damage.
+    Player HP: 68 -> 68 | Enemy HP: 120 -> 93
+ACT-000415 | 2026-11-07 22:49:42 | Enemy Attack | Player PLY-005 | Enemy ENM-005 | Boneguard Executioner attacked Player for 8 damage.
+    Player HP: 68 -> 60 | Enemy HP: 93 -> 93
+ACT-000416 | 2026-11-07 22:49:44 | Attack | Player PLY-005 | Enemy ENM-005 | Player attacked Boneguard Executioner for 27 damage.
+    Player HP: 60 -> 60 | Enemy HP: 93 -> 66
+ACT-000417 | 2026-11-07 22:49:45 | Enemy Attack | Player PLY-005 | Enemy ENM-005 | Boneguard Executioner attacked Player for 10 damage.
+    Player HP: 60 -> 50 | Enemy HP: 66 -> 66
+ACT-000418 | 2026-11-07 22:49:48 | Attack | Player PLY-005 | Enemy ENM-005 | Player attacked Boneguard Executioner for 27 damage.
+    Player HP: 50 -> 50 | Enemy HP: 66 -> 39
+ACT-000419 | 2026-11-07 22:49:49 | Enemy Attack | Player PLY-005 | Enemy ENM-005 | Boneguard Executioner attacked Player for 10 damage.
+    Player HP: 50 -> 40 | Enemy HP: 39 -> 39
+ACT-000420 | 2026-11-07 22:50:00 | Attack | Player PLY-005 | Enemy ENM-005 | Player attacked Boneguard Executioner for 28 damage.
+    Player HP: 40 -> 40 | Enemy HP: 39 -> 11
+ACT-000421 | 2026-11-07 22:50:02 | Enemy Attack | Player PLY-005 | Enemy ENM-005 | Boneguard Executioner attacked Player for 9 damage.
+    Player HP: 40 -> 31 | Enemy HP: 11 -> 11
+ACT-000422 | 2026-11-07 22:50:04 | Attack | Player PLY-005 | Enemy ENM-005 | Player attacked Boneguard Executioner for 23 damage.
+    Player HP: 31 -> 31 | Enemy HP: 11 -> 0
+ACT-000423 | 2026-11-07 22:50:05 | Victory | Player PLY-005 | Enemy ENM-005 | Player defeated Boneguard Executioner.
+    Player HP: 31 -> 31 | Enemy HP: 0 -> 0
+ACT-000424 | 2026-11-07 22:50:05 | Reward | Player PLY-005 | Enemy ENM-005 | Player received 60 gold.
+    Player HP: 31 -> 31 | Enemy HP: 0 -> 0
+ACT-000425 | 2026-11-07 22:50:05 | Reward | Player PLY-005 | Enemy ENM-005 | Player earned 120 score points.
+    Player HP: 31 -> 31 | Enemy HP: 0 -> 0
+ACT-000426 | 2026-11-07 22:52:05 | Travel | Player PLY-014 | Enemy N/A | Player traveled to Rotting Sewers via Rusted Grate.
+    Player HP: 100 -> 100 | Enemy HP: None -> None
+ACT-000427 | 2026-11-07 22:52:10 | Battle Start | Player PLY-014 | Enemy ENM-001 | Battle started with Gravefang Rat.
+    Player HP: 100 -> 100 | Enemy HP: 55 -> 55
+ACT-000428 | 2026-11-07 22:52:38 | Attack | Player PLY-014 | Enemy ENM-001 | Player attacked Gravefang Rat for 16 damage.
+    Player HP: 100 -> 100 | Enemy HP: 55 -> 39
+ACT-000429 | 2026-11-07 22:52:39 | Enemy Attack | Player PLY-014 | Enemy ENM-001 | Gravefang Rat attacked Player for 6 damage.
+    Player HP: 100 -> 94 | Enemy HP: 39 -> 39
+ACT-000430 | 2026-11-07 22:52:46 | Attack | Player PLY-014 | Enemy ENM-001 | Player attacked Gravefang Rat for 18 damage.
+    Player HP: 94 -> 94 | Enemy HP: 39 -> 21
+ACT-000431 | 2026-11-07 22:52:48 | Enemy Attack | Player PLY-014 | Enemy ENM-001 | Gravefang Rat attacked Player for 5 damage.
+    Player HP: 94 -> 89 | Enemy HP: 21 -> 21
+ACT-000432 | 2026-11-07 22:52:51 | Attack | Player PLY-014 | Enemy ENM-001 | Player attacked Gravefang Rat for 17 damage.
+    Player HP: 89 -> 89 | Enemy HP: 21 -> 4
+ACT-000433 | 2026-11-07 22:52:53 | Enemy Attack | Player PLY-014 | Enemy ENM-001 | Gravefang Rat attacked Player for 5 damage.
+    Player HP: 89 -> 84 | Enemy HP: 4 -> 4
+ACT-000434 | 2026-11-07 22:52:56 | Attack | Player PLY-014 | Enemy ENM-001 | Player attacked Gravefang Rat for 16 damage.
+    Player HP: 84 -> 84 | Enemy HP: 4 -> 0
+ACT-000435 | 2026-11-07 22:52:56 | Victory | Player PLY-014 | Enemy ENM-001 | Player defeated Gravefang Rat.
+    Player HP: 84 -> 84 | Enemy HP: 0 -> 0
+ACT-000436 | 2026-11-07 22:52:56 | Reward | Player PLY-014 | Enemy ENM-001 | Player received 25 gold.
+    Player HP: 84 -> 84 | Enemy HP: 0 -> 0
+ACT-000437 | 2026-11-07 22:52:56 | Reward | Player PLY-014 | Enemy ENM-001 | Player earned 40 score points.
+    Player HP: 84 -> 84 | Enemy HP: 0 -> 0
+ACT-000438 | 2026-11-07 22:53:04 | Battle Start | Player PLY-014 | Enemy ENM-002 | Battle started with Hollowbone Goblin.
+    Player HP: 84 -> 84 | Enemy HP: 70 -> 70
+ACT-000439 | 2026-11-07 22:53:19 | Defend | Player PLY-014 | Enemy ENM-002 | Player defended against Hollowbone Goblin.
+    Player HP: 84 -> 84 | Enemy HP: 70 -> 70
+ACT-000440 | 2026-11-07 22:53:21 | Enemy Attack | Player PLY-014 | Enemy ENM-002 | Hollowbone Goblin attacked Player for 3 damage (blocked by your guard).
+    Player HP: 84 -> 81 | Enemy HP: 70 -> 70
+ACT-000441 | 2026-11-07 22:53:27 | Attack | Player PLY-014 | Enemy ENM-002 | Player attacked Hollowbone Goblin for 18 damage.
+    Player HP: 81 -> 81 | Enemy HP: 70 -> 52
+ACT-000442 | 2026-11-07 22:53:29 | Enemy Attack | Player PLY-014 | Enemy ENM-002 | Hollowbone Goblin attacked Player for 9 damage.
+    Player HP: 81 -> 72 | Enemy HP: 52 -> 52
+ACT-000443 | 2026-11-07 22:53:37 | Attack | Player PLY-014 | Enemy ENM-002 | Player attacked Hollowbone Goblin for 15 damage.
+    Player HP: 72 -> 72 | Enemy HP: 52 -> 37
+ACT-000444 | 2026-11-07 22:53:38 | Enemy Attack | Player PLY-014 | Enemy ENM-002 | Hollowbone Goblin attacked Player for 6 damage.
+    Player HP: 72 -> 66 | Enemy HP: 37 -> 37
+ACT-000445 | 2026-11-07 22:53:44 | Attack | Player PLY-014 | Enemy ENM-002 | Player attacked Hollowbone Goblin for 17 damage.
+    Player HP: 66 -> 66 | Enemy HP: 37 -> 20
+ACT-000446 | 2026-11-07 22:53:45 | Enemy Attack | Player PLY-014 | Enemy ENM-002 | Hollowbone Goblin attacked Player for 7 damage.
+    Player HP: 66 -> 59 | Enemy HP: 20 -> 20
+ACT-000447 | 2026-11-07 22:53:50 | Attack | Player PLY-014 | Enemy ENM-002 | Player attacked Hollowbone Goblin for 15 damage.
+    Player HP: 59 -> 59 | Enemy HP: 20 -> 5
+ACT-000448 | 2026-11-07 22:53:51 | Enemy Attack | Player PLY-014 | Enemy ENM-002 | Hollowbone Goblin attacked Player for 9 damage.
+    Player HP: 59 -> 50 | Enemy HP: 5 -> 5
+ACT-000449 | 2026-11-07 22:53:56 | Attack | Player PLY-014 | Enemy ENM-002 | Player attacked Hollowbone Goblin for 16 damage.
+    Player HP: 50 -> 50 | Enemy HP: 5 -> 0
+ACT-000450 | 2026-11-07 22:53:56 | Victory | Player PLY-014 | Enemy ENM-002 | Player defeated Hollowbone Goblin.
+    Player HP: 50 -> 50 | Enemy HP: 0 -> 0
+ACT-000451 | 2026-11-07 22:53:56 | Reward | Player PLY-014 | Enemy ENM-002 | Player received 30 gold.
+    Player HP: 50 -> 50 | Enemy HP: 0 -> 0
+ACT-000452 | 2026-11-07 22:53:56 | Reward | Player PLY-014 | Enemy ENM-002 | Player earned 60 score points.
+    Player HP: 50 -> 50 | Enemy HP: 0 -> 0
+ACT-000453 | 2026-11-07 22:54:10 | Battle Start | Player PLY-014 | Enemy ENM-003 | Battle started with Ashen Ghoul.
+    Player HP: 50 -> 50 | Enemy HP: 85 -> 85
+ACT-000454 | 2026-11-07 22:54:49 | Potion Use | Player PLY-014 | Enemy ENM-003 | Player used one Health Potion and restored 35 HP.
+    Player HP: 50 -> 85 | Enemy HP: 85 -> 85
+ACT-000455 | 2026-11-07 22:54:51 | Enemy Attack | Player PLY-014 | Enemy ENM-003 | Ashen Ghoul attacked Player for 7 damage.
+    Player HP: 85 -> 78 | Enemy HP: 85 -> 85
+ACT-000456 | 2026-11-07 22:54:55 | Attack | Player PLY-014 | Enemy ENM-003 | Player attacked Ashen Ghoul but missed.
+    Player HP: 78 -> 78 | Enemy HP: 85 -> 85
+ACT-000457 | 2026-11-07 22:54:56 | Enemy Attack | Player PLY-014 | Enemy ENM-003 | Ashen Ghoul attacked Player for 7 damage.
+    Player HP: 78 -> 71 | Enemy HP: 85 -> 85
+ACT-000458 | 2026-11-07 22:54:59 | Attack | Player PLY-014 | Enemy ENM-003 | Player attacked Ashen Ghoul for 17 damage.
+    Player HP: 71 -> 71 | Enemy HP: 85 -> 68
+ACT-000459 | 2026-11-07 22:55:01 | Enemy Attack | Player PLY-014 | Enemy ENM-003 | Ashen Ghoul attacked Player for 10 damage.
+    Player HP: 71 -> 61 | Enemy HP: 68 -> 68
+ACT-000460 | 2026-11-07 22:55:05 | Defend | Player PLY-014 | Enemy ENM-003 | Player defended against Ashen Ghoul.
+    Player HP: 61 -> 61 | Enemy HP: 68 -> 68
+ACT-000461 | 2026-11-07 22:55:07 | Enemy Attack | Player PLY-014 | Enemy ENM-003 | Ashen Ghoul attacked Player for 2 damage (blocked by your guard).
+    Player HP: 61 -> 59 | Enemy HP: 68 -> 68
+ACT-000462 | 2026-11-07 22:55:14 | Attack | Player PLY-014 | Enemy ENM-003 | Player attacked Ashen Ghoul for 19 damage.
+    Player HP: 59 -> 59 | Enemy HP: 68 -> 49
+ACT-000463 | 2026-11-07 22:55:16 | Enemy Attack | Player PLY-014 | Enemy ENM-003 | Ashen Ghoul attacked Player for 9 damage.
+    Player HP: 59 -> 50 | Enemy HP: 49 -> 49
+ACT-000464 | 2026-11-07 22:55:20 | Attack | Player PLY-014 | Enemy ENM-003 | Player attacked Ashen Ghoul for 22 damage (critical).
+    Player HP: 50 -> 50 | Enemy HP: 49 -> 27
+ACT-000465 | 2026-11-07 22:55:22 | Enemy Attack | Player PLY-014 | Enemy ENM-003 | Ashen Ghoul attacked Player for 7 damage.
+    Player HP: 50 -> 43 | Enemy HP: 27 -> 27
+ACT-000466 | 2026-11-07 22:55:26 | Attack | Player PLY-014 | Enemy ENM-003 | Player attacked Ashen Ghoul for 13 damage.
+    Player HP: 43 -> 43 | Enemy HP: 27 -> 14
+ACT-000467 | 2026-11-07 22:55:27 | Enemy Attack | Player PLY-014 | Enemy ENM-003 | Ashen Ghoul attacked Player for 16 damage.
+    Player HP: 43 -> 27 | Enemy HP: 14 -> 14
+ACT-000468 | 2026-11-07 22:55:30 | Attack | Player PLY-014 | Enemy ENM-003 | Player attacked Ashen Ghoul for 13 damage.
+    Player HP: 27 -> 27 | Enemy HP: 14 -> 1
+ACT-000469 | 2026-11-07 22:55:32 | Enemy Attack | Player PLY-014 | Enemy ENM-003 | Ashen Ghoul attacked Player for 10 damage.
+    Player HP: 27 -> 17 | Enemy HP: 1 -> 1
+ACT-000470 | 2026-11-07 22:55:34 | Attack | Player PLY-014 | Enemy ENM-003 | Player attacked Ashen Ghoul for 29 damage (critical).
+    Player HP: 17 -> 17 | Enemy HP: 1 -> 0
+ACT-000471 | 2026-11-07 22:55:34 | Victory | Player PLY-014 | Enemy ENM-003 | Player defeated Ashen Ghoul.
+    Player HP: 17 -> 17 | Enemy HP: 0 -> 0
+ACT-000472 | 2026-11-07 22:55:34 | Reward | Player PLY-014 | Enemy ENM-003 | Player received 35 gold.
+    Player HP: 17 -> 17 | Enemy HP: 0 -> 0
+ACT-000473 | 2026-11-07 22:55:34 | Reward | Player PLY-014 | Enemy ENM-003 | Player earned 80 score points.
+    Player HP: 17 -> 17 | Enemy HP: 0 -> 0
+ACT-000474 | 2026-11-07 22:55:34 | Level Complete | Player PLY-014 | Enemy ENM-003 | Weak level completed. Attack 14 -> 19, Max HP 100 -> 120. Level completion bonus: 40 Gold.
+    Player HP: 37 -> 37 | Enemy HP: 0 -> 0
+ACT-000475 | 2026-11-07 22:55:34 | Equipment Upgrade | Player PLY-014 | Enemy ENM-003 | Standard-Issue gear upgraded for free: Sword: Rusty Sword -> Bloodstone Sword (ATK: +6 | SPD: +4%); Shield: Wooden Shield -> Iron Shield (BLOCK: 9%); Armor: Cloth Armor -> Chainmail Armor (DEF: -2 per hit).
+    Player HP: 37 -> 37 | Enemy HP: 0 -> 0
+ACT-000476 | 2026-11-07 22:55:34 | Progression | Player PLY-014 | Enemy ENM-003 | Rank increased from Beginner to Adventurer.
+    Player HP: 37 -> 37 | Enemy HP: 0 -> 0
+ACT-000477 | 2026-11-07 22:56:23 | Treasure | Player PLY-014 | Enemy N/A | Player opened the Mossy Supply Chest (Basic) and found 25 gold.
+    Player HP: 37 -> 37 | Enemy HP: None -> None
+ACT-000478 | 2026-11-07 22:56:56 | Purchase | Player PLY-014 | Enemy N/A | Player bought 2 Health Potion for 60 gold.
+    Player HP: 37 -> 37 | Enemy HP: None -> None
+ACT-000479 | 2026-11-07 22:57:33 | Travel | Player PLY-014 | Enemy N/A | Player traveled to Dreadveil Entrance via Rusted Grate.
+    Player HP: 37 -> 37 | Enemy HP: None -> None
+ACT-000480 | 2026-11-07 22:57:43 | Travel | Player PLY-014 | Enemy N/A | Player traveled to Rotting Sewers via Rusted Grate.
+    Player HP: 37 -> 37 | Enemy HP: None -> None
+ACT-000481 | 2026-11-07 22:57:54 | Travel | Player PLY-014 | Enemy N/A | Player traveled to Dreadveil Entrance via Rusted Grate.
+    Player HP: 37 -> 37 | Enemy HP: None -> None
+ACT-000482 | 2026-11-07 22:58:12 | Travel | Player PLY-014 | Enemy N/A | Player traveled to Rotting Sewers via Rusted Grate.
+    Player HP: 37 -> 37 | Enemy HP: None -> None
+ACT-000483 | 2026-11-07 22:58:22 | Travel | Player PLY-014 | Enemy N/A | Player traveled to Dreadveil Entrance via Rusted Grate.
+    Player HP: 37 -> 37 | Enemy HP: None -> None
+ACT-000484 | 2026-11-07 23:01:26 | Travel | Player PLY-015 | Enemy N/A | Player traveled to Rotting Sewers via Rusted Grate.
+    Player HP: 100 -> 100 | Enemy HP: None -> None
+ACT-000485 | 2026-11-07 23:01:35 | Battle Start | Player PLY-015 | Enemy ENM-001 | Battle started with Gravefang Rat.
+    Player HP: 100 -> 100 | Enemy HP: 55 -> 55
+ACT-000486 | 2026-11-07 23:01:48 | Attack | Player PLY-015 | Enemy ENM-001 | Player attacked Gravefang Rat for 13 damage.
+    Player HP: 100 -> 100 | Enemy HP: 55 -> 42
+ACT-000487 | 2026-11-07 23:01:50 | Enemy Attack | Player PLY-015 | Enemy ENM-001 | Gravefang Rat attacked Player for 3 damage.
+    Player HP: 100 -> 97 | Enemy HP: 42 -> 42
+ACT-000488 | 2026-11-07 23:01:55 | Attack | Player PLY-015 | Enemy ENM-001 | Player attacked Gravefang Rat for 17 damage.
+    Player HP: 97 -> 97 | Enemy HP: 42 -> 25
+ACT-000489 | 2026-11-07 23:01:57 | Enemy Attack | Player PLY-015 | Enemy ENM-001 | Gravefang Rat attacked Player for 7 damage.
+    Player HP: 97 -> 90 | Enemy HP: 25 -> 25
+ACT-000490 | 2026-11-07 23:02:00 | Attack | Player PLY-015 | Enemy ENM-001 | Player attacked Gravefang Rat for 28 damage (critical).
+    Player HP: 90 -> 90 | Enemy HP: 25 -> 0
+ACT-000491 | 2026-11-07 23:02:00 | Victory | Player PLY-015 | Enemy ENM-001 | Player defeated Gravefang Rat.
+    Player HP: 90 -> 90 | Enemy HP: 0 -> 0
+ACT-000492 | 2026-11-07 23:02:00 | Reward | Player PLY-015 | Enemy ENM-001 | Player received 25 gold.
+    Player HP: 90 -> 90 | Enemy HP: 0 -> 0
+ACT-000493 | 2026-11-07 23:02:00 | Reward | Player PLY-015 | Enemy ENM-001 | Player earned 40 score points.
+    Player HP: 90 -> 90 | Enemy HP: 0 -> 0
+ACT-000494 | 2026-11-07 23:02:19 | Battle Start | Player PLY-015 | Enemy ENM-002 | Battle started with Hollowbone Goblin.
+    Player HP: 90 -> 90 | Enemy HP: 70 -> 70
+ACT-000495 | 2026-11-07 23:02:25 | Attack | Player PLY-015 | Enemy ENM-002 | Player attacked Hollowbone Goblin for 17 damage.
+    Player HP: 90 -> 90 | Enemy HP: 70 -> 53
+ACT-000496 | 2026-11-07 23:02:26 | Enemy Attack | Player PLY-015 | Enemy ENM-002 | Hollowbone Goblin attacked Player for 8 damage.
+    Player HP: 90 -> 82 | Enemy HP: 53 -> 53
+ACT-000497 | 2026-11-07 23:02:30 | Attack | Player PLY-015 | Enemy ENM-002 | Player attacked Hollowbone Goblin for 15 damage.
+    Player HP: 82 -> 82 | Enemy HP: 53 -> 38
+ACT-000498 | 2026-11-07 23:02:32 | Enemy Attack | Player PLY-015 | Enemy ENM-002 | Hollowbone Goblin attacked Player for 9 damage.
+    Player HP: 82 -> 73 | Enemy HP: 38 -> 38
+ACT-000499 | 2026-11-07 23:02:34 | Attack | Player PLY-015 | Enemy ENM-002 | Player attacked Hollowbone Goblin for 18 damage.
+    Player HP: 73 -> 73 | Enemy HP: 38 -> 20
+ACT-000500 | 2026-11-07 23:02:36 | Enemy Attack | Player PLY-015 | Enemy ENM-002 | Hollowbone Goblin attacked Player for 7 damage.
+    Player HP: 73 -> 66 | Enemy HP: 20 -> 20
+ACT-000501 | 2026-11-07 23:02:39 | Attack | Player PLY-015 | Enemy ENM-002 | Player attacked Hollowbone Goblin for 33 damage (critical).
+    Player HP: 66 -> 66 | Enemy HP: 20 -> 0
+ACT-000502 | 2026-11-07 23:02:39 | Victory | Player PLY-015 | Enemy ENM-002 | Player defeated Hollowbone Goblin.
+    Player HP: 66 -> 66 | Enemy HP: 0 -> 0
+ACT-000503 | 2026-11-07 23:02:39 | Reward | Player PLY-015 | Enemy ENM-002 | Player received 30 gold.
+    Player HP: 66 -> 66 | Enemy HP: 0 -> 0
+ACT-000504 | 2026-11-07 23:02:39 | Reward | Player PLY-015 | Enemy ENM-002 | Player earned 60 score points.
+    Player HP: 66 -> 66 | Enemy HP: 0 -> 0
+ACT-000505 | 2026-11-07 23:03:02 | Purchase | Player PLY-015 | Enemy N/A | Player bought 2 Health Potion for 60 gold.
+    Player HP: 66 -> 66 | Enemy HP: None -> None
+ACT-000506 | 2026-11-07 23:03:12 | Battle Start | Player PLY-015 | Enemy ENM-003 | Battle started with Ashen Ghoul.
+    Player HP: 66 -> 66 | Enemy HP: 85 -> 85
+ACT-000507 | 2026-11-07 23:03:20 | Attack | Player PLY-015 | Enemy ENM-003 | Player attacked Ashen Ghoul for 24 damage (critical).
+    Player HP: 66 -> 66 | Enemy HP: 85 -> 61
+ACT-000508 | 2026-11-07 23:03:22 | Enemy Attack | Player PLY-015 | Enemy ENM-003 | Ashen Ghoul attacked Player for 9 damage.
+    Player HP: 66 -> 57 | Enemy HP: 61 -> 61
+ACT-000509 | 2026-11-07 23:03:26 | Attack | Player PLY-015 | Enemy ENM-003 | Player attacked Ashen Ghoul for 16 damage.
+    Player HP: 57 -> 57 | Enemy HP: 61 -> 45
+ACT-000510 | 2026-11-07 23:03:28 | Enemy Attack | Player PLY-015 | Enemy ENM-003 | Ashen Ghoul attacked Player for 9 damage.
+    Player HP: 57 -> 48 | Enemy HP: 45 -> 45
+ACT-000511 | 2026-11-07 23:03:30 | Attack | Player PLY-015 | Enemy ENM-003 | Player attacked Ashen Ghoul for 24 damage (critical).
+    Player HP: 48 -> 48 | Enemy HP: 45 -> 21
+ACT-000512 | 2026-11-07 23:03:32 | Enemy Attack | Player PLY-015 | Enemy ENM-003 | Ashen Ghoul attacked Player for 10 damage.
+    Player HP: 48 -> 38 | Enemy HP: 21 -> 21
+ACT-000513 | 2026-11-07 23:03:35 | Attack | Player PLY-015 | Enemy ENM-003 | Player attacked Ashen Ghoul for 14 damage.
+    Player HP: 38 -> 38 | Enemy HP: 21 -> 7
+ACT-000514 | 2026-11-07 23:03:37 | Enemy Attack | Player PLY-015 | Enemy ENM-003 | Ashen Ghoul attacked Player for 8 damage.
+    Player HP: 38 -> 30 | Enemy HP: 7 -> 7
+ACT-000515 | 2026-11-07 23:03:39 | Attack | Player PLY-015 | Enemy ENM-003 | Player attacked Ashen Ghoul for 17 damage.
+    Player HP: 30 -> 30 | Enemy HP: 7 -> 0
+ACT-000516 | 2026-11-07 23:03:39 | Victory | Player PLY-015 | Enemy ENM-003 | Player defeated Ashen Ghoul.
+    Player HP: 30 -> 30 | Enemy HP: 0 -> 0
+ACT-000517 | 2026-11-07 23:03:39 | Reward | Player PLY-015 | Enemy ENM-003 | Player received 35 gold.
+    Player HP: 30 -> 30 | Enemy HP: 0 -> 0
+ACT-000518 | 2026-11-07 23:03:39 | Reward | Player PLY-015 | Enemy ENM-003 | Player earned 80 score points.
+    Player HP: 30 -> 30 | Enemy HP: 0 -> 0
+ACT-000519 | 2026-11-07 23:03:39 | Level Complete | Player PLY-015 | Enemy ENM-003 | Weak level completed. Attack 14 -> 19, Max HP 100 -> 120. Level completion bonus: 40 Gold.
+    Player HP: 50 -> 50 | Enemy HP: 0 -> 0
+ACT-000520 | 2026-11-07 23:03:39 | Equipment Upgrade | Player PLY-015 | Enemy ENM-003 | Standard-Issue gear upgraded for free: Sword: Rusty Sword -> Bloodstone Sword (ATK: +6 | SPD: +4%); Shield: Wooden Shield -> Iron Shield (BLOCK: 9%); Armor: Cloth Armor -> Chainmail Armor (DEF: -2 per hit).
+    Player HP: 50 -> 50 | Enemy HP: 0 -> 0
+ACT-000521 | 2026-11-07 23:03:39 | Progression | Player PLY-015 | Enemy ENM-003 | Rank increased from Beginner to Adventurer.
+    Player HP: 50 -> 50 | Enemy HP: 0 -> 0
+ACT-000522 | 2026-11-07 23:03:46 | Treasure | Player PLY-015 | Enemy N/A | Player opened the Mossy Supply Chest (Basic) and found 25 gold.
+    Player HP: 50 -> 50 | Enemy HP: None -> None
+ACT-000523 | 2026-11-07 23:04:47 | Travel | Player PLY-015 | Enemy N/A | Player traveled to Bloodstone Hall via Crimson Gate.
+    Player HP: 50 -> 50 | Enemy HP: None -> None
+ACT-000524 | 2026-11-07 23:04:51 | Battle Start | Player PLY-015 | Enemy ENM-004 | Battle started with Ironjaw Reaver.
+    Player HP: 50 -> 50 | Enemy HP: 105 -> 105
+ACT-000525 | 2026-11-07 23:04:58 | Potion Use | Player PLY-015 | Enemy ENM-004 | Player used one Health Potion and restored 42 HP.
+    Player HP: 50 -> 92 | Enemy HP: 105 -> 105
+ACT-000526 | 2026-11-07 23:04:59 | Enemy Attack | Player PLY-015 | Enemy ENM-004 | Ironjaw Reaver attacked Player for 10 damage.
+    Player HP: 92 -> 82 | Enemy HP: 105 -> 105
+ACT-000527 | 2026-11-07 23:05:03 | Attack | Player PLY-015 | Enemy ENM-004 | Player attacked Ironjaw Reaver for 43 damage (critical).
+    Player HP: 82 -> 82 | Enemy HP: 105 -> 62
+ACT-000528 | 2026-11-07 23:05:05 | Enemy Attack | Player PLY-015 | Enemy ENM-004 | Ironjaw Reaver attacked Player for 8 damage.
+    Player HP: 82 -> 74 | Enemy HP: 62 -> 62
+ACT-000529 | 2026-11-07 23:05:08 | Attack | Player PLY-015 | Enemy ENM-004 | Player attacked Ironjaw Reaver for 47 damage (critical).
+    Player HP: 74 -> 74 | Enemy HP: 62 -> 15
+ACT-000530 | 2026-11-07 23:05:10 | Enemy Attack | Player PLY-015 | Enemy ENM-004 | Ironjaw Reaver attacked Player for 10 damage.
+    Player HP: 74 -> 64 | Enemy HP: 15 -> 15
+ACT-000531 | 2026-11-07 23:05:14 | Attack | Player PLY-015 | Enemy ENM-004 | Player attacked Ironjaw Reaver for 40 damage (critical).
+    Player HP: 64 -> 64 | Enemy HP: 15 -> 0
+ACT-000532 | 2026-11-07 23:05:14 | Victory | Player PLY-015 | Enemy ENM-004 | Player defeated Ironjaw Reaver.
+    Player HP: 64 -> 64 | Enemy HP: 0 -> 0
+ACT-000533 | 2026-11-07 23:05:14 | Reward | Player PLY-015 | Enemy ENM-004 | Player received 50 gold.
+    Player HP: 64 -> 64 | Enemy HP: 0 -> 0
+ACT-000534 | 2026-11-07 23:05:14 | Reward | Player PLY-015 | Enemy ENM-004 | Player earned 100 score points.
+    Player HP: 64 -> 64 | Enemy HP: 0 -> 0
+ACT-000535 | 2026-11-07 23:05:19 | Battle Start | Player PLY-015 | Enemy ENM-005 | Battle started with Boneguard Executioner.
+    Player HP: 64 -> 64 | Enemy HP: 120 -> 120
+ACT-000536 | 2026-11-07 23:05:23 | Attack | Player PLY-015 | Enemy ENM-005 | Player attacked Boneguard Executioner but missed.
+    Player HP: 64 -> 64 | Enemy HP: 120 -> 120
+ACT-000537 | 2026-11-07 23:05:25 | Enemy Attack | Player PLY-015 | Enemy ENM-005 | Boneguard Executioner attacked Player for 9 damage.
+    Player HP: 64 -> 55 | Enemy HP: 120 -> 120
+ACT-000538 | 2026-11-07 23:05:28 | Attack | Player PLY-015 | Enemy ENM-005 | Player attacked Boneguard Executioner for 26 damage.
+    Player HP: 55 -> 55 | Enemy HP: 120 -> 94
+ACT-000539 | 2026-11-07 23:05:30 | Enemy Attack | Player PLY-015 | Enemy ENM-005 | Boneguard Executioner attacked Player for 12 damage.
+    Player HP: 55 -> 43 | Enemy HP: 94 -> 94
+ACT-000540 | 2026-11-07 23:05:34 | Attack | Player PLY-015 | Enemy ENM-005 | Player attacked Boneguard Executioner for 26 damage.
+    Player HP: 43 -> 43 | Enemy HP: 94 -> 68
+ACT-000541 | 2026-11-07 23:05:36 | Enemy Attack | Player PLY-015 | Enemy ENM-005 | Boneguard Executioner attacked Player for 10 damage.
+    Player HP: 43 -> 33 | Enemy HP: 68 -> 68
+ACT-000542 | 2026-11-07 23:05:39 | Potion Use | Player PLY-015 | Enemy ENM-005 | Player used one Health Potion and restored 42 HP.
+    Player HP: 33 -> 75 | Enemy HP: 68 -> 68
+ACT-000543 | 2026-11-07 23:05:41 | Enemy Attack | Player PLY-015 | Enemy ENM-005 | Boneguard Executioner attacked Player for 18 damage.
+    Player HP: 75 -> 57 | Enemy HP: 68 -> 68
+ACT-000544 | 2026-11-07 23:05:45 | Attack | Player PLY-015 | Enemy ENM-005 | Player attacked Boneguard Executioner for 25 damage.
+    Player HP: 57 -> 57 | Enemy HP: 68 -> 43
+ACT-000545 | 2026-11-07 23:05:47 | Enemy Attack | Player PLY-015 | Enemy ENM-005 | Boneguard Executioner attacked Player for 9 damage.
+    Player HP: 57 -> 48 | Enemy HP: 43 -> 43
+ACT-000546 | 2026-11-07 23:05:49 | Attack | Player PLY-015 | Enemy ENM-005 | Player attacked Boneguard Executioner but missed.
+    Player HP: 48 -> 48 | Enemy HP: 43 -> 43
+ACT-000547 | 2026-11-07 23:05:51 | Enemy Attack | Player PLY-015 | Enemy ENM-005 | Boneguard Executioner attacked Player for 11 damage.
+    Player HP: 48 -> 37 | Enemy HP: 43 -> 43
+ACT-000548 | 2026-11-07 23:05:55 | Attack | Player PLY-015 | Enemy ENM-005 | Player attacked Boneguard Executioner for 45 damage (critical).
+    Player HP: 37 -> 37 | Enemy HP: 43 -> 0
+ACT-000549 | 2026-11-07 23:05:55 | Victory | Player PLY-015 | Enemy ENM-005 | Player defeated Boneguard Executioner.
+    Player HP: 37 -> 37 | Enemy HP: 0 -> 0
+ACT-000550 | 2026-11-07 23:05:55 | Reward | Player PLY-015 | Enemy ENM-005 | Player received 60 gold.
+    Player HP: 37 -> 37 | Enemy HP: 0 -> 0
+ACT-000551 | 2026-11-07 23:05:55 | Reward | Player PLY-015 | Enemy ENM-005 | Player earned 120 score points.
+    Player HP: 37 -> 37 | Enemy HP: 0 -> 0
+ACT-000552 | 2026-11-07 23:06:18 | Purchase | Player PLY-015 | Enemy N/A | Player bought 2 Health Potion for 60 gold.
+    Player HP: 37 -> 37 | Enemy HP: None -> None
+ACT-000553 | 2026-11-07 23:06:49 | Battle Start | Player PLY-015 | Enemy ENM-006 | Battle started with Hellchain Marauder.
+    Player HP: 37 -> 37 | Enemy HP: 135 -> 135
+ACT-000554 | 2026-11-07 23:06:58 | Potion Use | Player PLY-015 | Enemy ENM-006 | Player used one Health Potion and restored 42 HP.
+    Player HP: 37 -> 79 | Enemy HP: 135 -> 135
+ACT-000555 | 2026-11-07 23:07:00 | Enemy Attack | Player PLY-015 | Enemy ENM-006 | Hellchain Marauder attacked Player for 10 damage.
+    Player HP: 79 -> 69 | Enemy HP: 135 -> 135
+ACT-000556 | 2026-11-07 23:07:03 | Attack | Player PLY-015 | Enemy ENM-006 | Player attacked Hellchain Marauder for 42 damage (critical).
+    Player HP: 69 -> 69 | Enemy HP: 135 -> 93
+ACT-000557 | 2026-11-07 23:07:05 | Enemy Attack | Player PLY-015 | Enemy ENM-006 | Hellchain Marauder attacked Player for 10 damage.
+    Player HP: 69 -> 59 | Enemy HP: 93 -> 93
+ACT-000558 | 2026-11-07 23:07:11 | Attack | Player PLY-015 | Enemy ENM-006 | Player attacked Hellchain Marauder for 28 damage.
+    Player HP: 59 -> 59 | Enemy HP: 93 -> 65
+ACT-000559 | 2026-11-07 23:07:13 | Enemy Attack | Player PLY-015 | Enemy ENM-006 | Hellchain Marauder attacked Player for 17 damage.
+    Player HP: 59 -> 42 | Enemy HP: 65 -> 65
+ACT-000560 | 2026-11-07 23:07:28 | Potion Use | Player PLY-015 | Enemy ENM-006 | Player used one Health Potion and restored 42 HP.
+    Player HP: 42 -> 84 | Enemy HP: 65 -> 65
+ACT-000561 | 2026-11-07 23:07:30 | Enemy Attack | Player PLY-015 | Enemy ENM-006 | Hellchain Marauder attacked Player for 10 damage.
+    Player HP: 84 -> 74 | Enemy HP: 65 -> 65
+ACT-000562 | 2026-11-07 23:07:33 | Attack | Player PLY-015 | Enemy ENM-006 | Player attacked Hellchain Marauder for 26 damage.
+    Player HP: 74 -> 74 | Enemy HP: 65 -> 39
+ACT-000563 | 2026-11-07 23:07:34 | Enemy Attack | Player PLY-015 | Enemy ENM-006 | Hellchain Marauder attacked Player for 10 damage.
+    Player HP: 74 -> 64 | Enemy HP: 39 -> 39
+ACT-000564 | 2026-11-07 23:07:37 | Attack | Player PLY-015 | Enemy ENM-006 | Player attacked Hellchain Marauder for 27 damage.
+    Player HP: 64 -> 64 | Enemy HP: 39 -> 12
+ACT-000565 | 2026-11-07 23:07:38 | Enemy Attack | Player PLY-015 | Enemy ENM-006 | Hellchain Marauder attacked Player for 9 damage.
+    Player HP: 64 -> 55 | Enemy HP: 12 -> 12
+ACT-000566 | 2026-11-07 23:07:41 | Attack | Player PLY-015 | Enemy ENM-006 | Player attacked Hellchain Marauder for 27 damage.
+    Player HP: 55 -> 55 | Enemy HP: 12 -> 0
+ACT-000567 | 2026-11-07 23:07:41 | Victory | Player PLY-015 | Enemy ENM-006 | Player defeated Hellchain Marauder.
+    Player HP: 55 -> 55 | Enemy HP: 0 -> 0
+ACT-000568 | 2026-11-07 23:07:41 | Reward | Player PLY-015 | Enemy ENM-006 | Player received 70 gold.
+    Player HP: 55 -> 55 | Enemy HP: 0 -> 0
+ACT-000569 | 2026-11-07 23:07:41 | Reward | Player PLY-015 | Enemy ENM-006 | Player earned 140 score points.
+    Player HP: 55 -> 55 | Enemy HP: 0 -> 0
+ACT-000570 | 2026-11-07 23:07:41 | Level Complete | Player PLY-015 | Enemy ENM-006 | Intermediate level completed. Attack 19 -> 24, Max HP 120 -> 140. Level completion bonus: 80 Gold.
+    Player HP: 75 -> 75 | Enemy HP: 0 -> 0
+ACT-000571 | 2026-11-07 23:07:41 | Equipment Upgrade | Player PLY-015 | Enemy ENM-006 | Standard-Issue gear upgraded for free: Sword: Bloodstone Sword -> Steel Sword (ATK: +10 | SPD: +8%); Shield: Iron Shield -> Steel Shield (BLOCK: 15%); Armor: Chainmail Armor -> Steel Armor (DEF: -4 per hit).
+    Player HP: 75 -> 75 | Enemy HP: 0 -> 0
+ACT-000572 | 2026-11-07 23:07:41 | Progression | Player PLY-015 | Enemy ENM-006 | Rank increased from Adventurer to Elite.
+    Player HP: 75 -> 75 | Enemy HP: 0 -> 0
+ACT-000573 | 2026-11-07 23:09:24 | Travel | Player PLY-015 | Enemy N/A | Player traveled to Rotting Sewers via Crimson Gate.
+    Player HP: 75 -> 75 | Enemy HP: None -> None
+ACT-000574 | 2026-11-07 23:09:55 | Travel | Player PLY-015 | Enemy N/A | Player traveled to Bloodstone Hall via Crimson Gate.
+    Player HP: 75 -> 75 | Enemy HP: None -> None
+ACT-000575 | 2026-11-07 23:10:13 | Travel | Player PLY-015 | Enemy N/A | Player traveled to Rotting Sewers via Crimson Gate.
+    Player HP: 75 -> 75 | Enemy HP: None -> None
+ACT-000576 | 2026-11-07 23:10:19 | Travel | Player PLY-015 | Enemy N/A | Player traveled to Bloodstone Hall via Crimson Gate.
+    Player HP: 75 -> 75 | Enemy HP: None -> None
+ACT-000577 | 2026-11-07 23:10:32 | Travel | Player PLY-015 | Enemy N/A | Player traveled to Rotting Sewers via Crimson Gate.
+    Player HP: 75 -> 75 | Enemy HP: None -> None
+ACT-000578 | 2026-11-07 23:10:53 | Travel | Player PLY-015 | Enemy N/A | Player traveled to Dreadveil Entrance via Rusted Grate.
+    Player HP: 75 -> 75 | Enemy HP: None -> None
+ACT-000579 | 2026-11-07 23:11:08 | Travel | Player PLY-015 | Enemy N/A | Player traveled to Rotting Sewers via Rusted Grate.
+    Player HP: 75 -> 75 | Enemy HP: None -> None
+ACT-000580 | 2026-11-07 23:11:42 | Travel | Player PLY-015 | Enemy N/A | Player traveled to Bloodstone Hall via Crimson Gate.
+    Player HP: 75 -> 75 | Enemy HP: None -> None
+ACT-000581 | 2026-11-07 23:12:33 | Travel | Player PLY-015 | Enemy N/A | Player traveled to War-Torn Catacombs via Iron Drawbridge.
+    Player HP: 75 -> 75 | Enemy HP: None -> None
+ACT-000582 | 2026-11-07 23:12:39 | Battle Start | Player PLY-015 | Enemy ENM-007 | Battle started with Dreadfang Berserker.
+    Player HP: 75 -> 75 | Enemy HP: 150 -> 150
+ACT-000583 | 2026-11-07 23:12:47 | Attack | Player PLY-015 | Enemy ENM-007 | Player attacked Dreadfang Berserker for 34 damage.
+    Player HP: 75 -> 75 | Enemy HP: 150 -> 116
+ACT-000584 | 2026-11-07 23:12:49 | Enemy Attack | Player PLY-015 | Enemy ENM-007 | Dreadfang Berserker attacked Player for 10 damage.
+    Player HP: 75 -> 65 | Enemy HP: 116 -> 116
+ACT-000585 | 2026-11-07 23:12:52 | Attack | Player PLY-015 | Enemy ENM-007 | Player attacked Dreadfang Berserker for 37 damage.
+    Player HP: 65 -> 65 | Enemy HP: 116 -> 79
+ACT-000586 | 2026-11-07 23:12:54 | Enemy Attack | Player PLY-015 | Enemy ENM-007 | Dreadfang Berserker attacked Player for 8 damage.
+    Player HP: 65 -> 57 | Enemy HP: 79 -> 79
+ACT-000587 | 2026-11-07 23:12:57 | Attack | Player PLY-015 | Enemy ENM-007 | Player attacked Dreadfang Berserker for 57 damage (critical).
+    Player HP: 57 -> 57 | Enemy HP: 79 -> 22
+ACT-000588 | 2026-11-07 23:12:58 | Enemy Attack | Player PLY-015 | Enemy ENM-007 | Dreadfang Berserker attacked Player for 9 damage.
+    Player HP: 57 -> 48 | Enemy HP: 22 -> 22
+ACT-000589 | 2026-11-07 23:13:00 | Attack | Player PLY-015 | Enemy ENM-007 | Player attacked Dreadfang Berserker for 54 damage (critical).
+    Player HP: 48 -> 48 | Enemy HP: 22 -> 0
+ACT-000590 | 2026-11-07 23:13:00 | Victory | Player PLY-015 | Enemy ENM-007 | Player defeated Dreadfang Berserker.
+    Player HP: 48 -> 48 | Enemy HP: 0 -> 0
+ACT-000591 | 2026-11-07 23:13:00 | Reward | Player PLY-015 | Enemy ENM-007 | Player received 85 gold.
+    Player HP: 48 -> 48 | Enemy HP: 0 -> 0
+ACT-000592 | 2026-11-07 23:13:00 | Reward | Player PLY-015 | Enemy ENM-007 | Player earned 180 score points.
+    Player HP: 48 -> 48 | Enemy HP: 0 -> 0
+ACT-000593 | 2026-11-07 23:13:18 | Purchase | Player PLY-015 | Enemy N/A | Player bought 4 Health Potion for 120 gold.
+    Player HP: 48 -> 48 | Enemy HP: None -> None
+ACT-000594 | 2026-11-07 23:13:31 | Purchase | Player PLY-015 | Enemy N/A | Player bought 1 Dice of Fate for 100 gold.
+    Player HP: 48 -> 48 | Enemy HP: None -> None
+ACT-000595 | 2026-11-07 23:13:43 | Battle Start | Player PLY-015 | Enemy ENM-008 | Battle started with Abyssal Death Knight.
+    Player HP: 48 -> 48 | Enemy HP: 165 -> 165
+ACT-000596 | 2026-11-07 23:13:54 | Item Use | Player PLY-015 | Enemy ENM-008 | Player rolled 6 on Dice of Fate. Jackpot: next sword attack gains +100% damage.
+    Player HP: 48 -> 48 | Enemy HP: 165 -> 165
+ACT-000597 | 2026-11-07 23:13:56 | Enemy Attack | Player PLY-015 | Enemy ENM-008 | Abyssal Death Knight attacked Player for 11 damage.
+    Player HP: 48 -> 37 | Enemy HP: 165 -> 165
+ACT-000598 | 2026-11-07 23:14:19 | Attack | Player PLY-015 | Enemy ENM-008 | Player attacked Abyssal Death Knight for 129 damage (critical).
+    Player HP: 37 -> 37 | Enemy HP: 165 -> 36
+ACT-000599 | 2026-11-07 23:14:21 | Enemy Attack | Player PLY-015 | Enemy ENM-008 | Abyssal Death Knight attacked Player for 17 damage.
+    Player HP: 37 -> 20 | Enemy HP: 36 -> 36
+ACT-000600 | 2026-11-07 23:14:39 | Defend | Player PLY-015 | Enemy ENM-008 | Player defended against Abyssal Death Knight.
+    Player HP: 20 -> 20 | Enemy HP: 36 -> 36
+ACT-000601 | 2026-11-07 23:14:41 | Enemy Attack | Player PLY-015 | Enemy ENM-008 | Abyssal Death Knight attacked Player for 4 damage (blocked by your guard).
+    Player HP: 20 -> 16 | Enemy HP: 36 -> 36
+ACT-000602 | 2026-11-07 23:14:46 | Attack | Player PLY-015 | Enemy ENM-008 | Player attacked Abyssal Death Knight for 44 damage.
+    Player HP: 16 -> 16 | Enemy HP: 36 -> 0
+ACT-000603 | 2026-11-07 23:14:46 | Victory | Player PLY-015 | Enemy ENM-008 | Player defeated Abyssal Death Knight.
+    Player HP: 16 -> 16 | Enemy HP: 0 -> 0
+ACT-000604 | 2026-11-07 23:14:46 | Reward | Player PLY-015 | Enemy ENM-008 | Player received 95 gold.
+    Player HP: 16 -> 16 | Enemy HP: 0 -> 0
+ACT-000605 | 2026-11-07 23:14:46 | Reward | Player PLY-015 | Enemy ENM-008 | Player earned 200 score points.
+    Player HP: 16 -> 16 | Enemy HP: 0 -> 0
+ACT-000606 | 2026-11-07 23:15:12 | Battle Start | Player PLY-015 | Enemy ENM-009 | Battle started with Soulreaper Wraith.
+    Player HP: 16 -> 16 | Enemy HP: 180 -> 180
+ACT-000607 | 2026-11-07 23:15:20 | Potion Use | Player PLY-015 | Enemy ENM-009 | Player used one Health Potion and restored 49 HP.
+    Player HP: 16 -> 65 | Enemy HP: 180 -> 180
+ACT-000608 | 2026-11-07 23:15:22 | Enemy Attack | Player PLY-015 | Enemy ENM-009 | Soulreaper Wraith attacked Player for 20 damage.
+    Player HP: 65 -> 45 | Enemy HP: 180 -> 180
+ACT-000609 | 2026-11-07 23:15:31 | Potion Use | Player PLY-015 | Enemy ENM-009 | Player used one Health Potion and restored 49 HP.
+    Player HP: 45 -> 94 | Enemy HP: 180 -> 180
+ACT-000610 | 2026-11-07 23:15:32 | Enemy Attack | Player PLY-015 | Enemy ENM-009 | Soulreaper Wraith attacked Player for 13 damage.
+    Player HP: 94 -> 81 | Enemy HP: 180 -> 180
+ACT-000611 | 2026-11-07 23:15:36 | Attack | Player PLY-015 | Enemy ENM-009 | Player attacked Soulreaper Wraith for 37 damage.
+    Player HP: 81 -> 81 | Enemy HP: 180 -> 143
+ACT-000612 | 2026-11-07 23:15:38 | Enemy Attack | Player PLY-015 | Enemy ENM-009 | Soulreaper Wraith attacked Player for 13 damage.
+    Player HP: 81 -> 68 | Enemy HP: 143 -> 143
+ACT-000613 | 2026-11-07 23:15:39 | Attack | Player PLY-015 | Enemy ENM-009 | Player attacked Soulreaper Wraith but missed.
+    Player HP: 68 -> 68 | Enemy HP: 143 -> 143
+ACT-000614 | 2026-11-07 23:15:41 | Enemy Attack | Player PLY-015 | Enemy ENM-009 | Soulreaper Wraith attacked Player for 13 damage.
+    Player HP: 68 -> 55 | Enemy HP: 143 -> 143
+ACT-000615 | 2026-11-07 23:15:43 | Attack | Player PLY-015 | Enemy ENM-009 | Player attacked Soulreaper Wraith for 54 damage (critical).
+    Player HP: 55 -> 55 | Enemy HP: 143 -> 89
+ACT-000616 | 2026-11-07 23:15:45 | Enemy Attack | Player PLY-015 | Enemy ENM-009 | Soulreaper Wraith attacked Player for 10 damage.
+    Player HP: 55 -> 45 | Enemy HP: 89 -> 89
+ACT-000617 | 2026-11-07 23:15:48 | Potion Use | Player PLY-015 | Enemy ENM-009 | Player used one Health Potion and restored 49 HP.
+    Player HP: 45 -> 94 | Enemy HP: 89 -> 89
+ACT-000618 | 2026-11-07 23:15:49 | Enemy Attack | Player PLY-015 | Enemy ENM-009 | Soulreaper Wraith attacked Player for 11 damage.
+    Player HP: 94 -> 83 | Enemy HP: 89 -> 89
+ACT-000619 | 2026-11-07 23:15:52 | Attack | Player PLY-015 | Enemy ENM-009 | Player attacked Soulreaper Wraith for 64 damage (critical).
+    Player HP: 83 -> 83 | Enemy HP: 89 -> 25
+ACT-000620 | 2026-11-07 23:15:53 | Enemy Attack | Player PLY-015 | Enemy ENM-009 | Soulreaper Wraith attacked Player for 11 damage.
+    Player HP: 83 -> 72 | Enemy HP: 25 -> 25
+ACT-000621 | 2026-11-07 23:15:56 | Attack | Player PLY-015 | Enemy ENM-009 | Player attacked Soulreaper Wraith for 31 damage.
+    Player HP: 72 -> 72 | Enemy HP: 25 -> 0
+ACT-000622 | 2026-11-07 23:15:56 | Victory | Player PLY-015 | Enemy ENM-009 | Player defeated Soulreaper Wraith.
+    Player HP: 72 -> 72 | Enemy HP: 0 -> 0
+ACT-000623 | 2026-11-07 23:15:56 | Reward | Player PLY-015 | Enemy ENM-009 | Player received 110 gold.
+    Player HP: 72 -> 72 | Enemy HP: 0 -> 0
+ACT-000624 | 2026-11-07 23:15:56 | Reward | Player PLY-015 | Enemy ENM-009 | Player earned 220 score points.
+    Player HP: 72 -> 72 | Enemy HP: 0 -> 0
+ACT-000625 | 2026-11-07 23:15:56 | Level Complete | Player PLY-015 | Enemy ENM-009 | Strong level completed. Attack 24 -> 29, Max HP 140 -> 160. Level completion bonus: 150 Gold.
+    Player HP: 92 -> 92 | Enemy HP: 0 -> 0
+ACT-000626 | 2026-11-07 23:15:56 | Equipment Upgrade | Player PLY-015 | Enemy ENM-009 | Standard-Issue gear upgraded for free: Sword: Steel Sword -> Darksteel Sword (ATK: +14 | SPD: +12%); Shield: Steel Shield -> Darksteel Shield (BLOCK: 23%); Armor: Steel Armor -> Darksteel Armor (DEF: -6 per hit).
+    Player HP: 92 -> 92 | Enemy HP: 0 -> 0
+ACT-000627 | 2026-11-07 23:15:56 | Progression | Player PLY-015 | Enemy ENM-009 | Rank increased from Elite to Master.
+    Player HP: 92 -> 92 | Enemy HP: 0 -> 0
+ACT-000628 | 2026-11-07 23:16:13 | Travel | Player PLY-015 | Enemy N/A | Player traveled to Throne of Ruin via Throne Gate.
+    Player HP: 92 -> 92 | Enemy HP: None -> None
+ACT-000629 | 2026-11-07 23:17:01 | Purchase | Player PLY-015 | Enemy N/A | Player bought 5 Health Potion for 150 gold.
+    Player HP: 92 -> 92 | Enemy HP: None -> None
+ACT-000630 | 2026-11-07 23:17:27 | Purchase | Player PLY-015 | Enemy N/A | Player bought 1 Dice of Fate for 100 gold.
+    Player HP: 92 -> 92 | Enemy HP: None -> None
+ACT-000631 | 2026-11-07 23:18:01 | Purchase | Player PLY-015 | Enemy N/A | Player bought 3 Strength Tonic for 210 gold.
+    Player HP: 92 -> 92 | Enemy HP: None -> None
+ACT-000632 | 2026-11-07 23:18:12 | Battle Start | Player PLY-015 | Enemy BS-001 | Battle started with Vharok, the World Eater.
+    Player HP: 92 -> 92 | Enemy HP: 320 -> 320
+ACT-000633 | 2026-11-07 23:18:26 | Attack | Player PLY-015 | Enemy BS-001 | Player attacked Vharok, the World Eater for 44 damage.
+    Player HP: 92 -> 92 | Enemy HP: 320 -> 276
+ACT-000634 | 2026-11-07 23:18:28 | Enemy Attack | Player PLY-015 | Enemy BS-001 | Vharok, the World Eater attacked Player for 13 damage.
+    Player HP: 92 -> 79 | Enemy HP: 276 -> 276
+ACT-000635 | 2026-11-07 23:18:33 | Attack | Player PLY-015 | Enemy BS-001 | Player attacked Vharok, the World Eater for 40 damage.
+    Player HP: 79 -> 79 | Enemy HP: 276 -> 236
+ACT-000636 | 2026-11-07 23:18:34 | Enemy Attack | Player PLY-015 | Enemy BS-001 | Vharok, the World Eater attacked Player for 12 damage.
+    Player HP: 79 -> 67 | Enemy HP: 236 -> 236
+ACT-000637 | 2026-11-07 23:18:38 | Potion Use | Player PLY-015 | Enemy BS-001 | Player used one Health Potion and restored 56 HP.
+    Player HP: 67 -> 123 | Enemy HP: 236 -> 236
+ACT-000638 | 2026-11-07 23:18:39 | Enemy Attack | Player PLY-015 | Enemy BS-001 | Vharok, the World Eater attacked Player for 13 damage.
+    Player HP: 123 -> 110 | Enemy HP: 236 -> 236
+ACT-000639 | 2026-11-07 23:18:42 | Attack | Player PLY-015 | Enemy BS-001 | Player attacked Vharok, the World Eater for 40 damage.
+    Player HP: 110 -> 110 | Enemy HP: 236 -> 196
+ACT-000640 | 2026-11-07 23:18:44 | Enemy Attack | Player PLY-015 | Enemy BS-001 | Vharok, the World Eater attacked Player for 18 damage.
+    Player HP: 110 -> 92 | Enemy HP: 196 -> 196
+ACT-000641 | 2026-11-07 23:18:53 | Item Use | Player PLY-015 | Enemy BS-001 | Player rolled 3 on Dice of Fate. Life Blessing: restored 25 HP.
+    Player HP: 92 -> 117 | Enemy HP: 196 -> 196
+ACT-000642 | 2026-11-07 23:18:55 | Enemy Attack | Player PLY-015 | Enemy BS-001 | Vharok, the World Eater attacked Player for 10 damage.
+    Player HP: 117 -> 107 | Enemy HP: 196 -> 196
+ACT-000643 | 2026-11-07 23:19:04 | Defend | Player PLY-015 | Enemy BS-001 | Player defended against Vharok, the World Eater.
+    Player HP: 107 -> 107 | Enemy HP: 196 -> 196
+ACT-000644 | 2026-11-07 23:19:06 | Enemy Attack | Player PLY-015 | Enemy BS-001 | Vharok, the World Eater attacked Player for 4 damage (blocked by your guard).
+    Player HP: 107 -> 103 | Enemy HP: 196 -> 196
+ACT-000645 | 2026-11-07 23:19:10 | Attack | Player PLY-015 | Enemy BS-001 | Player attacked Vharok, the World Eater for 101 damage (critical).
+    Player HP: 103 -> 103 | Enemy HP: 196 -> 95
+ACT-000646 | 2026-11-07 23:19:11 | Enrage | Player PLY-015 | Enemy BS-001 | Vharok, the World Eater became enraged.
+    Player HP: 103 -> 103 | Enemy HP: 95 -> 95
+ACT-000647 | 2026-11-07 23:19:13 | Enemy Attack | Player PLY-015 | Enemy BS-001 | Vharok, the World Eater attacked Player for 18 damage.
+    Player HP: 103 -> 85 | Enemy HP: 95 -> 95
+ACT-000648 | 2026-11-07 23:19:17 | Potion Use | Player PLY-015 | Enemy BS-001 | Player used one Health Potion and restored 56 HP.
+    Player HP: 85 -> 141 | Enemy HP: 95 -> 95
+ACT-000649 | 2026-11-07 23:19:18 | Enemy Attack | Player PLY-015 | Enemy BS-001 | Vharok, the World Eater attacked Player for 15 damage.
+    Player HP: 141 -> 126 | Enemy HP: 95 -> 95
+ACT-000650 | 2026-11-07 23:19:21 | Attack | Player PLY-015 | Enemy BS-001 | Player attacked Vharok, the World Eater for 75 damage (critical).
+    Player HP: 126 -> 126 | Enemy HP: 95 -> 20
+ACT-000651 | 2026-11-07 23:19:23 | Enemy Attack | Player PLY-015 | Enemy BS-001 | Vharok, the World Eater attacked Player for 17 damage.
+    Player HP: 126 -> 109 | Enemy HP: 20 -> 20
+ACT-000652 | 2026-11-07 23:19:25 | Attack | Player PLY-015 | Enemy BS-001 | Player attacked Vharok, the World Eater for 45 damage.
+    Player HP: 109 -> 109 | Enemy HP: 20 -> 0
+ACT-000653 | 2026-11-07 23:19:25 | Victory | Player PLY-015 | Enemy BS-001 | Player defeated Vharok, the World Eater.
+    Player HP: 109 -> 109 | Enemy HP: 0 -> 0
+ACT-000654 | 2026-11-07 23:19:25 | Reward | Player PLY-015 | Enemy BS-001 | Player received 300 gold.
+    Player HP: 109 -> 109 | Enemy HP: 0 -> 0
+ACT-000655 | 2026-11-07 23:19:25 | Reward | Player PLY-015 | Enemy BS-001 | Player earned 600 score points.
+    Player HP: 109 -> 109 | Enemy HP: 0 -> 0
+ACT-000656 | 2026-11-07 23:19:25 | Level Complete | Player PLY-015 | Enemy BS-001 | Boss level completed. Attack 29 -> 34, Max HP 160 -> 180.
+    Player HP: 129 -> 129 | Enemy HP: 0 -> 0
+ACT-000657 | 2026-11-07 23:20:31 | Travel | Player PLY-015 | Enemy N/A | Player traveled to The Last Gate via Sealed Exit Door.
+    Player HP: 129 -> 129 | Enemy HP: None -> None
+ACT-000658 | 2026-11-07 23:20:33 | Dungeon Escape | Player PLY-015 | Enemy N/A | Player escaped the dungeon and earned 500 score.
+    Player HP: 129 -> 129 | Enemy HP: None -> None
+ACT-000659 | 2026-11-07 23:25:48 | Travel | Player PLY-004 | Enemy N/A | Player traveled to Rotting Sewers via Rusted Grate.
+    Player HP: 100 -> 100 | Enemy HP: None -> None
+ACT-000660 | 2026-11-07 23:25:53 | Battle Start | Player PLY-004 | Enemy ENM-001 | Battle started with Gravefang Rat.
+    Player HP: 100 -> 100 | Enemy HP: 55 -> 55
+ACT-000661 | 2026-11-07 23:25:55 | Attack | Player PLY-004 | Enemy ENM-001 | Player attacked Gravefang Rat for 16 damage.
+    Player HP: 100 -> 100 | Enemy HP: 55 -> 39
+ACT-000662 | 2026-11-07 23:25:57 | Enemy Attack | Player PLY-004 | Enemy ENM-001 | Gravefang Rat attacked Player for 5 damage.
+    Player HP: 100 -> 95 | Enemy HP: 39 -> 39
+ACT-000663 | 2026-11-07 23:25:59 | Attack | Player PLY-004 | Enemy ENM-001 | Player attacked Gravefang Rat for 15 damage.
+    Player HP: 95 -> 95 | Enemy HP: 39 -> 24
+ACT-000664 | 2026-11-07 23:26:01 | Enemy Attack | Player PLY-004 | Enemy ENM-001 | Gravefang Rat attacked Player for 6 damage.
+    Player HP: 95 -> 89 | Enemy HP: 24 -> 24
+ACT-000665 | 2026-11-07 23:26:02 | Attack | Player PLY-004 | Enemy ENM-001 | Player attacked Gravefang Rat for 33 damage (critical).
+    Player HP: 89 -> 89 | Enemy HP: 24 -> 0
+ACT-000666 | 2026-11-07 23:26:03 | Victory | Player PLY-004 | Enemy ENM-001 | Player defeated Gravefang Rat.
+    Player HP: 89 -> 89 | Enemy HP: 0 -> 0
+ACT-000667 | 2026-11-07 23:26:03 | Reward | Player PLY-004 | Enemy ENM-001 | Player received 25 gold.
+    Player HP: 89 -> 89 | Enemy HP: 0 -> 0
+ACT-000668 | 2026-11-07 23:26:03 | Reward | Player PLY-004 | Enemy ENM-001 | Player earned 40 score points.
+    Player HP: 89 -> 89 | Enemy HP: 0 -> 0
+ACT-000669 | 2026-11-07 23:26:08 | Battle Start | Player PLY-004 | Enemy ENM-002 | Battle started with Hollowbone Goblin.
+    Player HP: 89 -> 89 | Enemy HP: 70 -> 70
+ACT-000670 | 2026-11-07 23:26:11 | Attack | Player PLY-004 | Enemy ENM-002 | Player attacked Hollowbone Goblin for 17 damage.
+    Player HP: 89 -> 89 | Enemy HP: 70 -> 53
+ACT-000671 | 2026-11-07 23:26:12 | Enemy Attack | Player PLY-004 | Enemy ENM-002 | Hollowbone Goblin attacked Player for 7 damage.
+    Player HP: 89 -> 82 | Enemy HP: 53 -> 53
+ACT-000672 | 2026-11-07 23:26:15 | Attack | Player PLY-004 | Enemy ENM-002 | Player attacked Hollowbone Goblin for 13 damage.
+    Player HP: 82 -> 82 | Enemy HP: 53 -> 40
+ACT-000673 | 2026-11-07 23:26:16 | Enemy Attack | Player PLY-004 | Enemy ENM-002 | Hollowbone Goblin attacked Player for 7 damage.
+    Player HP: 82 -> 75 | Enemy HP: 40 -> 40
+ACT-000674 | 2026-11-07 23:26:20 | Attack | Player PLY-004 | Enemy ENM-002 | Player attacked Hollowbone Goblin for 16 damage.
+    Player HP: 75 -> 75 | Enemy HP: 40 -> 24
+ACT-000675 | 2026-11-07 23:26:21 | Enemy Attack | Player PLY-004 | Enemy ENM-002 | Hollowbone Goblin attacked Player for 9 damage.
+    Player HP: 75 -> 66 | Enemy HP: 24 -> 24
+ACT-000676 | 2026-11-07 23:26:23 | Attack | Player PLY-004 | Enemy ENM-002 | Player attacked Hollowbone Goblin for 15 damage.
+    Player HP: 66 -> 66 | Enemy HP: 24 -> 9
+ACT-000677 | 2026-11-07 23:26:25 | Enemy Attack | Player PLY-004 | Enemy ENM-002 | Hollowbone Goblin attacked Player for 5 damage.
+    Player HP: 66 -> 61 | Enemy HP: 9 -> 9
+ACT-000678 | 2026-11-07 23:26:27 | Attack | Player PLY-004 | Enemy ENM-002 | Player attacked Hollowbone Goblin for 16 damage.
+    Player HP: 61 -> 61 | Enemy HP: 9 -> 0
+ACT-000679 | 2026-11-07 23:26:27 | Victory | Player PLY-004 | Enemy ENM-002 | Player defeated Hollowbone Goblin.
+    Player HP: 61 -> 61 | Enemy HP: 0 -> 0
+ACT-000680 | 2026-11-07 23:26:27 | Reward | Player PLY-004 | Enemy ENM-002 | Player received 30 gold.
+    Player HP: 61 -> 61 | Enemy HP: 0 -> 0
+ACT-000681 | 2026-11-07 23:26:27 | Reward | Player PLY-004 | Enemy ENM-002 | Player earned 60 score points.
+    Player HP: 61 -> 61 | Enemy HP: 0 -> 0
+ACT-000682 | 2026-11-07 23:26:45 | Battle Start | Player PLY-004 | Enemy ENM-003 | Battle started with Ashen Ghoul.
+    Player HP: 61 -> 61 | Enemy HP: 85 -> 85
+ACT-000683 | 2026-11-07 23:26:51 | Attack | Player PLY-004 | Enemy ENM-003 | Player attacked Ashen Ghoul for 13 damage.
+    Player HP: 61 -> 61 | Enemy HP: 85 -> 72
+ACT-000684 | 2026-11-07 23:26:52 | Enemy Attack | Player PLY-004 | Enemy ENM-003 | Ashen Ghoul attacked Player for 10 damage.
+    Player HP: 61 -> 51 | Enemy HP: 72 -> 72
+ACT-000685 | 2026-11-07 23:26:55 | Attack | Player PLY-004 | Enemy ENM-003 | Player attacked Ashen Ghoul for 14 damage.
+    Player HP: 51 -> 51 | Enemy HP: 72 -> 58
+ACT-000686 | 2026-11-07 23:26:57 | Enemy Attack | Player PLY-004 | Enemy ENM-003 | Ashen Ghoul attacked Player for 13 damage.
+    Player HP: 51 -> 38 | Enemy HP: 58 -> 58
+ACT-000687 | 2026-11-07 23:27:00 | Attack | Player PLY-004 | Enemy ENM-003 | Player attacked Ashen Ghoul for 16 damage.
+    Player HP: 38 -> 38 | Enemy HP: 58 -> 42
+ACT-000688 | 2026-11-07 23:27:02 | Enemy Attack | Player PLY-004 | Enemy ENM-003 | Ashen Ghoul attacked Player for 10 damage.
+    Player HP: 38 -> 28 | Enemy HP: 42 -> 42
+ACT-000689 | 2026-11-07 23:27:04 | Attack | Player PLY-004 | Enemy ENM-003 | Player attacked Ashen Ghoul for 13 damage.
+    Player HP: 28 -> 28 | Enemy HP: 42 -> 29
+ACT-000690 | 2026-11-07 23:27:06 | Enemy Attack | Player PLY-004 | Enemy ENM-003 | Ashen Ghoul attacked Player for 10 damage.
+    Player HP: 28 -> 18 | Enemy HP: 29 -> 29
+ACT-000691 | 2026-11-07 23:27:09 | Attack | Player PLY-004 | Enemy ENM-003 | Player attacked Ashen Ghoul for 19 damage.
+    Player HP: 18 -> 18 | Enemy HP: 29 -> 10
+ACT-000692 | 2026-11-07 23:27:10 | Enemy Attack | Player PLY-004 | Enemy ENM-003 | Ashen Ghoul attacked Player for 10 damage.
+    Player HP: 18 -> 8 | Enemy HP: 10 -> 10
+ACT-000693 | 2026-11-07 23:27:17 | Potion Use | Player PLY-004 | Enemy ENM-003 | Player used one Health Potion and restored 35 HP.
+    Player HP: 8 -> 43 | Enemy HP: 10 -> 10
+ACT-000694 | 2026-11-07 23:27:19 | Enemy Attack | Player PLY-004 | Enemy ENM-003 | Ashen Ghoul attacked Player for 8 damage.
+    Player HP: 43 -> 35 | Enemy HP: 10 -> 10
+ACT-000695 | 2026-11-07 23:27:22 | Attack | Player PLY-004 | Enemy ENM-003 | Player attacked Ashen Ghoul for 19 damage.
+    Player HP: 35 -> 35 | Enemy HP: 10 -> 0
+ACT-000696 | 2026-11-07 23:27:22 | Victory | Player PLY-004 | Enemy ENM-003 | Player defeated Ashen Ghoul.
+    Player HP: 35 -> 35 | Enemy HP: 0 -> 0
+ACT-000697 | 2026-11-07 23:27:22 | Reward | Player PLY-004 | Enemy ENM-003 | Player received 35 gold.
+    Player HP: 35 -> 35 | Enemy HP: 0 -> 0
+ACT-000698 | 2026-11-07 23:27:22 | Reward | Player PLY-004 | Enemy ENM-003 | Player earned 80 score points.
+    Player HP: 35 -> 35 | Enemy HP: 0 -> 0
+ACT-000699 | 2026-11-07 23:27:22 | Level Complete | Player PLY-004 | Enemy ENM-003 | Weak level completed. Attack 14 -> 19, Max HP 100 -> 120. Level completion bonus: 40 Gold.
+    Player HP: 55 -> 55 | Enemy HP: 0 -> 0
+ACT-000700 | 2026-11-07 23:27:22 | Equipment Upgrade | Player PLY-004 | Enemy ENM-003 | Standard-Issue gear upgraded for free: Sword: Rusty Sword -> Bloodstone Sword (ATK: +6 | SPD: +4%); Shield: Wooden Shield -> Iron Shield (BLOCK: 9%); Armor: Cloth Armor -> Chainmail Armor (DEF: -2 per hit).
+    Player HP: 55 -> 55 | Enemy HP: 0 -> 0
+ACT-000701 | 2026-11-07 23:27:22 | Progression | Player PLY-004 | Enemy ENM-003 | Rank increased from Beginner to Adventurer.
+    Player HP: 55 -> 55 | Enemy HP: 0 -> 0
+ACT-000702 | 2026-11-07 23:28:15 | Purchase | Player PLY-004 | Enemy N/A | Player bought 6 Health Potion for 180 gold.
+    Player HP: 55 -> 55 | Enemy HP: None -> None
+ACT-000703 | 2026-11-07 23:28:32 | Travel | Player PLY-004 | Enemy N/A | Player traveled to Dreadveil Entrance via Rusted Grate.
+    Player HP: 55 -> 55 | Enemy HP: None -> None
+ACT-000704 | 2026-11-07 23:28:44 | Travel | Player PLY-004 | Enemy N/A | Player traveled to Rotting Sewers via Rusted Grate.
+    Player HP: 55 -> 55 | Enemy HP: None -> None
+ACT-000705 | 2026-11-07 23:28:56 | Travel | Player PLY-004 | Enemy N/A | Player traveled to Dreadveil Entrance via Rusted Grate.
+    Player HP: 55 -> 55 | Enemy HP: None -> None
+ACT-000706 | 2026-11-07 23:29:01 | Travel | Player PLY-004 | Enemy N/A | Player traveled to Rotting Sewers via Rusted Grate.
+    Player HP: 55 -> 55 | Enemy HP: None -> None
+ACT-000707 | 2026-11-07 23:29:07 | Travel | Player PLY-004 | Enemy N/A | Player traveled to Bloodstone Hall via Crimson Gate.
+    Player HP: 55 -> 55 | Enemy HP: None -> None
+ACT-000708 | 2026-11-07 23:29:11 | Battle Start | Player PLY-004 | Enemy ENM-004 | Battle started with Ironjaw Reaver.
+    Player HP: 55 -> 55 | Enemy HP: 105 -> 105
+ACT-000709 | 2026-11-07 23:29:25 | Attack | Player PLY-004 | Enemy ENM-004 | Player attacked Ironjaw Reaver for 45 damage (critical).
+    Player HP: 55 -> 55 | Enemy HP: 105 -> 60
+ACT-000710 | 2026-11-07 23:29:27 | Enemy Attack | Player PLY-004 | Enemy ENM-004 | Ironjaw Reaver attacked Player for 7 damage.
+    Player HP: 55 -> 48 | Enemy HP: 60 -> 60
+ACT-000711 | 2026-11-07 23:29:29 | Attack | Player PLY-004 | Enemy ENM-004 | Player attacked Ironjaw Reaver for 23 damage.
+    Player HP: 48 -> 48 | Enemy HP: 60 -> 37
+ACT-000712 | 2026-11-07 23:29:31 | Enemy Attack | Player PLY-004 | Enemy ENM-004 | Ironjaw Reaver attacked Player for 10 damage.
+    Player HP: 48 -> 38 | Enemy HP: 37 -> 37
+ACT-000713 | 2026-11-07 23:29:33 | Attack | Player PLY-004 | Enemy ENM-004 | Player attacked Ironjaw Reaver for 38 damage (critical).
+    Player HP: 38 -> 38 | Enemy HP: 37 -> 0
+ACT-000714 | 2026-11-07 23:29:33 | Victory | Player PLY-004 | Enemy ENM-004 | Player defeated Ironjaw Reaver.
+    Player HP: 38 -> 38 | Enemy HP: 0 -> 0
+ACT-000715 | 2026-11-07 23:29:33 | Reward | Player PLY-004 | Enemy ENM-004 | Player received 50 gold.
+    Player HP: 38 -> 38 | Enemy HP: 0 -> 0
+ACT-000716 | 2026-11-07 23:29:33 | Reward | Player PLY-004 | Enemy ENM-004 | Player earned 100 score points.
+    Player HP: 38 -> 38 | Enemy HP: 0 -> 0
+ACT-000717 | 2026-11-07 23:29:40 | Battle Start | Player PLY-004 | Enemy ENM-005 | Battle started with Boneguard Executioner.
+    Player HP: 38 -> 38 | Enemy HP: 120 -> 120
+ACT-000718 | 2026-11-07 23:29:46 | Potion Use | Player PLY-004 | Enemy ENM-005 | Player used one Health Potion and restored 42 HP.
+    Player HP: 38 -> 80 | Enemy HP: 120 -> 120
+ACT-000719 | 2026-11-07 23:29:47 | Enemy Attack | Player PLY-004 | Enemy ENM-005 | Boneguard Executioner attacked Player for 9 damage.
+    Player HP: 80 -> 71 | Enemy HP: 120 -> 120
+ACT-000720 | 2026-11-07 23:29:50 | Attack | Player PLY-004 | Enemy ENM-005 | Player attacked Boneguard Executioner for 47 damage (critical).
+    Player HP: 71 -> 71 | Enemy HP: 120 -> 73
+ACT-000721 | 2026-11-07 23:29:51 | Enemy Attack | Player PLY-004 | Enemy ENM-005 | Boneguard Executioner attacked Player for 8 damage.
+    Player HP: 71 -> 63 | Enemy HP: 73 -> 73
+ACT-000722 | 2026-11-07 23:29:54 | Attack | Player PLY-004 | Enemy ENM-005 | Player attacked Boneguard Executioner for 28 damage.
+    Player HP: 63 -> 63 | Enemy HP: 73 -> 45
+ACT-000723 | 2026-11-07 23:29:56 | Enemy Attack | Player PLY-004 | Enemy ENM-005 | Boneguard Executioner attacked Player for 8 damage.
+    Player HP: 63 -> 55 | Enemy HP: 45 -> 45
+ACT-000724 | 2026-11-07 23:30:00 | Attack | Player PLY-004 | Enemy ENM-005 | Player attacked Boneguard Executioner for 24 damage.
+    Player HP: 55 -> 55 | Enemy HP: 45 -> 21
+ACT-000725 | 2026-11-07 23:30:01 | Enemy Attack | Player PLY-004 | Enemy ENM-005 | Boneguard Executioner attacked Player for 10 damage.
+    Player HP: 55 -> 45 | Enemy HP: 21 -> 21
+ACT-000726 | 2026-11-07 23:30:05 | Attack | Player PLY-004 | Enemy ENM-005 | Player attacked Boneguard Executioner for 24 damage.
+    Player HP: 45 -> 45 | Enemy HP: 21 -> 0
+ACT-000727 | 2026-11-07 23:30:06 | Victory | Player PLY-004 | Enemy ENM-005 | Player defeated Boneguard Executioner.
+    Player HP: 45 -> 45 | Enemy HP: 0 -> 0
+ACT-000728 | 2026-11-07 23:30:06 | Reward | Player PLY-004 | Enemy ENM-005 | Player received 60 gold.
+    Player HP: 45 -> 45 | Enemy HP: 0 -> 0
+ACT-000729 | 2026-11-07 23:30:06 | Reward | Player PLY-004 | Enemy ENM-005 | Player earned 120 score points.
+    Player HP: 45 -> 45 | Enemy HP: 0 -> 0
+ACT-000730 | 2026-11-07 23:30:13 | Battle Start | Player PLY-004 | Enemy ENM-006 | Battle started with Hellchain Marauder.
+    Player HP: 45 -> 45 | Enemy HP: 135 -> 135
+ACT-000731 | 2026-11-07 23:30:18 | Potion Use | Player PLY-004 | Enemy ENM-006 | Player used one Health Potion and restored 42 HP.
+    Player HP: 45 -> 87 | Enemy HP: 135 -> 135
+ACT-000732 | 2026-11-07 23:30:20 | Enemy Attack | Player PLY-004 | Enemy ENM-006 | Hellchain Marauder attacked Player for 12 damage.
+    Player HP: 87 -> 75 | Enemy HP: 135 -> 135
+ACT-000733 | 2026-11-07 23:30:22 | Attack | Player PLY-004 | Enemy ENM-006 | Player attacked Hellchain Marauder for 28 damage.
+    Player HP: 75 -> 75 | Enemy HP: 135 -> 107
+ACT-000734 | 2026-11-07 23:30:24 | Enemy Attack | Player PLY-004 | Enemy ENM-006 | Hellchain Marauder attacked Player for 11 damage.
+    Player HP: 75 -> 64 | Enemy HP: 107 -> 107
+ACT-000735 | 2026-11-07 23:30:26 | Attack | Player PLY-004 | Enemy ENM-006 | Player attacked Hellchain Marauder for 28 damage.
+    Player HP: 64 -> 64 | Enemy HP: 107 -> 79
+ACT-000736 | 2026-11-07 23:30:28 | Enemy Attack | Player PLY-004 | Enemy ENM-006 | Hellchain Marauder attacked Player for 10 damage.
+    Player HP: 64 -> 54 | Enemy HP: 79 -> 79
+ACT-000737 | 2026-11-07 23:30:32 | Attack | Player PLY-004 | Enemy ENM-006 | Player attacked Hellchain Marauder for 22 damage.
+    Player HP: 54 -> 54 | Enemy HP: 79 -> 57
+ACT-000738 | 2026-11-07 23:30:33 | Enemy Attack | Player PLY-004 | Enemy ENM-006 | Hellchain Marauder attacked Player for 10 damage.
+    Player HP: 54 -> 44 | Enemy HP: 57 -> 57
+ACT-000739 | 2026-11-07 23:30:35 | Attack | Player PLY-004 | Enemy ENM-006 | Player attacked Hellchain Marauder for 42 damage (critical).
+    Player HP: 44 -> 44 | Enemy HP: 57 -> 15
+ACT-000740 | 2026-11-07 23:30:37 | Enemy Attack | Player PLY-004 | Enemy ENM-006 | Hellchain Marauder attacked Player for 10 damage.
+    Player HP: 44 -> 34 | Enemy HP: 15 -> 15
+ACT-000741 | 2026-11-07 23:30:39 | Attack | Player PLY-004 | Enemy ENM-006 | Player attacked Hellchain Marauder for 47 damage (critical).
+    Player HP: 34 -> 34 | Enemy HP: 15 -> 0
+ACT-000742 | 2026-11-07 23:30:39 | Victory | Player PLY-004 | Enemy ENM-006 | Player defeated Hellchain Marauder.
+    Player HP: 34 -> 34 | Enemy HP: 0 -> 0
+ACT-000743 | 2026-11-07 23:30:39 | Reward | Player PLY-004 | Enemy ENM-006 | Player received 70 gold.
+    Player HP: 34 -> 34 | Enemy HP: 0 -> 0
+ACT-000744 | 2026-11-07 23:30:39 | Reward | Player PLY-004 | Enemy ENM-006 | Player earned 140 score points.
+    Player HP: 34 -> 34 | Enemy HP: 0 -> 0
+ACT-000745 | 2026-11-07 23:30:39 | Level Complete | Player PLY-004 | Enemy ENM-006 | Intermediate level completed. Attack 19 -> 24, Max HP 120 -> 140. Level completion bonus: 80 Gold.
+    Player HP: 54 -> 54 | Enemy HP: 0 -> 0
+ACT-000746 | 2026-11-07 23:30:39 | Equipment Upgrade | Player PLY-004 | Enemy ENM-006 | Standard-Issue gear upgraded for free: Sword: Bloodstone Sword -> Steel Sword (ATK: +10 | SPD: +8%); Shield: Iron Shield -> Steel Shield (BLOCK: 15%); Armor: Chainmail Armor -> Steel Armor (DEF: -4 per hit).
+    Player HP: 54 -> 54 | Enemy HP: 0 -> 0
+ACT-000747 | 2026-11-07 23:30:39 | Progression | Player PLY-004 | Enemy ENM-006 | Rank increased from Adventurer to Elite.
+    Player HP: 54 -> 54 | Enemy HP: 0 -> 0
+ACT-000748 | 2026-11-07 23:30:47 | Travel | Player PLY-004 | Enemy N/A | Player traveled to Rotting Sewers via Crimson Gate.
+    Player HP: 54 -> 54 | Enemy HP: None -> None
+ACT-000749 | 2026-11-07 23:30:50 | Travel | Player PLY-004 | Enemy N/A | Player traveled to Bloodstone Hall via Crimson Gate.
+    Player HP: 54 -> 54 | Enemy HP: None -> None
+ACT-000750 | 2026-11-07 23:30:54 | Travel | Player PLY-004 | Enemy N/A | Player traveled to Rotting Sewers via Crimson Gate.
+    Player HP: 54 -> 54 | Enemy HP: None -> None
+ACT-000751 | 2026-11-07 23:30:56 | Travel | Player PLY-004 | Enemy N/A | Player traveled to Dreadveil Entrance via Rusted Grate.
+    Player HP: 54 -> 54 | Enemy HP: None -> None
+ACT-000752 | 2026-11-07 23:31:04 | Travel | Player PLY-004 | Enemy N/A | Player traveled to Rotting Sewers via Rusted Grate.
+    Player HP: 54 -> 54 | Enemy HP: None -> None
+ACT-000753 | 2026-11-07 23:31:08 | Travel | Player PLY-004 | Enemy N/A | Player traveled to Bloodstone Hall via Crimson Gate.
+    Player HP: 54 -> 54 | Enemy HP: None -> None
+ACT-000754 | 2026-11-07 23:31:11 | Travel | Player PLY-004 | Enemy N/A | Player traveled to Rotting Sewers via Crimson Gate.
+    Player HP: 54 -> 54 | Enemy HP: None -> None
+ACT-000755 | 2026-11-07 23:31:15 | Travel | Player PLY-004 | Enemy N/A | Player traveled to Dreadveil Entrance via Rusted Grate.
+    Player HP: 54 -> 54 | Enemy HP: None -> None
+ACT-000756 | 2026-11-07 23:31:20 | Travel | Player PLY-004 | Enemy N/A | Player traveled to Rotting Sewers via Rusted Grate.
+    Player HP: 54 -> 54 | Enemy HP: None -> None
+ACT-000757 | 2026-11-07 23:31:24 | Travel | Player PLY-004 | Enemy N/A | Player traveled to Bloodstone Hall via Crimson Gate.
+    Player HP: 54 -> 54 | Enemy HP: None -> None
+ACT-000758 | 2026-11-07 23:31:32 | Travel | Player PLY-004 | Enemy N/A | Player traveled to Rotting Sewers via Crimson Gate.
+    Player HP: 54 -> 54 | Enemy HP: None -> None
+ACT-000759 | 2026-11-07 23:31:35 | Travel | Player PLY-004 | Enemy N/A | Player traveled to Bloodstone Hall via Crimson Gate.
+    Player HP: 54 -> 54 | Enemy HP: None -> None
+ACT-000760 | 2026-11-07 23:31:40 | Travel | Player PLY-004 | Enemy N/A | Player traveled to Rotting Sewers via Crimson Gate.
+    Player HP: 54 -> 54 | Enemy HP: None -> None
+ACT-000761 | 2026-11-07 23:31:45 | Travel | Player PLY-004 | Enemy N/A | Player traveled to Dreadveil Entrance via Rusted Grate.
+    Player HP: 54 -> 54 | Enemy HP: None -> None
+ACT-000762 | 2026-11-07 23:31:52 | Travel | Player PLY-004 | Enemy N/A | Player traveled to Rotting Sewers via Rusted Grate.
+    Player HP: 54 -> 54 | Enemy HP: None -> None
+ACT-000763 | 2026-11-07 23:31:57 | Travel | Player PLY-004 | Enemy N/A | Player traveled to Dreadveil Entrance via Rusted Grate.
+    Player HP: 54 -> 54 | Enemy HP: None -> None
+ACT-000764 | 2026-11-07 23:32:01 | Travel | Player PLY-004 | Enemy N/A | Player traveled to Rotting Sewers via Rusted Grate.
+    Player HP: 54 -> 54 | Enemy HP: None -> None
+ACT-000765 | 2026-11-07 23:32:05 | Travel | Player PLY-004 | Enemy N/A | Player traveled to Bloodstone Hall via Crimson Gate.
+    Player HP: 54 -> 54 | Enemy HP: None -> None
+ACT-000766 | 2026-11-07 23:32:12 | Travel | Player PLY-004 | Enemy N/A | Player traveled to War-Torn Catacombs via Iron Drawbridge.
+    Player HP: 54 -> 54 | Enemy HP: None -> None
+ACT-000767 | 2026-11-07 23:32:16 | Battle Start | Player PLY-004 | Enemy ENM-007 | Battle started with Dreadfang Berserker.
+    Player HP: 54 -> 54 | Enemy HP: 150 -> 150
+ACT-000768 | 2026-11-07 23:32:28 | Attack | Player PLY-004 | Enemy ENM-007 | Player attacked Dreadfang Berserker for 36 damage.
+    Player HP: 54 -> 54 | Enemy HP: 150 -> 114
+ACT-000769 | 2026-11-07 23:32:29 | Enemy Attack | Player PLY-004 | Enemy ENM-007 | Dreadfang Berserker attacked Player for 11 damage.
+    Player HP: 54 -> 43 | Enemy HP: 114 -> 114
+ACT-000770 | 2026-11-07 23:32:32 | Potion Use | Player PLY-004 | Enemy ENM-007 | Player used one Health Potion and restored 49 HP.
+    Player HP: 43 -> 92 | Enemy HP: 114 -> 114
+ACT-000771 | 2026-11-07 23:32:33 | Enemy Attack | Player PLY-004 | Enemy ENM-007 | Dreadfang Berserker attacked Player for 9 damage.
+    Player HP: 92 -> 83 | Enemy HP: 114 -> 114
+ACT-000772 | 2026-11-07 23:32:36 | Attack | Player PLY-004 | Enemy ENM-007 | Player attacked Dreadfang Berserker for 37 damage.
+    Player HP: 83 -> 83 | Enemy HP: 114 -> 77
+ACT-000773 | 2026-11-07 23:32:37 | Enemy Attack | Player PLY-004 | Enemy ENM-007 | Dreadfang Berserker attacked Player for 9 damage.
+    Player HP: 83 -> 74 | Enemy HP: 77 -> 77
+ACT-000774 | 2026-11-07 23:32:39 | Attack | Player PLY-004 | Enemy ENM-007 | Player attacked Dreadfang Berserker for 36 damage.
+    Player HP: 74 -> 74 | Enemy HP: 77 -> 41
+ACT-000775 | 2026-11-07 23:32:41 | Enemy Attack | Player PLY-004 | Enemy ENM-007 | Dreadfang Berserker attacked Player for 9 damage.
+    Player HP: 74 -> 65 | Enemy HP: 41 -> 41
+ACT-000776 | 2026-11-07 23:32:43 | Attack | Player PLY-004 | Enemy ENM-007 | Player attacked Dreadfang Berserker for 36 damage.
+    Player HP: 65 -> 65 | Enemy HP: 41 -> 5
+ACT-000777 | 2026-11-07 23:32:44 | Enemy Attack | Player PLY-004 | Enemy ENM-007 | Dreadfang Berserker attacked Player for 10 damage.
+    Player HP: 65 -> 55 | Enemy HP: 5 -> 5
+ACT-000778 | 2026-11-07 23:32:46 | Attack | Player PLY-004 | Enemy ENM-007 | Player attacked Dreadfang Berserker for 36 damage.
+    Player HP: 55 -> 55 | Enemy HP: 5 -> 0
+ACT-000779 | 2026-11-07 23:32:46 | Victory | Player PLY-004 | Enemy ENM-007 | Player defeated Dreadfang Berserker.
+    Player HP: 55 -> 55 | Enemy HP: 0 -> 0
+ACT-000780 | 2026-11-07 23:32:46 | Reward | Player PLY-004 | Enemy ENM-007 | Player received 85 gold.
+    Player HP: 55 -> 55 | Enemy HP: 0 -> 0
+ACT-000781 | 2026-11-07 23:32:46 | Reward | Player PLY-004 | Enemy ENM-007 | Player earned 180 score points.
+    Player HP: 55 -> 55 | Enemy HP: 0 -> 0
+ACT-000782 | 2026-11-07 23:33:04 | Battle Start | Player PLY-004 | Enemy ENM-008 | Battle started with Abyssal Death Knight.
+    Player HP: 55 -> 55 | Enemy HP: 165 -> 165
+ACT-000783 | 2026-11-07 23:33:06 | Attack | Player PLY-004 | Enemy ENM-008 | Player attacked Abyssal Death Knight for 54 damage (critical).
+    Player HP: 55 -> 55 | Enemy HP: 165 -> 111
+ACT-000784 | 2026-11-07 23:33:08 | Enemy Attack | Player PLY-004 | Enemy ENM-008 | Abyssal Death Knight attacked Player for 11 damage.
+    Player HP: 55 -> 44 | Enemy HP: 111 -> 111
+ACT-000785 | 2026-11-07 23:33:10 | Attack | Player PLY-004 | Enemy ENM-008 | Player attacked Abyssal Death Knight for 59 damage (critical).
+    Player HP: 44 -> 44 | Enemy HP: 111 -> 52
+ACT-000786 | 2026-11-07 23:33:11 | Enemy Attack | Player PLY-004 | Enemy ENM-008 | Abyssal Death Knight attacked Player for 11 damage.
+    Player HP: 44 -> 33 | Enemy HP: 52 -> 52
+ACT-000787 | 2026-11-07 23:33:14 | Potion Use | Player PLY-004 | Enemy ENM-008 | Player used one Health Potion and restored 49 HP.
+    Player HP: 33 -> 82 | Enemy HP: 52 -> 52
+ACT-000788 | 2026-11-07 23:33:16 | Enemy Attack | Player PLY-004 | Enemy ENM-008 | Abyssal Death Knight attacked Player for 10 damage.
+    Player HP: 82 -> 72 | Enemy HP: 52 -> 52
+ACT-000789 | 2026-11-07 23:33:18 | Attack | Player PLY-004 | Enemy ENM-008 | Player attacked Abyssal Death Knight for 59 damage (critical).
+    Player HP: 72 -> 72 | Enemy HP: 52 -> 0
+ACT-000790 | 2026-11-07 23:33:18 | Victory | Player PLY-004 | Enemy ENM-008 | Player defeated Abyssal Death Knight.
+    Player HP: 72 -> 72 | Enemy HP: 0 -> 0
+ACT-000791 | 2026-11-07 23:33:18 | Reward | Player PLY-004 | Enemy ENM-008 | Player received 95 gold.
+    Player HP: 72 -> 72 | Enemy HP: 0 -> 0
+ACT-000792 | 2026-11-07 23:33:18 | Reward | Player PLY-004 | Enemy ENM-008 | Player earned 200 score points.
+    Player HP: 72 -> 72 | Enemy HP: 0 -> 0
+ACT-000793 | 2026-11-07 23:33:26 | Battle Start | Player PLY-004 | Enemy ENM-009 | Battle started with Soulreaper Wraith.
+    Player HP: 72 -> 72 | Enemy HP: 180 -> 180
+ACT-000794 | 2026-11-07 23:33:33 | Attack | Player PLY-004 | Enemy ENM-009 | Player attacked Soulreaper Wraith for 35 damage.
+    Player HP: 72 -> 72 | Enemy HP: 180 -> 145
+ACT-000795 | 2026-11-07 23:33:35 | Enemy Attack | Player PLY-004 | Enemy ENM-009 | Soulreaper Wraith attacked Player for 13 damage.
+    Player HP: 72 -> 59 | Enemy HP: 145 -> 145
+ACT-000796 | 2026-11-07 23:33:40 | Attack | Player PLY-004 | Enemy ENM-009 | Player attacked Soulreaper Wraith for 34 damage.
+    Player HP: 59 -> 59 | Enemy HP: 145 -> 111
+ACT-000797 | 2026-11-07 23:33:42 | Enemy Attack | Player PLY-004 | Enemy ENM-009 | Soulreaper Wraith attacked Player for 10 damage.
+    Player HP: 59 -> 49 | Enemy HP: 111 -> 111
+ACT-000798 | 2026-11-07 23:33:44 | Attack | Player PLY-004 | Enemy ENM-009 | Player attacked Soulreaper Wraith for 35 damage.
+    Player HP: 49 -> 49 | Enemy HP: 111 -> 76
+ACT-000799 | 2026-11-07 23:33:46 | Enemy Attack | Player PLY-004 | Enemy ENM-009 | Soulreaper Wraith attacked Player for 13 damage.
+    Player HP: 49 -> 36 | Enemy HP: 76 -> 76
+ACT-000800 | 2026-11-07 23:33:49 | Potion Use | Player PLY-004 | Enemy ENM-009 | Player used one Health Potion and restored 49 HP.
+    Player HP: 36 -> 85 | Enemy HP: 76 -> 76
+ACT-000801 | 2026-11-07 23:33:50 | Enemy Attack | Player PLY-004 | Enemy ENM-009 | Soulreaper Wraith attacked Player for 10 damage.
+    Player HP: 85 -> 75 | Enemy HP: 76 -> 76
+ACT-000802 | 2026-11-07 23:33:53 | Attack | Player PLY-004 | Enemy ENM-009 | Player attacked Soulreaper Wraith for 33 damage.
+    Player HP: 75 -> 75 | Enemy HP: 76 -> 43
+ACT-000803 | 2026-11-07 23:33:55 | Enemy Attack | Player PLY-004 | Enemy ENM-009 | Soulreaper Wraith attacked Player for 12 damage.
+    Player HP: 75 -> 63 | Enemy HP: 43 -> 43
+ACT-000804 | 2026-11-07 23:33:57 | Attack | Player PLY-004 | Enemy ENM-009 | Player attacked Soulreaper Wraith for 35 damage.
+    Player HP: 63 -> 63 | Enemy HP: 43 -> 8
+ACT-000805 | 2026-11-07 23:33:59 | Enemy Attack | Player PLY-004 | Enemy ENM-009 | Soulreaper Wraith attacked Player for 11 damage.
+    Player HP: 63 -> 52 | Enemy HP: 8 -> 8
+ACT-000806 | 2026-11-07 23:34:00 | Attack | Player PLY-004 | Enemy ENM-009 | Player attacked Soulreaper Wraith for 34 damage.
+    Player HP: 52 -> 52 | Enemy HP: 8 -> 0
+ACT-000807 | 2026-11-07 23:34:00 | Victory | Player PLY-004 | Enemy ENM-009 | Player defeated Soulreaper Wraith.
+    Player HP: 52 -> 52 | Enemy HP: 0 -> 0
+ACT-000808 | 2026-11-07 23:34:00 | Reward | Player PLY-004 | Enemy ENM-009 | Player received 110 gold.
+    Player HP: 52 -> 52 | Enemy HP: 0 -> 0
+ACT-000809 | 2026-11-07 23:34:00 | Reward | Player PLY-004 | Enemy ENM-009 | Player earned 220 score points.
+    Player HP: 52 -> 52 | Enemy HP: 0 -> 0
+ACT-000810 | 2026-11-07 23:34:00 | Level Complete | Player PLY-004 | Enemy ENM-009 | Strong level completed. Attack 24 -> 29, Max HP 140 -> 160. Level completion bonus: 150 Gold.
+    Player HP: 72 -> 72 | Enemy HP: 0 -> 0
+ACT-000811 | 2026-11-07 23:34:00 | Equipment Upgrade | Player PLY-004 | Enemy ENM-009 | Standard-Issue gear upgraded for free: Sword: Steel Sword -> Darksteel Sword (ATK: +14 | SPD: +12%); Shield: Steel Shield -> Darksteel Shield (BLOCK: 23%); Armor: Steel Armor -> Darksteel Armor (DEF: -6 per hit).
+    Player HP: 72 -> 72 | Enemy HP: 0 -> 0
+ACT-000812 | 2026-11-07 23:34:00 | Progression | Player PLY-004 | Enemy ENM-009 | Rank increased from Elite to Master.
+    Player HP: 72 -> 72 | Enemy HP: 0 -> 0
+ACT-000813 | 2026-11-07 23:34:08 | Travel | Player PLY-004 | Enemy N/A | Player traveled to Throne of Ruin via Throne Gate.
+    Player HP: 72 -> 72 | Enemy HP: None -> None
+ACT-000814 | 2026-11-07 23:34:41 | Purchase | Player PLY-004 | Enemy N/A | Player bought 9 Health Potion for 270 gold.
+    Player HP: 72 -> 72 | Enemy HP: None -> None
+ACT-000815 | 2026-11-07 23:34:50 | Purchase | Player PLY-004 | Enemy N/A | Player bought 1 Dice of Fate for 100 gold.
+    Player HP: 72 -> 72 | Enemy HP: None -> None
+ACT-000816 | 2026-11-07 23:35:11 | Purchase | Player PLY-004 | Enemy N/A | Player bought 2 Paralysis Bomb for 220 gold.
+    Player HP: 72 -> 72 | Enemy HP: None -> None
+ACT-000817 | 2026-11-07 23:35:19 | Purchase | Player PLY-004 | Enemy N/A | Player bought 1 Strength Tonic for 70 gold.
+    Player HP: 72 -> 72 | Enemy HP: None -> None
+ACT-000818 | 2026-11-07 23:36:17 | Battle Start | Player PLY-004 | Enemy BS-001 | Battle started with Vharok, the World Eater.
+    Player HP: 72 -> 72 | Enemy HP: 320 -> 320
+ACT-000819 | 2026-11-07 23:36:24 | Attack | Player PLY-004 | Enemy BS-001 | Player attacked Vharok, the World Eater for 46 damage.
+    Player HP: 72 -> 72 | Enemy HP: 320 -> 274
+ACT-000820 | 2026-11-07 23:36:25 | Enemy Attack | Player PLY-004 | Enemy BS-001 | Vharok, the World Eater attacked Player for 10 damage.
+    Player HP: 72 -> 62 | Enemy HP: 274 -> 274
+ACT-000821 | 2026-11-07 23:36:28 | Attack | Player PLY-004 | Enemy BS-001 | Player attacked Vharok, the World Eater for 45 damage.
+    Player HP: 62 -> 62 | Enemy HP: 274 -> 229
+ACT-000822 | 2026-11-07 23:36:30 | Enemy Attack | Player PLY-004 | Enemy BS-001 | Vharok, the World Eater attacked Player for 18 damage.
+    Player HP: 62 -> 44 | Enemy HP: 229 -> 229
+ACT-000823 | 2026-11-07 23:36:32 | Potion Use | Player PLY-004 | Enemy BS-001 | Player used one Health Potion and restored 56 HP.
+    Player HP: 44 -> 100 | Enemy HP: 229 -> 229
+ACT-000824 | 2026-11-07 23:36:34 | Enemy Attack | Player PLY-004 | Enemy BS-001 | Vharok, the World Eater attacked Player for 13 damage.
+    Player HP: 100 -> 87 | Enemy HP: 229 -> 229
+ACT-000825 | 2026-11-07 23:36:36 | Attack | Player PLY-004 | Enemy BS-001 | Player attacked Vharok, the World Eater for 40 damage.
+    Player HP: 87 -> 87 | Enemy HP: 229 -> 189
+ACT-000826 | 2026-11-07 23:36:38 | Enemy Attack | Player PLY-004 | Enemy BS-001 | Vharok, the World Eater attacked Player for 20 damage.
+    Player HP: 87 -> 67 | Enemy HP: 189 -> 189
+ACT-000827 | 2026-11-07 23:36:40 | Attack | Player PLY-004 | Enemy BS-001 | Player attacked Vharok, the World Eater for 46 damage.
+    Player HP: 67 -> 67 | Enemy HP: 189 -> 143
+ACT-000828 | 2026-11-07 23:36:41 | Enrage | Player PLY-004 | Enemy BS-001 | Vharok, the World Eater became enraged.
+    Player HP: 67 -> 67 | Enemy HP: 143 -> 143
+ACT-000829 | 2026-11-07 23:36:43 | Enemy Attack | Player PLY-004 | Enemy BS-001 | Vharok, the World Eater attacked Player for 18 damage.
+    Player HP: 67 -> 49 | Enemy HP: 143 -> 143
+ACT-000830 | 2026-11-07 23:36:52 | Item Use | Player PLY-004 | Enemy BS-001 | Player rolled 5 on Dice of Fate. Shadow Shield: the next enemy hit deals zero damage.
+    Player HP: 49 -> 49 | Enemy HP: 143 -> 143
+ACT-000831 | 2026-11-07 23:36:54 | Enemy Attack | Player PLY-004 | Enemy BS-001 | Vharok, the World Eater attacked Player for 0 damage (Dice of Fate negated the hit).
+    Player HP: 49 -> 49 | Enemy HP: 143 -> 143
+ACT-000832 | 2026-11-07 23:37:06 | Attack | Player PLY-004 | Enemy BS-001 | Player attacked Vharok, the World Eater for 46 damage.
+    Player HP: 49 -> 49 | Enemy HP: 143 -> 97
+ACT-000833 | 2026-11-07 23:37:08 | Enemy Attack | Player PLY-004 | Enemy BS-001 | Vharok, the World Eater attacked Player for 15 damage.
+    Player HP: 49 -> 34 | Enemy HP: 97 -> 97
+ACT-000834 | 2026-11-07 23:37:15 | Potion Use | Player PLY-004 | Enemy BS-001 | Player used one Health Potion and restored 56 HP.
+    Player HP: 34 -> 90 | Enemy HP: 97 -> 97
+ACT-000835 | 2026-11-07 23:37:17 | Enemy Attack | Player PLY-004 | Enemy BS-001 | Vharok, the World Eater attacked Player for 15 damage.
+    Player HP: 90 -> 75 | Enemy HP: 97 -> 97
+ACT-000836 | 2026-11-07 23:37:19 | Potion Use | Player PLY-004 | Enemy BS-001 | Player used one Health Potion and restored 56 HP.
+    Player HP: 75 -> 131 | Enemy HP: 97 -> 97
+ACT-000837 | 2026-11-07 23:37:21 | Enemy Attack | Player PLY-004 | Enemy BS-001 | Vharok, the World Eater attacked Player for 16 damage.
+    Player HP: 131 -> 115 | Enemy HP: 97 -> 97
+ACT-000838 | 2026-11-07 23:37:25 | Item Use | Player PLY-004 | Enemy BS-001 | Paralysis Bomb failed against Vharok, the World Eater.
+    Player HP: 115 -> 115 | Enemy HP: 97 -> 97
+ACT-000839 | 2026-11-07 23:37:27 | Enemy Attack | Player PLY-004 | Enemy BS-001 | Vharok, the World Eater attacked Player for 17 damage.
+    Player HP: 115 -> 98 | Enemy HP: 97 -> 97
+ACT-000840 | 2026-11-07 23:37:36 | Item Use | Player PLY-004 | Enemy BS-001 | Paralysis Bomb failed against Vharok, the World Eater.
+    Player HP: 98 -> 98 | Enemy HP: 97 -> 97
+ACT-000841 | 2026-11-07 23:37:37 | Enemy Attack | Player PLY-004 | Enemy BS-001 | Vharok, the World Eater attacked Player for 17 damage.
+    Player HP: 98 -> 81 | Enemy HP: 97 -> 97
+ACT-000842 | 2026-11-07 23:37:41 | Attack | Player PLY-004 | Enemy BS-001 | Player attacked Vharok, the World Eater for 71 damage (critical).
+    Player HP: 81 -> 81 | Enemy HP: 97 -> 26
+ACT-000843 | 2026-11-07 23:37:42 | Enemy Attack | Player PLY-004 | Enemy BS-001 | Vharok, the World Eater attacked Player for 16 damage.
+    Player HP: 81 -> 65 | Enemy HP: 26 -> 26
+ACT-000844 | 2026-11-07 23:37:45 | Attack | Player PLY-004 | Enemy BS-001 | Player attacked Vharok, the World Eater for 40 damage.
+    Player HP: 65 -> 65 | Enemy HP: 26 -> 0
+ACT-000845 | 2026-11-07 23:37:45 | Victory | Player PLY-004 | Enemy BS-001 | Player defeated Vharok, the World Eater.
+    Player HP: 65 -> 65 | Enemy HP: 0 -> 0
+ACT-000846 | 2026-11-07 23:37:45 | Reward | Player PLY-004 | Enemy BS-001 | Player received 300 gold.
+    Player HP: 65 -> 65 | Enemy HP: 0 -> 0
+ACT-000847 | 2026-11-07 23:37:45 | Reward | Player PLY-004 | Enemy BS-001 | Player earned 600 score points.
+    Player HP: 65 -> 65 | Enemy HP: 0 -> 0
+ACT-000848 | 2026-11-07 23:37:45 | Level Complete | Player PLY-004 | Enemy BS-001 | Boss level completed. Attack 29 -> 34, Max HP 160 -> 180.
+    Player HP: 85 -> 85 | Enemy HP: 0 -> 0
+ACT-000849 | 2026-11-07 23:38:19 | Travel | Player PLY-004 | Enemy N/A | Player traveled to The Last Gate via Sealed Exit Door.
+    Player HP: 85 -> 85 | Enemy HP: None -> None
+ACT-000850 | 2026-11-07 23:38:23 | Dungeon Escape | Player PLY-004 | Enemy N/A | Player escaped the dungeon and earned 500 score.
+    Player HP: 85 -> 85 | Enemy HP: None -> None
+ACT-000851 | 2026-11-07 23:41:11 | Travel | Player PLY-017 | Enemy N/A | Player traveled to Rotting Sewers via Rusted Grate.
+    Player HP: 100 -> 100 | Enemy HP: None -> None
+ACT-000852 | 2026-11-07 23:41:17 | Battle Start | Player PLY-017 | Enemy ENM-001 | Battle started with Gravefang Rat.
+    Player HP: 100 -> 100 | Enemy HP: 55 -> 55
+ACT-000853 | 2026-11-07 23:41:21 | Attack | Player PLY-017 | Enemy ENM-001 | Player attacked Gravefang Rat for 15 damage.
+    Player HP: 100 -> 100 | Enemy HP: 55 -> 40
+ACT-000854 | 2026-11-07 23:41:23 | Enemy Attack | Player PLY-017 | Enemy ENM-001 | Gravefang Rat attacked Player for 7 damage.
+    Player HP: 100 -> 93 | Enemy HP: 40 -> 40
+ACT-000855 | 2026-11-07 23:41:25 | Attack | Player PLY-017 | Enemy ENM-001 | Player attacked Gravefang Rat for 15 damage.
+    Player HP: 93 -> 93 | Enemy HP: 40 -> 25
+ACT-000856 | 2026-11-07 23:41:27 | Enemy Attack | Player PLY-017 | Enemy ENM-001 | Gravefang Rat attacked Player for 6 damage.
+    Player HP: 93 -> 87 | Enemy HP: 25 -> 25
+ACT-000857 | 2026-11-07 23:41:28 | Attack | Player PLY-017 | Enemy ENM-001 | Player attacked Gravefang Rat but missed.
+    Player HP: 87 -> 87 | Enemy HP: 25 -> 25
+ACT-000858 | 2026-11-07 23:41:30 | Enemy Attack | Player PLY-017 | Enemy ENM-001 | Gravefang Rat attacked Player for 4 damage.
+    Player HP: 87 -> 83 | Enemy HP: 25 -> 25
+ACT-000859 | 2026-11-07 23:41:33 | Attack | Player PLY-017 | Enemy ENM-001 | Player attacked Gravefang Rat for 16 damage.
+    Player HP: 83 -> 83 | Enemy HP: 25 -> 9
+ACT-000860 | 2026-11-07 23:41:35 | Enemy Attack | Player PLY-017 | Enemy ENM-001 | Gravefang Rat attacked Player for 6 damage.
+    Player HP: 83 -> 77 | Enemy HP: 9 -> 9
+ACT-000861 | 2026-11-07 23:41:37 | Attack | Player PLY-017 | Enemy ENM-001 | Player attacked Gravefang Rat for 13 damage.
+    Player HP: 77 -> 77 | Enemy HP: 9 -> 0
+ACT-000862 | 2026-11-07 23:41:37 | Victory | Player PLY-017 | Enemy ENM-001 | Player defeated Gravefang Rat.
+    Player HP: 77 -> 77 | Enemy HP: 0 -> 0
+ACT-000863 | 2026-11-07 23:41:37 | Reward | Player PLY-017 | Enemy ENM-001 | Player received 25 gold.
+    Player HP: 77 -> 77 | Enemy HP: 0 -> 0
+ACT-000864 | 2026-11-07 23:41:37 | Reward | Player PLY-017 | Enemy ENM-001 | Player earned 40 score points.
+    Player HP: 77 -> 77 | Enemy HP: 0 -> 0
+ACT-000865 | 2026-11-07 23:41:47 | Battle Start | Player PLY-017 | Enemy ENM-002 | Battle started with Hollowbone Goblin.
+    Player HP: 77 -> 77 | Enemy HP: 70 -> 70
+ACT-000866 | 2026-11-07 23:41:51 | Attack | Player PLY-017 | Enemy ENM-002 | Player attacked Hollowbone Goblin for 16 damage.
+    Player HP: 77 -> 77 | Enemy HP: 70 -> 54
+ACT-000867 | 2026-11-07 23:41:53 | Enemy Attack | Player PLY-017 | Enemy ENM-002 | Hollowbone Goblin attacked Player for 7 damage.
+    Player HP: 77 -> 70 | Enemy HP: 54 -> 54
+ACT-000868 | 2026-11-07 23:42:13 | Attack | Player PLY-017 | Enemy ENM-002 | Player attacked Hollowbone Goblin but missed.
+    Player HP: 70 -> 70 | Enemy HP: 54 -> 54
+ACT-000869 | 2026-11-07 23:42:15 | Enemy Attack | Player PLY-017 | Enemy ENM-002 | Hollowbone Goblin attacked Player for 8 damage.
+    Player HP: 70 -> 62 | Enemy HP: 54 -> 54
+ACT-000870 | 2026-11-07 23:42:18 | Attack | Player PLY-017 | Enemy ENM-002 | Player attacked Hollowbone Goblin for 19 damage.
+    Player HP: 62 -> 62 | Enemy HP: 54 -> 35
+ACT-000871 | 2026-11-07 23:42:20 | Enemy Attack | Player PLY-017 | Enemy ENM-002 | Hollowbone Goblin attacked Player for 7 damage.
+    Player HP: 62 -> 55 | Enemy HP: 35 -> 35
+ACT-000872 | 2026-11-07 23:42:22 | Attack | Player PLY-017 | Enemy ENM-002 | Player attacked Hollowbone Goblin for 16 damage.
+    Player HP: 55 -> 55 | Enemy HP: 35 -> 19
+ACT-000873 | 2026-11-07 23:42:24 | Enemy Attack | Player PLY-017 | Enemy ENM-002 | Hollowbone Goblin attacked Player for 7 damage.
+    Player HP: 55 -> 48 | Enemy HP: 19 -> 19
+ACT-000874 | 2026-11-07 23:42:26 | Attack | Player PLY-017 | Enemy ENM-002 | Player attacked Hollowbone Goblin for 18 damage.
+    Player HP: 48 -> 48 | Enemy HP: 19 -> 1
+ACT-000875 | 2026-11-07 23:42:28 | Enemy Attack | Player PLY-017 | Enemy ENM-002 | Hollowbone Goblin attacked Player for 8 damage.
+    Player HP: 48 -> 40 | Enemy HP: 1 -> 1
+ACT-000876 | 2026-11-07 23:42:30 | Attack | Player PLY-017 | Enemy ENM-002 | Player attacked Hollowbone Goblin for 18 damage.
+    Player HP: 40 -> 40 | Enemy HP: 1 -> 0
+ACT-000877 | 2026-11-07 23:42:30 | Victory | Player PLY-017 | Enemy ENM-002 | Player defeated Hollowbone Goblin.
+    Player HP: 40 -> 40 | Enemy HP: 0 -> 0
+ACT-000878 | 2026-11-07 23:42:30 | Reward | Player PLY-017 | Enemy ENM-002 | Player received 30 gold.
+    Player HP: 40 -> 40 | Enemy HP: 0 -> 0
+ACT-000879 | 2026-11-07 23:42:30 | Reward | Player PLY-017 | Enemy ENM-002 | Player earned 60 score points.
+    Player HP: 40 -> 40 | Enemy HP: 0 -> 0
+ACT-000880 | 2026-11-07 23:43:32 | Battle Start | Player PLY-017 | Enemy ENM-003 | Battle started with Ashen Ghoul.
+    Player HP: 40 -> 40 | Enemy HP: 85 -> 85
+ACT-000881 | 2026-11-07 23:43:35 | Potion Use | Player PLY-017 | Enemy ENM-003 | Player used one Health Potion and restored 35 HP.
+    Player HP: 40 -> 75 | Enemy HP: 85 -> 85
+ACT-000882 | 2026-11-07 23:43:37 | Enemy Attack | Player PLY-017 | Enemy ENM-003 | Ashen Ghoul attacked Player for 11 damage.
+    Player HP: 75 -> 64 | Enemy HP: 85 -> 85
+ACT-000883 | 2026-11-07 23:43:39 | Attack | Player PLY-017 | Enemy ENM-003 | Player attacked Ashen Ghoul for 18 damage.
+    Player HP: 64 -> 64 | Enemy HP: 85 -> 67
+ACT-000884 | 2026-11-07 23:43:41 | Enemy Attack | Player PLY-017 | Enemy ENM-003 | Ashen Ghoul attacked Player for 9 damage.
+    Player HP: 64 -> 55 | Enemy HP: 67 -> 67
+ACT-000885 | 2026-11-07 23:43:54 | Attack | Player PLY-017 | Enemy ENM-003 | Player attacked Ashen Ghoul for 13 damage.
+    Player HP: 55 -> 55 | Enemy HP: 67 -> 54
+ACT-000886 | 2026-11-07 23:43:56 | Enemy Attack | Player PLY-017 | Enemy ENM-003 | Ashen Ghoul attacked Player for 8 damage.
+    Player HP: 55 -> 47 | Enemy HP: 54 -> 54
+ACT-000887 | 2026-11-07 23:43:58 | Attack | Player PLY-017 | Enemy ENM-003 | Player attacked Ashen Ghoul for 19 damage.
+    Player HP: 47 -> 47 | Enemy HP: 54 -> 35
+ACT-000888 | 2026-11-07 23:44:00 | Enemy Attack | Player PLY-017 | Enemy ENM-003 | Ashen Ghoul attacked Player for 9 damage.
+    Player HP: 47 -> 38 | Enemy HP: 35 -> 35
+ACT-000889 | 2026-11-07 23:44:05 | Attack | Player PLY-017 | Enemy ENM-003 | Player attacked Ashen Ghoul for 18 damage.
+    Player HP: 38 -> 38 | Enemy HP: 35 -> 17
+ACT-000890 | 2026-11-07 23:44:07 | Enemy Attack | Player PLY-017 | Enemy ENM-003 | Ashen Ghoul attacked Player for 9 damage.
+    Player HP: 38 -> 29 | Enemy HP: 17 -> 17
+ACT-000891 | 2026-11-07 23:44:09 | Attack | Player PLY-017 | Enemy ENM-003 | Player attacked Ashen Ghoul for 17 damage.
+    Player HP: 29 -> 29 | Enemy HP: 17 -> 0
+ACT-000892 | 2026-11-07 23:44:09 | Victory | Player PLY-017 | Enemy ENM-003 | Player defeated Ashen Ghoul.
+    Player HP: 29 -> 29 | Enemy HP: 0 -> 0
+ACT-000893 | 2026-11-07 23:44:09 | Reward | Player PLY-017 | Enemy ENM-003 | Player received 35 gold.
+    Player HP: 29 -> 29 | Enemy HP: 0 -> 0
+ACT-000894 | 2026-11-07 23:44:09 | Reward | Player PLY-017 | Enemy ENM-003 | Player earned 80 score points.
+    Player HP: 29 -> 29 | Enemy HP: 0 -> 0
+ACT-000895 | 2026-11-07 23:44:09 | Level Complete | Player PLY-017 | Enemy ENM-003 | Weak level completed. Attack 14 -> 19, Max HP 100 -> 120. Level completion bonus: 40 Gold.
+    Player HP: 49 -> 49 | Enemy HP: 0 -> 0
+ACT-000896 | 2026-11-07 23:44:09 | Equipment Upgrade | Player PLY-017 | Enemy ENM-003 | Standard-Issue gear upgraded for free: Sword: Rusty Sword -> Bloodstone Sword (ATK: +6 | SPD: +4%); Shield: Wooden Shield -> Iron Shield (BLOCK: 9%); Armor: Cloth Armor -> Chainmail Armor (DEF: -2 per hit).
+    Player HP: 49 -> 49 | Enemy HP: 0 -> 0
+ACT-000897 | 2026-11-07 23:44:09 | Progression | Player PLY-017 | Enemy ENM-003 | Rank increased from Beginner to Adventurer.
+    Player HP: 49 -> 49 | Enemy HP: 0 -> 0
+ACT-000898 | 2026-11-07 23:44:36 | Purchase | Player PLY-017 | Enemy N/A | Player bought 6 Health Potion for 180 gold.
+    Player HP: 49 -> 49 | Enemy HP: None -> None
+ACT-000899 | 2026-11-07 23:45:09 | Travel | Player PLY-017 | Enemy N/A | Player traveled to Dreadveil Entrance via Rusted Grate.
+    Player HP: 49 -> 49 | Enemy HP: None -> None
+ACT-000900 | 2026-11-07 23:45:14 | Travel | Player PLY-017 | Enemy N/A | Player traveled to Rotting Sewers via Rusted Grate.
+    Player HP: 49 -> 49 | Enemy HP: None -> None
+ACT-000901 | 2026-11-07 23:45:18 | Travel | Player PLY-017 | Enemy N/A | Player traveled to Bloodstone Hall via Crimson Gate.
+    Player HP: 49 -> 49 | Enemy HP: None -> None
+ACT-000902 | 2026-11-07 23:45:21 | Battle Start | Player PLY-017 | Enemy ENM-004 | Battle started with Ironjaw Reaver.
+    Player HP: 49 -> 49 | Enemy HP: 105 -> 105
+ACT-000903 | 2026-11-07 23:45:26 | Potion Use | Player PLY-017 | Enemy ENM-004 | Player used one Health Potion and restored 42 HP.
+    Player HP: 49 -> 91 | Enemy HP: 105 -> 105
+ACT-000904 | 2026-11-07 23:45:28 | Enemy Attack | Player PLY-017 | Enemy ENM-004 | Ironjaw Reaver attacked Player for 10 damage.
+    Player HP: 91 -> 81 | Enemy HP: 105 -> 105
+ACT-000905 | 2026-11-07 23:45:32 | Attack | Player PLY-017 | Enemy ENM-004 | Player attacked Ironjaw Reaver for 26 damage.
+    Player HP: 81 -> 81 | Enemy HP: 105 -> 79
+ACT-000906 | 2026-11-07 23:45:33 | Enemy Attack | Player PLY-017 | Enemy ENM-004 | Ironjaw Reaver attacked Player for 10 damage.
+    Player HP: 81 -> 71 | Enemy HP: 79 -> 79
+ACT-000907 | 2026-11-07 23:45:36 | Attack | Player PLY-017 | Enemy ENM-004 | Player attacked Ironjaw Reaver for 28 damage.
+    Player HP: 71 -> 71 | Enemy HP: 79 -> 51
+ACT-000908 | 2026-11-07 23:45:37 | Enemy Attack | Player PLY-017 | Enemy ENM-004 | Ironjaw Reaver attacked Player for 9 damage.
+    Player HP: 71 -> 62 | Enemy HP: 51 -> 51
+ACT-000909 | 2026-11-07 23:45:40 | Attack | Player PLY-017 | Enemy ENM-004 | Player attacked Ironjaw Reaver for 27 damage.
+    Player HP: 62 -> 62 | Enemy HP: 51 -> 24
+ACT-000910 | 2026-11-07 23:45:42 | Enemy Attack | Player PLY-017 | Enemy ENM-004 | Ironjaw Reaver attacked Player for 7 damage.
+    Player HP: 62 -> 55 | Enemy HP: 24 -> 24
+ACT-000911 | 2026-11-07 23:45:43 | Attack | Player PLY-017 | Enemy ENM-004 | Player attacked Ironjaw Reaver but missed.
+    Player HP: 55 -> 55 | Enemy HP: 24 -> 24
+ACT-000912 | 2026-11-07 23:45:45 | Enemy Attack | Player PLY-017 | Enemy ENM-004 | Ironjaw Reaver attacked Player for 10 damage.
+    Player HP: 55 -> 45 | Enemy HP: 24 -> 24
+ACT-000913 | 2026-11-07 23:45:47 | Attack | Player PLY-017 | Enemy ENM-004 | Player attacked Ironjaw Reaver for 27 damage.
+    Player HP: 45 -> 45 | Enemy HP: 24 -> 0
+ACT-000914 | 2026-11-07 23:45:48 | Victory | Player PLY-017 | Enemy ENM-004 | Player defeated Ironjaw Reaver.
+    Player HP: 45 -> 45 | Enemy HP: 0 -> 0
+ACT-000915 | 2026-11-07 23:45:48 | Reward | Player PLY-017 | Enemy ENM-004 | Player received 50 gold.
+    Player HP: 45 -> 45 | Enemy HP: 0 -> 0
+ACT-000916 | 2026-11-07 23:45:48 | Reward | Player PLY-017 | Enemy ENM-004 | Player earned 100 score points.
+    Player HP: 45 -> 45 | Enemy HP: 0 -> 0
+ACT-000917 | 2026-11-07 23:45:54 | Battle Start | Player PLY-017 | Enemy ENM-005 | Battle started with Boneguard Executioner.
+    Player HP: 45 -> 45 | Enemy HP: 120 -> 120
+ACT-000918 | 2026-11-07 23:46:01 | Potion Use | Player PLY-017 | Enemy ENM-005 | Player used one Health Potion and restored 42 HP.
+    Player HP: 45 -> 87 | Enemy HP: 120 -> 120
+ACT-000919 | 2026-11-07 23:46:03 | Enemy Attack | Player PLY-017 | Enemy ENM-005 | Boneguard Executioner attacked Player for 10 damage.
+    Player HP: 87 -> 77 | Enemy HP: 120 -> 120
+ACT-000920 | 2026-11-07 23:46:05 | Attack | Player PLY-017 | Enemy ENM-005 | Player attacked Boneguard Executioner for 25 damage.
+    Player HP: 77 -> 77 | Enemy HP: 120 -> 95
+ACT-000921 | 2026-11-07 23:46:06 | Enemy Attack | Player PLY-017 | Enemy ENM-005 | Boneguard Executioner attacked Player for 10 damage.
+    Player HP: 77 -> 67 | Enemy HP: 95 -> 95
+ACT-000922 | 2026-11-07 23:46:10 | Attack | Player PLY-017 | Enemy ENM-005 | Player attacked Boneguard Executioner for 40 damage (critical).
+    Player HP: 67 -> 67 | Enemy HP: 95 -> 55
+ACT-000923 | 2026-11-07 23:46:11 | Enemy Attack | Player PLY-017 | Enemy ENM-005 | Boneguard Executioner attacked Player for 8 damage.
+    Player HP: 67 -> 59 | Enemy HP: 55 -> 55
+ACT-000924 | 2026-11-07 23:46:13 | Attack | Player PLY-017 | Enemy ENM-005 | Player attacked Boneguard Executioner for 49 damage (critical).
+    Player HP: 59 -> 59 | Enemy HP: 55 -> 6
+ACT-000925 | 2026-11-07 23:46:15 | Enemy Attack | Player PLY-017 | Enemy ENM-005 | Boneguard Executioner attacked Player for 11 damage.
+    Player HP: 59 -> 48 | Enemy HP: 6 -> 6
+ACT-000926 | 2026-11-07 23:46:51 | Attack | Player PLY-017 | Enemy ENM-005 | Player attacked Boneguard Executioner for 42 damage (critical).
+    Player HP: 48 -> 48 | Enemy HP: 6 -> 0
+ACT-000927 | 2026-11-07 23:46:51 | Victory | Player PLY-017 | Enemy ENM-005 | Player defeated Boneguard Executioner.
+    Player HP: 48 -> 48 | Enemy HP: 0 -> 0
+ACT-000928 | 2026-11-07 23:46:51 | Reward | Player PLY-017 | Enemy ENM-005 | Player received 60 gold.
+    Player HP: 48 -> 48 | Enemy HP: 0 -> 0
+ACT-000929 | 2026-11-07 23:46:51 | Reward | Player PLY-017 | Enemy ENM-005 | Player earned 120 score points.
+    Player HP: 48 -> 48 | Enemy HP: 0 -> 0
+ACT-000930 | 2026-11-07 23:47:07 | Battle Start | Player PLY-017 | Enemy ENM-006 | Battle started with Hellchain Marauder.
+    Player HP: 48 -> 48 | Enemy HP: 135 -> 135
+ACT-000931 | 2026-11-07 23:47:14 | Attack | Player PLY-017 | Enemy ENM-006 | Player attacked Hellchain Marauder for 27 damage.
+    Player HP: 48 -> 48 | Enemy HP: 135 -> 108
+ACT-000932 | 2026-11-07 23:47:15 | Enemy Attack | Player PLY-017 | Enemy ENM-006 | Hellchain Marauder attacked Player for 9 damage.
+    Player HP: 48 -> 39 | Enemy HP: 108 -> 108
+ACT-000933 | 2026-11-07 23:47:20 | Attack | Player PLY-017 | Enemy ENM-006 | Player attacked Hellchain Marauder for 22 damage.
+    Player HP: 39 -> 39 | Enemy HP: 108 -> 86
+ACT-000934 | 2026-11-07 23:47:22 | Enemy Attack | Player PLY-017 | Enemy ENM-006 | Hellchain Marauder attacked Player for 10 damage.
+    Player HP: 39 -> 29 | Enemy HP: 86 -> 86
+ACT-000935 | 2026-11-07 23:47:25 | Attack | Player PLY-017 | Enemy ENM-006 | Player attacked Hellchain Marauder for 40 damage (critical).
+    Player HP: 29 -> 29 | Enemy HP: 86 -> 46
+ACT-000936 | 2026-11-07 23:47:26 | Enemy Attack | Player PLY-017 | Enemy ENM-006 | Hellchain Marauder attacked Player for 10 damage.
+    Player HP: 29 -> 19 | Enemy HP: 46 -> 46
+ACT-000937 | 2026-11-07 23:47:32 | Potion Use | Player PLY-017 | Enemy ENM-006 | Player used one Health Potion and restored 42 HP.
+    Player HP: 19 -> 61 | Enemy HP: 46 -> 46
+ACT-000938 | 2026-11-07 23:47:34 | Enemy Attack | Player PLY-017 | Enemy ENM-006 | Hellchain Marauder attacked Player for 10 damage.
+    Player HP: 61 -> 51 | Enemy HP: 46 -> 46
+ACT-000939 | 2026-11-07 23:47:36 | Attack | Player PLY-017 | Enemy ENM-006 | Player attacked Hellchain Marauder for 26 damage.
+    Player HP: 51 -> 51 | Enemy HP: 46 -> 20
+ACT-000940 | 2026-11-07 23:47:38 | Enemy Attack | Player PLY-017 | Enemy ENM-006 | Hellchain Marauder attacked Player for 10 damage.
+    Player HP: 51 -> 41 | Enemy HP: 20 -> 20
+ACT-000941 | 2026-11-07 23:47:40 | Attack | Player PLY-017 | Enemy ENM-006 | Player attacked Hellchain Marauder for 25 damage.
+    Player HP: 41 -> 41 | Enemy HP: 20 -> 0
+ACT-000942 | 2026-11-07 23:47:40 | Victory | Player PLY-017 | Enemy ENM-006 | Player defeated Hellchain Marauder.
+    Player HP: 41 -> 41 | Enemy HP: 0 -> 0
+ACT-000943 | 2026-11-07 23:47:40 | Reward | Player PLY-017 | Enemy ENM-006 | Player received 70 gold.
+    Player HP: 41 -> 41 | Enemy HP: 0 -> 0
+ACT-000944 | 2026-11-07 23:47:40 | Reward | Player PLY-017 | Enemy ENM-006 | Player earned 140 score points.
+    Player HP: 41 -> 41 | Enemy HP: 0 -> 0
+ACT-000945 | 2026-11-07 23:47:40 | Level Complete | Player PLY-017 | Enemy ENM-006 | Intermediate level completed. Attack 19 -> 24, Max HP 120 -> 140. Level completion bonus: 80 Gold.
+    Player HP: 61 -> 61 | Enemy HP: 0 -> 0
+ACT-000946 | 2026-11-07 23:47:40 | Equipment Upgrade | Player PLY-017 | Enemy ENM-006 | Standard-Issue gear upgraded for free: Sword: Bloodstone Sword -> Steel Sword (ATK: +10 | SPD: +8%); Shield: Iron Shield -> Steel Shield (BLOCK: 15%); Armor: Chainmail Armor -> Steel Armor (DEF: -4 per hit).
+    Player HP: 61 -> 61 | Enemy HP: 0 -> 0
+ACT-000947 | 2026-11-07 23:47:40 | Progression | Player PLY-017 | Enemy ENM-006 | Rank increased from Adventurer to Elite.
+    Player HP: 61 -> 61 | Enemy HP: 0 -> 0
+ACT-000948 | 2026-11-07 23:47:50 | Travel | Player PLY-017 | Enemy N/A | Player traveled to War-Torn Catacombs via Iron Drawbridge.
+    Player HP: 61 -> 61 | Enemy HP: None -> None
+ACT-000949 | 2026-11-07 23:47:54 | Battle Start | Player PLY-017 | Enemy ENM-007 | Battle started with Dreadfang Berserker.
+    Player HP: 61 -> 61 | Enemy HP: 150 -> 150
+ACT-000950 | 2026-11-07 23:47:59 | Attack | Player PLY-017 | Enemy ENM-007 | Player attacked Dreadfang Berserker for 33 damage.
+    Player HP: 61 -> 61 | Enemy HP: 150 -> 117
+ACT-000951 | 2026-11-07 23:48:00 | Enemy Attack | Player PLY-017 | Enemy ENM-007 | Dreadfang Berserker attacked Player for 10 damage.
+    Player HP: 61 -> 51 | Enemy HP: 117 -> 117
+ACT-000952 | 2026-11-07 23:48:02 | Attack | Player PLY-017 | Enemy ENM-007 | Player attacked Dreadfang Berserker for 34 damage.
+    Player HP: 51 -> 51 | Enemy HP: 117 -> 83
+ACT-000953 | 2026-11-07 23:48:04 | Enemy Attack | Player PLY-017 | Enemy ENM-007 | Dreadfang Berserker attacked Player for 11 damage.
+    Player HP: 51 -> 40 | Enemy HP: 83 -> 83
+ACT-000954 | 2026-11-07 23:48:06 | Attack | Player PLY-017 | Enemy ENM-007 | Player attacked Dreadfang Berserker for 35 damage.
+    Player HP: 40 -> 40 | Enemy HP: 83 -> 48
+ACT-000955 | 2026-11-07 23:48:07 | Enemy Attack | Player PLY-017 | Enemy ENM-007 | Dreadfang Berserker attacked Player for 9 damage.
+    Player HP: 40 -> 31 | Enemy HP: 48 -> 48
+ACT-000956 | 2026-11-07 23:48:09 | Attack | Player PLY-017 | Enemy ENM-007 | Player attacked Dreadfang Berserker for 59 damage (critical).
+    Player HP: 31 -> 31 | Enemy HP: 48 -> 0
+ACT-000957 | 2026-11-07 23:48:09 | Victory | Player PLY-017 | Enemy ENM-007 | Player defeated Dreadfang Berserker.
+    Player HP: 31 -> 31 | Enemy HP: 0 -> 0
+ACT-000958 | 2026-11-07 23:48:09 | Reward | Player PLY-017 | Enemy ENM-007 | Player received 85 gold.
+    Player HP: 31 -> 31 | Enemy HP: 0 -> 0
+ACT-000959 | 2026-11-07 23:48:09 | Reward | Player PLY-017 | Enemy ENM-007 | Player earned 180 score points.
+    Player HP: 31 -> 31 | Enemy HP: 0 -> 0
+ACT-000960 | 2026-11-07 23:48:18 | Battle Start | Player PLY-017 | Enemy ENM-008 | Battle started with Abyssal Death Knight.
+    Player HP: 31 -> 31 | Enemy HP: 165 -> 165
+ACT-000961 | 2026-11-07 23:48:22 | Potion Use | Player PLY-017 | Enemy ENM-008 | Player used one Health Potion and restored 49 HP.
+    Player HP: 31 -> 80 | Enemy HP: 165 -> 165
+ACT-000962 | 2026-11-07 23:48:23 | Enemy Attack | Player PLY-017 | Enemy ENM-008 | Abyssal Death Knight attacked Player for 12 damage.
+    Player HP: 80 -> 68 | Enemy HP: 165 -> 165
+ACT-000963 | 2026-11-07 23:48:26 | Attack | Player PLY-017 | Enemy ENM-008 | Player attacked Abyssal Death Knight for 37 damage.
+    Player HP: 68 -> 68 | Enemy HP: 165 -> 128
+ACT-000964 | 2026-11-07 23:48:28 | Enemy Attack | Player PLY-017 | Enemy ENM-008 | Abyssal Death Knight attacked Player for 11 damage.
+    Player HP: 68 -> 57 | Enemy HP: 128 -> 128
+ACT-000965 | 2026-11-07 23:48:29 | Attack | Player PLY-017 | Enemy ENM-008 | Player attacked Abyssal Death Knight for 59 damage (critical).
+    Player HP: 57 -> 57 | Enemy HP: 128 -> 69
+ACT-000966 | 2026-11-07 23:48:31 | Enemy Attack | Player PLY-017 | Enemy ENM-008 | Abyssal Death Knight attacked Player for 12 damage.
+    Player HP: 57 -> 45 | Enemy HP: 69 -> 69
+ACT-000967 | 2026-11-07 23:48:34 | Attack | Player PLY-017 | Enemy ENM-008 | Player attacked Abyssal Death Knight for 34 damage.
+    Player HP: 45 -> 45 | Enemy HP: 69 -> 35
+ACT-000968 | 2026-11-07 23:48:35 | Enemy Attack | Player PLY-017 | Enemy ENM-008 | Abyssal Death Knight attacked Player for 15 damage.
+    Player HP: 45 -> 30 | Enemy HP: 35 -> 35
+ACT-000969 | 2026-11-07 23:48:38 | Attack | Player PLY-017 | Enemy ENM-008 | Player attacked Abyssal Death Knight for 32 damage.
+    Player HP: 30 -> 30 | Enemy HP: 35 -> 3
+ACT-000970 | 2026-11-07 23:48:39 | Enemy Attack | Player PLY-017 | Enemy ENM-008 | Abyssal Death Knight attacked Player for 11 damage.
+    Player HP: 30 -> 19 | Enemy HP: 3 -> 3
+ACT-000971 | 2026-11-07 23:48:41 | Attack | Player PLY-017 | Enemy ENM-008 | Player attacked Abyssal Death Knight for 32 damage.
+    Player HP: 19 -> 19 | Enemy HP: 3 -> 0
+ACT-000972 | 2026-11-07 23:48:42 | Victory | Player PLY-017 | Enemy ENM-008 | Player defeated Abyssal Death Knight.
+    Player HP: 19 -> 19 | Enemy HP: 0 -> 0
+ACT-000973 | 2026-11-07 23:48:42 | Reward | Player PLY-017 | Enemy ENM-008 | Player received 95 gold.
+    Player HP: 19 -> 19 | Enemy HP: 0 -> 0
+ACT-000974 | 2026-11-07 23:48:42 | Reward | Player PLY-017 | Enemy ENM-008 | Player earned 200 score points.
+    Player HP: 19 -> 19 | Enemy HP: 0 -> 0
+ACT-000975 | 2026-11-07 23:48:52 | Battle Start | Player PLY-017 | Enemy ENM-009 | Battle started with Soulreaper Wraith.
+    Player HP: 19 -> 19 | Enemy HP: 180 -> 180
+ACT-000976 | 2026-11-07 23:48:58 | Potion Use | Player PLY-017 | Enemy ENM-009 | Player used one Health Potion and restored 49 HP.
+    Player HP: 19 -> 68 | Enemy HP: 180 -> 180
+ACT-000977 | 2026-11-07 23:48:59 | Enemy Attack | Player PLY-017 | Enemy ENM-009 | Soulreaper Wraith attacked Player for 11 damage.
+    Player HP: 68 -> 57 | Enemy HP: 180 -> 180
+ACT-000978 | 2026-11-07 23:49:01 | Attack | Player PLY-017 | Enemy ENM-009 | Player attacked Soulreaper Wraith for 37 damage.
+    Player HP: 57 -> 57 | Enemy HP: 180 -> 143
+ACT-000979 | 2026-11-07 23:49:03 | Enemy Attack | Player PLY-017 | Enemy ENM-009 | Soulreaper Wraith attacked Player for 19 damage.
+    Player HP: 57 -> 38 | Enemy HP: 143 -> 143
+ACT-000980 | 2026-11-07 23:49:08 | Potion Use | Player PLY-017 | Enemy ENM-009 | Player used one Health Potion and restored 49 HP.
+    Player HP: 38 -> 87 | Enemy HP: 143 -> 143
+ACT-000981 | 2026-11-07 23:49:10 | Enemy Attack | Player PLY-017 | Enemy ENM-009 | Soulreaper Wraith attacked Player for 13 damage.
+    Player HP: 87 -> 74 | Enemy HP: 143 -> 143
+ACT-000982 | 2026-11-07 23:49:12 | Attack | Player PLY-017 | Enemy ENM-009 | Player attacked Soulreaper Wraith for 33 damage.
+    Player HP: 74 -> 74 | Enemy HP: 143 -> 110
+ACT-000983 | 2026-11-07 23:49:14 | Enemy Attack | Player PLY-017 | Enemy ENM-009 | Soulreaper Wraith attacked Player for 10 damage.
+    Player HP: 74 -> 64 | Enemy HP: 110 -> 110
+ACT-000984 | 2026-11-07 23:49:16 | Attack | Player PLY-017 | Enemy ENM-009 | Player attacked Soulreaper Wraith for 33 damage.
+    Player HP: 64 -> 64 | Enemy HP: 110 -> 77
+ACT-000985 | 2026-11-07 23:49:17 | Enemy Attack | Player PLY-017 | Enemy ENM-009 | Soulreaper Wraith attacked Player for 11 damage.
+    Player HP: 64 -> 53 | Enemy HP: 77 -> 77
+ACT-000986 | 2026-11-07 23:49:20 | Attack | Player PLY-017 | Enemy ENM-009 | Player attacked Soulreaper Wraith for 36 damage.
+    Player HP: 53 -> 53 | Enemy HP: 77 -> 41
+ACT-000987 | 2026-11-07 23:49:22 | Enemy Attack | Player PLY-017 | Enemy ENM-009 | Soulreaper Wraith attacked Player for 11 damage.
+    Player HP: 53 -> 42 | Enemy HP: 41 -> 41
+ACT-000988 | 2026-11-07 23:49:24 | Attack | Player PLY-017 | Enemy ENM-009 | Player attacked Soulreaper Wraith for 34 damage.
+    Player HP: 42 -> 42 | Enemy HP: 41 -> 7
+ACT-000989 | 2026-11-07 23:49:26 | Enemy Attack | Player PLY-017 | Enemy ENM-009 | Soulreaper Wraith attacked Player for 12 damage.
+    Player HP: 42 -> 30 | Enemy HP: 7 -> 7
+ACT-000990 | 2026-11-07 23:49:28 | Attack | Player PLY-017 | Enemy ENM-009 | Player attacked Soulreaper Wraith for 33 damage.
+    Player HP: 30 -> 30 | Enemy HP: 7 -> 0
+ACT-000991 | 2026-11-07 23:49:28 | Victory | Player PLY-017 | Enemy ENM-009 | Player defeated Soulreaper Wraith.
+    Player HP: 30 -> 30 | Enemy HP: 0 -> 0
+ACT-000992 | 2026-11-07 23:49:28 | Reward | Player PLY-017 | Enemy ENM-009 | Player received 110 gold.
+    Player HP: 30 -> 30 | Enemy HP: 0 -> 0
+ACT-000993 | 2026-11-07 23:49:28 | Reward | Player PLY-017 | Enemy ENM-009 | Player earned 220 score points.
+    Player HP: 30 -> 30 | Enemy HP: 0 -> 0
+ACT-000994 | 2026-11-07 23:49:28 | Level Complete | Player PLY-017 | Enemy ENM-009 | Strong level completed. Attack 24 -> 29, Max HP 140 -> 160. Level completion bonus: 150 Gold.
+    Player HP: 50 -> 50 | Enemy HP: 0 -> 0
+ACT-000995 | 2026-11-07 23:49:28 | Equipment Upgrade | Player PLY-017 | Enemy ENM-009 | Standard-Issue gear upgraded for free: Sword: Steel Sword -> Darksteel Sword (ATK: +14 | SPD: +12%); Shield: Steel Shield -> Darksteel Shield (BLOCK: 23%); Armor: Steel Armor -> Darksteel Armor (DEF: -6 per hit).
+    Player HP: 50 -> 50 | Enemy HP: 0 -> 0
+ACT-000996 | 2026-11-07 23:49:28 | Progression | Player PLY-017 | Enemy ENM-009 | Rank increased from Elite to Master.
+    Player HP: 50 -> 50 | Enemy HP: 0 -> 0
+ACT-000997 | 2026-11-07 23:50:13 | Purchase | Player PLY-017 | Enemy N/A | Player bought Darksteel Armor +2 for 385 gold.
+    Player HP: 50 -> 50 | Enemy HP: None -> None
+ACT-000998 | 2026-11-07 23:50:28 | Purchase | Player PLY-017 | Enemy N/A | Player bought Darksteel Sword +1 for 290 gold.
+    Player HP: 50 -> 50 | Enemy HP: None -> None
+ACT-000999 | 2026-11-07 23:50:43 | Purchase | Player PLY-017 | Enemy N/A | Player bought 1 Health Potion for 30 gold.
+    Player HP: 50 -> 50 | Enemy HP: None -> None
+ACT-001000 | 2026-11-07 23:51:06 | Travel | Player PLY-017 | Enemy N/A | Player traveled to Bloodstone Hall via Iron Drawbridge.
+    Player HP: 50 -> 50 | Enemy HP: None -> None
+ACT-001001 | 2026-11-07 23:51:11 | Travel | Player PLY-017 | Enemy N/A | Player traveled to War-Torn Catacombs via Iron Drawbridge.
+    Player HP: 50 -> 50 | Enemy HP: None -> None
+ACT-001002 | 2026-11-07 23:51:15 | Travel | Player PLY-017 | Enemy N/A | Player traveled to Throne of Ruin via Throne Gate.
+    Player HP: 50 -> 50 | Enemy HP: None -> None
+ACT-001003 | 2026-11-07 23:51:28 | Battle Start | Player PLY-017 | Enemy BS-001 | Battle started with Vharok, the World Eater.
+    Player HP: 50 -> 50 | Enemy HP: 320 -> 320
+ACT-001004 | 2026-11-07 23:51:34 | Potion Use | Player PLY-017 | Enemy BS-001 | Player used one Health Potion and restored 56 HP.
+    Player HP: 50 -> 106 | Enemy HP: 320 -> 320
+ACT-001005 | 2026-11-07 23:51:35 | Enemy Attack | Player PLY-017 | Enemy BS-001 | Vharok, the World Eater attacked Player for 11 damage.
+    Player HP: 106 -> 95 | Enemy HP: 320 -> 320
+ACT-001006 | 2026-11-07 23:51:39 | Attack | Player PLY-017 | Enemy BS-001 | Player attacked Vharok, the World Eater for 44 damage.
+    Player HP: 95 -> 95 | Enemy HP: 320 -> 276
+ACT-001007 | 2026-11-07 23:51:41 | Enemy Attack | Player PLY-017 | Enemy BS-001 | Vharok, the World Eater attacked Player for 8 damage.
+    Player HP: 95 -> 87 | Enemy HP: 276 -> 276
+ACT-001008 | 2026-11-07 23:51:44 | Attack | Player PLY-017 | Enemy BS-001 | Player attacked Vharok, the World Eater for 45 damage.
+    Player HP: 87 -> 87 | Enemy HP: 276 -> 231
+ACT-001009 | 2026-11-07 23:51:45 | Enemy Attack | Player PLY-017 | Enemy BS-001 | Vharok, the World Eater attacked Player for 11 damage.
+    Player HP: 87 -> 76 | Enemy HP: 231 -> 231
+ACT-001010 | 2026-11-07 23:51:47 | Attack | Player PLY-017 | Enemy BS-001 | Player attacked Vharok, the World Eater for 47 damage.
+    Player HP: 76 -> 76 | Enemy HP: 231 -> 184
+ACT-001011 | 2026-11-07 23:51:49 | Enemy Attack | Player PLY-017 | Enemy BS-001 | Vharok, the World Eater attacked Player for 8 damage.
+    Player HP: 76 -> 68 | Enemy HP: 184 -> 184
+ACT-001012 | 2026-11-07 23:51:50 | Attack | Player PLY-017 | Enemy BS-001 | Player attacked Vharok, the World Eater but missed.
+    Player HP: 68 -> 68 | Enemy HP: 184 -> 184
+ACT-001013 | 2026-11-07 23:51:52 | Enemy Attack | Player PLY-017 | Enemy BS-001 | Vharok, the World Eater attacked Player for 8 damage.
+    Player HP: 68 -> 60 | Enemy HP: 184 -> 184
+ACT-001014 | 2026-11-07 23:51:55 | Attack | Player PLY-017 | Enemy BS-001 | Player attacked Vharok, the World Eater for 49 damage.
+    Player HP: 60 -> 60 | Enemy HP: 184 -> 135
+ACT-001015 | 2026-11-07 23:51:55 | Enrage | Player PLY-017 | Enemy BS-001 | Vharok, the World Eater became enraged.
+    Player HP: 60 -> 60 | Enemy HP: 135 -> 135
+ACT-001016 | 2026-11-07 23:51:57 | Enemy Attack | Player PLY-017 | Enemy BS-001 | Vharok, the World Eater attacked Player for 13 damage.
+    Player HP: 60 -> 47 | Enemy HP: 135 -> 135
+ACT-001017 | 2026-11-07 23:51:59 | Attack | Player PLY-017 | Enemy BS-001 | Player attacked Vharok, the World Eater for 46 damage.
+    Player HP: 47 -> 47 | Enemy HP: 135 -> 89
+ACT-001018 | 2026-11-07 23:52:01 | Enemy Attack | Player PLY-017 | Enemy BS-001 | Vharok, the World Eater attacked Player for 13 damage.
+    Player HP: 47 -> 34 | Enemy HP: 89 -> 89
+ACT-001019 | 2026-11-07 23:52:04 | Attack | Player PLY-017 | Enemy BS-001 | Player attacked Vharok, the World Eater for 47 damage.
+    Player HP: 34 -> 34 | Enemy HP: 89 -> 42
+ACT-001020 | 2026-11-07 23:52:06 | Enemy Attack | Player PLY-017 | Enemy BS-001 | Vharok, the World Eater attacked Player for 16 damage.
+    Player HP: 34 -> 18 | Enemy HP: 42 -> 42
+ACT-001021 | 2026-11-07 23:52:14 | Attack | Player PLY-017 | Enemy BS-001 | Player attacked Vharok, the World Eater for 46 damage.
+    Player HP: 18 -> 18 | Enemy HP: 42 -> 0
+ACT-001022 | 2026-11-07 23:52:14 | Victory | Player PLY-017 | Enemy BS-001 | Player defeated Vharok, the World Eater.
+    Player HP: 18 -> 18 | Enemy HP: 0 -> 0
+ACT-001023 | 2026-11-07 23:52:14 | Reward | Player PLY-017 | Enemy BS-001 | Player received 300 gold.
+    Player HP: 18 -> 18 | Enemy HP: 0 -> 0
+ACT-001024 | 2026-11-07 23:52:14 | Reward | Player PLY-017 | Enemy BS-001 | Player earned 600 score points.
+    Player HP: 18 -> 18 | Enemy HP: 0 -> 0
+ACT-001025 | 2026-11-07 23:52:14 | Level Complete | Player PLY-017 | Enemy BS-001 | Boss level completed. Attack 29 -> 34, Max HP 160 -> 180.
+    Player HP: 38 -> 38 | Enemy HP: 0 -> 0
+ACT-001026 | 2026-11-07 23:52:40 | Travel | Player PLY-017 | Enemy N/A | Player traveled to The Last Gate via Sealed Exit Door.
+    Player HP: 38 -> 38 | Enemy HP: None -> None
+ACT-001027 | 2026-11-07 23:52:42 | Dungeon Escape | Player PLY-017 | Enemy N/A | Player escaped the dungeon and earned 500 score.
+    Player HP: 38 -> 38 | Enemy HP: None -> None
+ACT-001028 | 2026-11-07 23:54:23 | Travel | Player PLY-018 | Enemy N/A | Player traveled to Rotting Sewers via Rusted Grate.
+    Player HP: 100 -> 100 | Enemy HP: None -> None
+ACT-001029 | 2026-11-07 23:54:30 | Battle Start | Player PLY-018 | Enemy ENM-001 | Battle started with Gravefang Rat.
+    Player HP: 100 -> 100 | Enemy HP: 55 -> 55
+ACT-001030 | 2026-11-07 23:54:32 | Attack | Player PLY-018 | Enemy ENM-001 | Player attacked Gravefang Rat for 14 damage.
+    Player HP: 100 -> 100 | Enemy HP: 55 -> 41
+ACT-001031 | 2026-11-07 23:54:33 | Enemy Attack | Player PLY-018 | Enemy ENM-001 | Gravefang Rat attacked Player for 7 damage.
+    Player HP: 100 -> 93 | Enemy HP: 41 -> 41
+ACT-001032 | 2026-11-07 23:54:37 | Attack | Player PLY-018 | Enemy ENM-001 | Player attacked Gravefang Rat for 18 damage.
+    Player HP: 93 -> 93 | Enemy HP: 41 -> 23
+ACT-001033 | 2026-11-07 23:54:39 | Enemy Attack | Player PLY-018 | Enemy ENM-001 | Gravefang Rat attacked Player for 5 damage.
+    Player HP: 93 -> 88 | Enemy HP: 23 -> 23
+ACT-001034 | 2026-11-07 23:54:42 | Attack | Player PLY-018 | Enemy ENM-001 | Player attacked Gravefang Rat for 19 damage.
+    Player HP: 88 -> 88 | Enemy HP: 23 -> 4
+ACT-001035 | 2026-11-07 23:54:43 | Enemy Attack | Player PLY-018 | Enemy ENM-001 | Gravefang Rat attacked Player for 7 damage.
+    Player HP: 88 -> 81 | Enemy HP: 4 -> 4
+ACT-001036 | 2026-11-07 23:54:47 | Attack | Player PLY-018 | Enemy ENM-001 | Player attacked Gravefang Rat but missed.
+    Player HP: 81 -> 81 | Enemy HP: 4 -> 4
+ACT-001037 | 2026-11-07 23:54:48 | Enemy Attack | Player PLY-018 | Enemy ENM-001 | Gravefang Rat attacked Player for 5 damage.
+    Player HP: 81 -> 76 | Enemy HP: 4 -> 4
+ACT-001038 | 2026-11-07 23:54:51 | Attack | Player PLY-018 | Enemy ENM-001 | Player attacked Gravefang Rat for 19 damage.
+    Player HP: 76 -> 76 | Enemy HP: 4 -> 0
+ACT-001039 | 2026-11-07 23:54:51 | Victory | Player PLY-018 | Enemy ENM-001 | Player defeated Gravefang Rat.
+    Player HP: 76 -> 76 | Enemy HP: 0 -> 0
+ACT-001040 | 2026-11-07 23:54:51 | Reward | Player PLY-018 | Enemy ENM-001 | Player received 25 gold.
+    Player HP: 76 -> 76 | Enemy HP: 0 -> 0
+ACT-001041 | 2026-11-07 23:54:51 | Reward | Player PLY-018 | Enemy ENM-001 | Player earned 40 score points.
+    Player HP: 76 -> 76 | Enemy HP: 0 -> 0
+ACT-001042 | 2026-11-07 23:54:57 | Battle Start | Player PLY-018 | Enemy ENM-002 | Battle started with Hollowbone Goblin.
+    Player HP: 76 -> 76 | Enemy HP: 70 -> 70
+ACT-001043 | 2026-11-07 23:55:03 | Attack | Player PLY-018 | Enemy ENM-002 | Player attacked Hollowbone Goblin for 14 damage.
+    Player HP: 76 -> 76 | Enemy HP: 70 -> 56
+ACT-001044 | 2026-11-07 23:55:05 | Enemy Attack | Player PLY-018 | Enemy ENM-002 | Hollowbone Goblin attacked Player for 9 damage.
+    Player HP: 76 -> 67 | Enemy HP: 56 -> 56
+ACT-001045 | 2026-11-07 23:55:10 | Attack | Player PLY-018 | Enemy ENM-002 | Player attacked Hollowbone Goblin for 15 damage.
+    Player HP: 67 -> 67 | Enemy HP: 56 -> 41
+ACT-001046 | 2026-11-07 23:55:12 | Enemy Attack | Player PLY-018 | Enemy ENM-002 | Hollowbone Goblin attacked Player for 8 damage.
+    Player HP: 67 -> 59 | Enemy HP: 41 -> 41
+ACT-001047 | 2026-11-07 23:55:18 | Attack | Player PLY-018 | Enemy ENM-002 | Player attacked Hollowbone Goblin for 19 damage.
+    Player HP: 59 -> 59 | Enemy HP: 41 -> 22
+ACT-001048 | 2026-11-07 23:55:19 | Enemy Attack | Player PLY-018 | Enemy ENM-002 | Hollowbone Goblin attacked Player for 8 damage.
+    Player HP: 59 -> 51 | Enemy HP: 22 -> 22
+ACT-001049 | 2026-11-07 23:55:38 | Attack | Player PLY-018 | Enemy ENM-002 | Player attacked Hollowbone Goblin for 17 damage.
+    Player HP: 51 -> 51 | Enemy HP: 22 -> 5
+ACT-001050 | 2026-11-07 23:55:40 | Enemy Attack | Player PLY-018 | Enemy ENM-002 | Hollowbone Goblin attacked Player for 8 damage.
+    Player HP: 51 -> 43 | Enemy HP: 5 -> 5
+ACT-001051 | 2026-11-07 23:55:43 | Attack | Player PLY-018 | Enemy ENM-002 | Player attacked Hollowbone Goblin for 15 damage.
+    Player HP: 43 -> 43 | Enemy HP: 5 -> 0
+ACT-001052 | 2026-11-07 23:55:43 | Victory | Player PLY-018 | Enemy ENM-002 | Player defeated Hollowbone Goblin.
+    Player HP: 43 -> 43 | Enemy HP: 0 -> 0
+ACT-001053 | 2026-11-07 23:55:43 | Reward | Player PLY-018 | Enemy ENM-002 | Player received 30 gold.
+    Player HP: 43 -> 43 | Enemy HP: 0 -> 0
+ACT-001054 | 2026-11-07 23:55:43 | Reward | Player PLY-018 | Enemy ENM-002 | Player earned 60 score points.
+    Player HP: 43 -> 43 | Enemy HP: 0 -> 0
+ACT-001055 | 2026-11-07 23:56:02 | Battle Start | Player PLY-018 | Enemy ENM-003 | Battle started with Ashen Ghoul.
+    Player HP: 43 -> 43 | Enemy HP: 85 -> 85
+ACT-001056 | 2026-11-07 23:56:06 | Attack | Player PLY-018 | Enemy ENM-003 | Player attacked Ashen Ghoul for 15 damage.
+    Player HP: 43 -> 43 | Enemy HP: 85 -> 70
+ACT-001057 | 2026-11-07 23:56:08 | Enemy Attack | Player PLY-018 | Enemy ENM-003 | Ashen Ghoul attacked Player for 9 damage.
+    Player HP: 43 -> 34 | Enemy HP: 70 -> 70
+ACT-001058 | 2026-11-07 23:56:11 | Attack | Player PLY-018 | Enemy ENM-003 | Player attacked Ashen Ghoul for 19 damage.
+    Player HP: 34 -> 34 | Enemy HP: 70 -> 51
+ACT-001059 | 2026-11-07 23:56:13 | Enemy Attack | Player PLY-018 | Enemy ENM-003 | Ashen Ghoul attacked Player for 7 damage.
+    Player HP: 34 -> 27 | Enemy HP: 51 -> 51
+ACT-001060 | 2026-11-07 23:56:16 | Attack | Player PLY-018 | Enemy ENM-003 | Player attacked Ashen Ghoul for 28 damage (critical).
+    Player HP: 27 -> 27 | Enemy HP: 51 -> 23
+ACT-001061 | 2026-11-07 23:56:18 | Enemy Attack | Player PLY-018 | Enemy ENM-003 | Ashen Ghoul attacked Player for 8 damage.
+    Player HP: 27 -> 19 | Enemy HP: 23 -> 23
+ACT-001062 | 2026-11-07 23:56:22 | Potion Use | Player PLY-018 | Enemy ENM-003 | Player used one Health Potion and restored 35 HP.
+    Player HP: 19 -> 54 | Enemy HP: 23 -> 23
+ACT-001063 | 2026-11-07 23:56:24 | Enemy Attack | Player PLY-018 | Enemy ENM-003 | Ashen Ghoul attacked Player for 9 damage.
+    Player HP: 54 -> 45 | Enemy HP: 23 -> 23
+ACT-001064 | 2026-11-07 23:56:27 | Attack | Player PLY-018 | Enemy ENM-003 | Player attacked Ashen Ghoul for 13 damage.
+    Player HP: 45 -> 45 | Enemy HP: 23 -> 10
+ACT-001065 | 2026-11-07 23:56:29 | Enemy Attack | Player PLY-018 | Enemy ENM-003 | Ashen Ghoul attacked Player for 7 damage.
+    Player HP: 45 -> 38 | Enemy HP: 10 -> 10
+ACT-001066 | 2026-11-07 23:56:32 | Attack | Player PLY-018 | Enemy ENM-003 | Player attacked Ashen Ghoul for 17 damage.
+    Player HP: 38 -> 38 | Enemy HP: 10 -> 0
+ACT-001067 | 2026-11-07 23:56:32 | Victory | Player PLY-018 | Enemy ENM-003 | Player defeated Ashen Ghoul.
+    Player HP: 38 -> 38 | Enemy HP: 0 -> 0
+ACT-001068 | 2026-11-07 23:56:32 | Reward | Player PLY-018 | Enemy ENM-003 | Player received 35 gold.
+    Player HP: 38 -> 38 | Enemy HP: 0 -> 0
+ACT-001069 | 2026-11-07 23:56:32 | Reward | Player PLY-018 | Enemy ENM-003 | Player earned 80 score points.
+    Player HP: 38 -> 38 | Enemy HP: 0 -> 0
+ACT-001070 | 2026-11-07 23:56:32 | Level Complete | Player PLY-018 | Enemy ENM-003 | Weak level completed. Attack 14 -> 19, Max HP 100 -> 120. Level completion bonus: 40 Gold.
+    Player HP: 58 -> 58 | Enemy HP: 0 -> 0
+ACT-001071 | 2026-11-07 23:56:32 | Equipment Upgrade | Player PLY-018 | Enemy ENM-003 | Standard-Issue gear upgraded for free: Sword: Rusty Sword -> Bloodstone Sword (ATK: +6 | SPD: +4%); Shield: Wooden Shield -> Iron Shield (BLOCK: 9%); Armor: Cloth Armor -> Chainmail Armor (DEF: -2 per hit).
+    Player HP: 58 -> 58 | Enemy HP: 0 -> 0
+ACT-001072 | 2026-11-07 23:56:32 | Progression | Player PLY-018 | Enemy ENM-003 | Rank increased from Beginner to Adventurer.
+    Player HP: 58 -> 58 | Enemy HP: 0 -> 0
+ACT-001073 | 2026-11-07 23:57:10 | Purchase | Player PLY-018 | Enemy N/A | Player bought 6 Health Potion for 180 gold.
+    Player HP: 58 -> 58 | Enemy HP: None -> None
+ACT-001074 | 2026-11-07 23:57:25 | Travel | Player PLY-018 | Enemy N/A | Player traveled to Bloodstone Hall via Crimson Gate.
+    Player HP: 58 -> 58 | Enemy HP: None -> None
+ACT-001075 | 2026-11-07 23:57:30 | Battle Start | Player PLY-018 | Enemy ENM-004 | Battle started with Ironjaw Reaver.
+    Player HP: 58 -> 58 | Enemy HP: 105 -> 105
+ACT-001076 | 2026-11-07 23:57:37 | Attack | Player PLY-018 | Enemy ENM-004 | Player attacked Ironjaw Reaver for 40 damage (critical).
+    Player HP: 58 -> 58 | Enemy HP: 105 -> 65
+ACT-001077 | 2026-11-07 23:57:38 | Enemy Attack | Player PLY-018 | Enemy ENM-004 | Ironjaw Reaver attacked Player for 10 damage.
+    Player HP: 58 -> 48 | Enemy HP: 65 -> 65
+ACT-001078 | 2026-11-07 23:57:43 | Attack | Player PLY-018 | Enemy ENM-004 | Player attacked Ironjaw Reaver for 27 damage.
+    Player HP: 48 -> 48 | Enemy HP: 65 -> 38
+ACT-001079 | 2026-11-07 23:57:44 | Enemy Attack | Player PLY-018 | Enemy ENM-004 | Ironjaw Reaver attacked Player for 8 damage.
+    Player HP: 48 -> 40 | Enemy HP: 38 -> 38
+ACT-001080 | 2026-11-07 23:57:47 | Attack | Player PLY-018 | Enemy ENM-004 | Player attacked Ironjaw Reaver for 27 damage.
+    Player HP: 40 -> 40 | Enemy HP: 38 -> 11
+ACT-001081 | 2026-11-07 23:57:49 | Enemy Attack | Player PLY-018 | Enemy ENM-004 | Ironjaw Reaver attacked Player for 9 damage.
+    Player HP: 40 -> 31 | Enemy HP: 11 -> 11
+ACT-001082 | 2026-11-07 23:57:51 | Attack | Player PLY-018 | Enemy ENM-004 | Player attacked Ironjaw Reaver for 26 damage.
+    Player HP: 31 -> 31 | Enemy HP: 11 -> 0
+ACT-001083 | 2026-11-07 23:57:51 | Victory | Player PLY-018 | Enemy ENM-004 | Player defeated Ironjaw Reaver.
+    Player HP: 31 -> 31 | Enemy HP: 0 -> 0
+ACT-001084 | 2026-11-07 23:57:51 | Reward | Player PLY-018 | Enemy ENM-004 | Player received 50 gold.
+    Player HP: 31 -> 31 | Enemy HP: 0 -> 0
+ACT-001085 | 2026-11-07 23:57:51 | Reward | Player PLY-018 | Enemy ENM-004 | Player earned 100 score points.
+    Player HP: 31 -> 31 | Enemy HP: 0 -> 0
+ACT-001086 | 2026-11-07 23:57:58 | Battle Start | Player PLY-018 | Enemy ENM-005 | Battle started with Boneguard Executioner.
+    Player HP: 31 -> 31 | Enemy HP: 120 -> 120
+ACT-001087 | 2026-11-07 23:58:02 | Potion Use | Player PLY-018 | Enemy ENM-005 | Player used one Health Potion and restored 42 HP.
+    Player HP: 31 -> 73 | Enemy HP: 120 -> 120
+ACT-001088 | 2026-11-07 23:58:04 | Enemy Attack | Player PLY-018 | Enemy ENM-005 | Boneguard Executioner attacked Player for 10 damage.
+    Player HP: 73 -> 63 | Enemy HP: 120 -> 120
+ACT-001089 | 2026-11-07 23:58:07 | Attack | Player PLY-018 | Enemy ENM-005 | Player attacked Boneguard Executioner for 26 damage.
+    Player HP: 63 -> 63 | Enemy HP: 120 -> 94
+ACT-001090 | 2026-11-07 23:58:08 | Enemy Attack | Player PLY-018 | Enemy ENM-005 | Boneguard Executioner attacked Player for 10 damage.
+    Player HP: 63 -> 53 | Enemy HP: 94 -> 94
+ACT-001091 | 2026-11-07 23:58:13 | Attack | Player PLY-018 | Enemy ENM-005 | Player attacked Boneguard Executioner for 28 damage.
+    Player HP: 53 -> 53 | Enemy HP: 94 -> 66
+ACT-001092 | 2026-11-07 23:58:15 | Enemy Attack | Player PLY-018 | Enemy ENM-005 | Boneguard Executioner attacked Player for 8 damage.
+    Player HP: 53 -> 45 | Enemy HP: 66 -> 66
+ACT-001093 | 2026-11-07 23:58:18 | Attack | Player PLY-018 | Enemy ENM-005 | Player attacked Boneguard Executioner for 47 damage (critical).
+    Player HP: 45 -> 45 | Enemy HP: 66 -> 19
+ACT-001094 | 2026-11-07 23:58:20 | Enemy Attack | Player PLY-018 | Enemy ENM-005 | Boneguard Executioner attacked Player for 10 damage.
+    Player HP: 45 -> 35 | Enemy HP: 19 -> 19
+ACT-001095 | 2026-11-07 23:58:22 | Attack | Player PLY-018 | Enemy ENM-005 | Player attacked Boneguard Executioner for 22 damage.
+    Player HP: 35 -> 35 | Enemy HP: 19 -> 0
+ACT-001096 | 2026-11-07 23:58:22 | Victory | Player PLY-018 | Enemy ENM-005 | Player defeated Boneguard Executioner.
+    Player HP: 35 -> 35 | Enemy HP: 0 -> 0
+ACT-001097 | 2026-11-07 23:58:22 | Reward | Player PLY-018 | Enemy ENM-005 | Player received 60 gold.
+    Player HP: 35 -> 35 | Enemy HP: 0 -> 0
+ACT-001098 | 2026-11-07 23:58:22 | Reward | Player PLY-018 | Enemy ENM-005 | Player earned 120 score points.
+    Player HP: 35 -> 35 | Enemy HP: 0 -> 0
+ACT-001099 | 2026-11-07 23:58:59 | Battle Start | Player PLY-018 | Enemy ENM-006 | Battle started with Hellchain Marauder.
+    Player HP: 35 -> 35 | Enemy HP: 135 -> 135
+ACT-001100 | 2026-11-07 23:59:04 | Potion Use | Player PLY-018 | Enemy ENM-006 | Player used one Health Potion and restored 42 HP.
+    Player HP: 35 -> 77 | Enemy HP: 135 -> 135
+ACT-001101 | 2026-11-07 23:59:05 | Enemy Attack | Player PLY-018 | Enemy ENM-006 | Hellchain Marauder attacked Player for 9 damage.
+    Player HP: 77 -> 68 | Enemy HP: 135 -> 135
+ACT-001102 | 2026-11-07 23:59:10 | Attack | Player PLY-018 | Enemy ENM-006 | Player attacked Hellchain Marauder for 49 damage (critical).
+    Player HP: 68 -> 68 | Enemy HP: 135 -> 86
+ACT-001103 | 2026-11-07 23:59:12 | Enemy Attack | Player PLY-018 | Enemy ENM-006 | Hellchain Marauder attacked Player for 11 damage.
+    Player HP: 68 -> 57 | Enemy HP: 86 -> 86
+ACT-001104 | 2026-11-07 23:59:14 | Attack | Player PLY-018 | Enemy ENM-006 | Player attacked Hellchain Marauder for 47 damage (critical).
+    Player HP: 57 -> 57 | Enemy HP: 86 -> 39
+ACT-001105 | 2026-11-07 23:59:16 | Enemy Attack | Player PLY-018 | Enemy ENM-006 | Hellchain Marauder attacked Player for 9 damage.
+    Player HP: 57 -> 48 | Enemy HP: 39 -> 39
+ACT-001106 | 2026-11-07 23:59:18 | Attack | Player PLY-018 | Enemy ENM-006 | Player attacked Hellchain Marauder for 28 damage.
+    Player HP: 48 -> 48 | Enemy HP: 39 -> 11
+ACT-001107 | 2026-11-07 23:59:20 | Enemy Attack | Player PLY-018 | Enemy ENM-006 | Hellchain Marauder attacked Player for 9 damage.
+    Player HP: 48 -> 39 | Enemy HP: 11 -> 11
+ACT-001108 | 2026-11-07 23:59:22 | Attack | Player PLY-018 | Enemy ENM-006 | Player attacked Hellchain Marauder for 27 damage.
+    Player HP: 39 -> 39 | Enemy HP: 11 -> 0
+ACT-001109 | 2026-11-07 23:59:22 | Victory | Player PLY-018 | Enemy ENM-006 | Player defeated Hellchain Marauder.
+    Player HP: 39 -> 39 | Enemy HP: 0 -> 0
+ACT-001110 | 2026-11-07 23:59:22 | Reward | Player PLY-018 | Enemy ENM-006 | Player received 70 gold.
+    Player HP: 39 -> 39 | Enemy HP: 0 -> 0
+ACT-001111 | 2026-11-07 23:59:22 | Reward | Player PLY-018 | Enemy ENM-006 | Player earned 140 score points.
+    Player HP: 39 -> 39 | Enemy HP: 0 -> 0
+ACT-001112 | 2026-11-07 23:59:22 | Level Complete | Player PLY-018 | Enemy ENM-006 | Intermediate level completed. Attack 19 -> 24, Max HP 120 -> 140. Level completion bonus: 80 Gold.
+    Player HP: 59 -> 59 | Enemy HP: 0 -> 0
+ACT-001113 | 2026-11-07 23:59:22 | Equipment Upgrade | Player PLY-018 | Enemy ENM-006 | Standard-Issue gear upgraded for free: Sword: Bloodstone Sword -> Steel Sword (ATK: +10 | SPD: +8%); Shield: Iron Shield -> Steel Shield (BLOCK: 15%); Armor: Chainmail Armor -> Steel Armor (DEF: -4 per hit).
+    Player HP: 59 -> 59 | Enemy HP: 0 -> 0
+ACT-001114 | 2026-11-07 23:59:22 | Progression | Player PLY-018 | Enemy ENM-006 | Rank increased from Adventurer to Elite.
+    Player HP: 59 -> 59 | Enemy HP: 0 -> 0
+ACT-001115 | 2026-11-07 23:59:36 | Travel | Player PLY-018 | Enemy N/A | Player traveled to War-Torn Catacombs via Iron Drawbridge.
+    Player HP: 59 -> 59 | Enemy HP: None -> None
+ACT-001116 | 2026-11-07 23:59:42 | Battle Start | Player PLY-018 | Enemy ENM-007 | Battle started with Dreadfang Berserker.
+    Player HP: 59 -> 59 | Enemy HP: 150 -> 150
+ACT-001117 | 2026-11-07 23:59:46 | Attack | Player PLY-018 | Enemy ENM-007 | Player attacked Dreadfang Berserker for 59 damage (critical).
+    Player HP: 59 -> 59 | Enemy HP: 150 -> 91
+ACT-001118 | 2026-11-07 23:59:47 | Enemy Attack | Player PLY-018 | Enemy ENM-007 | Dreadfang Berserker attacked Player for 15 damage.
+    Player HP: 59 -> 44 | Enemy HP: 91 -> 91
+ACT-001119 | 2026-11-07 23:59:50 | Attack | Player PLY-018 | Enemy ENM-007 | Player attacked Dreadfang Berserker for 59 damage (critical).
+    Player HP: 44 -> 44 | Enemy HP: 91 -> 32
+ACT-001120 | 2026-11-07 23:59:52 | Enemy Attack | Player PLY-018 | Enemy ENM-007 | Dreadfang Berserker attacked Player for 11 damage.
+    Player HP: 44 -> 33 | Enemy HP: 32 -> 32
+ACT-001121 | 2026-11-07 23:59:55 | Attack | Player PLY-018 | Enemy ENM-007 | Player attacked Dreadfang Berserker for 37 damage.
+    Player HP: 33 -> 33 | Enemy HP: 32 -> 0
+ACT-001122 | 2026-11-07 23:59:55 | Victory | Player PLY-018 | Enemy ENM-007 | Player defeated Dreadfang Berserker.
+    Player HP: 33 -> 33 | Enemy HP: 0 -> 0
+ACT-001123 | 2026-11-07 23:59:55 | Reward | Player PLY-018 | Enemy ENM-007 | Player received 85 gold.
+    Player HP: 33 -> 33 | Enemy HP: 0 -> 0
+ACT-001124 | 2026-11-07 23:59:55 | Reward | Player PLY-018 | Enemy ENM-007 | Player earned 180 score points.
+    Player HP: 33 -> 33 | Enemy HP: 0 -> 0
+ACT-001125 | 2026-11-08 00:00:08 | Battle Start | Player PLY-018 | Enemy ENM-008 | Battle started with Abyssal Death Knight.
+    Player HP: 33 -> 33 | Enemy HP: 165 -> 165
+ACT-001126 | 2026-11-08 00:00:11 | Potion Use | Player PLY-018 | Enemy ENM-008 | Player used one Health Potion and restored 49 HP.
+    Player HP: 33 -> 82 | Enemy HP: 165 -> 165
+ACT-001127 | 2026-11-08 00:00:13 | Enemy Attack | Player PLY-018 | Enemy ENM-008 | Abyssal Death Knight attacked Player for 11 damage.
+    Player HP: 82 -> 71 | Enemy HP: 165 -> 165
+ACT-001128 | 2026-11-08 00:00:18 | Attack | Player PLY-018 | Enemy ENM-008 | Player attacked Abyssal Death Knight for 36 damage.
+    Player HP: 71 -> 71 | Enemy HP: 165 -> 129
+ACT-001129 | 2026-11-08 00:00:19 | Enemy Attack | Player PLY-018 | Enemy ENM-008 | Abyssal Death Knight attacked Player for 17 damage.
+    Player HP: 71 -> 54 | Enemy HP: 129 -> 129
+ACT-001130 | 2026-11-08 00:00:27 | Attack | Player PLY-018 | Enemy ENM-008 | Player attacked Abyssal Death Knight for 37 damage.
+    Player HP: 54 -> 54 | Enemy HP: 129 -> 92
+ACT-001131 | 2026-11-08 00:00:29 | Enemy Attack | Player PLY-018 | Enemy ENM-008 | Abyssal Death Knight attacked Player for 10 damage.
+    Player HP: 54 -> 44 | Enemy HP: 92 -> 92
+ACT-001132 | 2026-11-08 00:00:34 | Attack | Player PLY-018 | Enemy ENM-008 | Player attacked Abyssal Death Knight for 34 damage.
+    Player HP: 44 -> 44 | Enemy HP: 92 -> 58
+ACT-001133 | 2026-11-08 00:00:35 | Enemy Attack | Player PLY-018 | Enemy ENM-008 | Abyssal Death Knight attacked Player for 12 damage.
+    Player HP: 44 -> 32 | Enemy HP: 58 -> 58
+ACT-001134 | 2026-11-08 00:01:40 | Attack | Player PLY-018 | Enemy ENM-008 | Player attacked Abyssal Death Knight for 34 damage.
+    Player HP: 32 -> 32 | Enemy HP: 58 -> 24
+ACT-001135 | 2026-11-08 00:01:41 | Enemy Attack | Player PLY-018 | Enemy ENM-008 | Abyssal Death Knight attacked Player for 11 damage.
+    Player HP: 32 -> 21 | Enemy HP: 24 -> 24
+ACT-001136 | 2026-11-08 00:01:44 | Attack | Player PLY-018 | Enemy ENM-008 | Player attacked Abyssal Death Knight for 31 damage.
+    Player HP: 21 -> 21 | Enemy HP: 24 -> 0
+ACT-001137 | 2026-11-08 00:01:44 | Victory | Player PLY-018 | Enemy ENM-008 | Player defeated Abyssal Death Knight.
+    Player HP: 21 -> 21 | Enemy HP: 0 -> 0
+ACT-001138 | 2026-11-08 00:01:44 | Reward | Player PLY-018 | Enemy ENM-008 | Player received 95 gold.
+    Player HP: 21 -> 21 | Enemy HP: 0 -> 0
+ACT-001139 | 2026-11-08 00:01:44 | Reward | Player PLY-018 | Enemy ENM-008 | Player earned 200 score points.
+    Player HP: 21 -> 21 | Enemy HP: 0 -> 0
+ACT-001140 | 2026-11-08 00:01:52 | Battle Start | Player PLY-018 | Enemy ENM-009 | Battle started with Soulreaper Wraith.
+    Player HP: 21 -> 21 | Enemy HP: 180 -> 180
+ACT-001141 | 2026-11-08 00:01:56 | Potion Use | Player PLY-018 | Enemy ENM-009 | Player used one Health Potion and restored 49 HP.
+    Player HP: 21 -> 70 | Enemy HP: 180 -> 180
+ACT-001142 | 2026-11-08 00:01:58 | Enemy Attack | Player PLY-018 | Enemy ENM-009 | Soulreaper Wraith attacked Player for 11 damage.
+    Player HP: 70 -> 59 | Enemy HP: 180 -> 180
+ACT-001143 | 2026-11-08 00:02:15 | Attack | Player PLY-018 | Enemy ENM-009 | Player attacked Soulreaper Wraith for 32 damage.
+    Player HP: 59 -> 59 | Enemy HP: 180 -> 148
+ACT-001144 | 2026-11-08 00:02:17 | Enemy Attack | Player PLY-018 | Enemy ENM-009 | Soulreaper Wraith attacked Player for 11 damage.
+    Player HP: 59 -> 48 | Enemy HP: 148 -> 148
+ACT-001145 | 2026-11-08 00:02:21 | Attack | Player PLY-018 | Enemy ENM-009 | Player attacked Soulreaper Wraith for 32 damage.
+    Player HP: 48 -> 48 | Enemy HP: 148 -> 116
+ACT-001146 | 2026-11-08 00:02:23 | Enemy Attack | Player PLY-018 | Enemy ENM-009 | Soulreaper Wraith attacked Player for 11 damage.
+    Player HP: 48 -> 37 | Enemy HP: 116 -> 116
+ACT-001147 | 2026-11-08 00:02:24 | Attack | Player PLY-018 | Enemy ENM-009 | Player attacked Soulreaper Wraith for 36 damage.
+    Player HP: 37 -> 37 | Enemy HP: 116 -> 80
+ACT-001148 | 2026-11-08 00:02:26 | Enemy Attack | Player PLY-018 | Enemy ENM-009 | Soulreaper Wraith attacked Player for 11 damage.
+    Player HP: 37 -> 26 | Enemy HP: 80 -> 80
+ACT-001149 | 2026-11-08 00:02:28 | Attack | Player PLY-018 | Enemy ENM-009 | Player attacked Soulreaper Wraith for 64 damage (critical).
+    Player HP: 26 -> 26 | Enemy HP: 80 -> 16
+ACT-001150 | 2026-11-08 00:02:30 | Enemy Attack | Player PLY-018 | Enemy ENM-009 | Soulreaper Wraith attacked Player for 11 damage.
+    Player HP: 26 -> 15 | Enemy HP: 16 -> 16
+ACT-001151 | 2026-11-08 00:02:32 | Potion Use | Player PLY-018 | Enemy ENM-009 | Player used one Health Potion and restored 49 HP.
+    Player HP: 15 -> 64 | Enemy HP: 16 -> 16
+ACT-001152 | 2026-11-08 00:02:34 | Enemy Attack | Player PLY-018 | Enemy ENM-009 | Soulreaper Wraith attacked Player for 17 damage.
+    Player HP: 64 -> 47 | Enemy HP: 16 -> 16
+ACT-001153 | 2026-11-08 00:02:38 | Attack | Player PLY-018 | Enemy ENM-009 | Player attacked Soulreaper Wraith for 56 damage (critical).
+    Player HP: 47 -> 47 | Enemy HP: 16 -> 0
+ACT-001154 | 2026-11-08 00:02:38 | Victory | Player PLY-018 | Enemy ENM-009 | Player defeated Soulreaper Wraith.
+    Player HP: 47 -> 47 | Enemy HP: 0 -> 0
+ACT-001155 | 2026-11-08 00:02:38 | Reward | Player PLY-018 | Enemy ENM-009 | Player received 110 gold.
+    Player HP: 47 -> 47 | Enemy HP: 0 -> 0
+ACT-001156 | 2026-11-08 00:02:38 | Reward | Player PLY-018 | Enemy ENM-009 | Player earned 220 score points.
+    Player HP: 47 -> 47 | Enemy HP: 0 -> 0
+ACT-001157 | 2026-11-08 00:02:38 | Level Complete | Player PLY-018 | Enemy ENM-009 | Strong level completed. Attack 24 -> 29, Max HP 140 -> 160. Level completion bonus: 150 Gold.
+    Player HP: 67 -> 67 | Enemy HP: 0 -> 0
+ACT-001158 | 2026-11-08 00:02:38 | Equipment Upgrade | Player PLY-018 | Enemy ENM-009 | Standard-Issue gear upgraded for free: Sword: Steel Sword -> Darksteel Sword (ATK: +14 | SPD: +12%); Shield: Steel Shield -> Darksteel Shield (BLOCK: 23%); Armor: Steel Armor -> Darksteel Armor (DEF: -6 per hit).
+    Player HP: 67 -> 67 | Enemy HP: 0 -> 0
+ACT-001159 | 2026-11-08 00:02:38 | Progression | Player PLY-018 | Enemy ENM-009 | Rank increased from Elite to Master.
+    Player HP: 67 -> 67 | Enemy HP: 0 -> 0
+ACT-001160 | 2026-11-08 00:03:29 | Purchase | Player PLY-018 | Enemy N/A | Player bought 9 Health Potion for 270 gold.
+    Player HP: 67 -> 67 | Enemy HP: None -> None
+ACT-001161 | 2026-11-08 00:04:25 | Travel | Player PLY-018 | Enemy N/A | Player traveled to Throne of Ruin via Throne Gate.
+    Player HP: 67 -> 67 | Enemy HP: None -> None
+ACT-001162 | 2026-11-08 00:04:34 | Battle Start | Player PLY-018 | Enemy BS-001 | Battle started with Vharok, the World Eater.
+    Player HP: 67 -> 67 | Enemy HP: 320 -> 320
+ACT-001163 | 2026-11-08 00:04:36 | Potion Use | Player PLY-018 | Enemy BS-001 | Player used one Health Potion and restored 56 HP.
+    Player HP: 67 -> 123 | Enemy HP: 320 -> 320
+ACT-001164 | 2026-11-08 00:04:38 | Enemy Attack | Player PLY-018 | Enemy BS-001 | Vharok, the World Eater attacked Player for 13 damage.
+    Player HP: 123 -> 110 | Enemy HP: 320 -> 320
+ACT-001165 | 2026-11-08 00:04:41 | Attack | Player PLY-018 | Enemy BS-001 | Player attacked Vharok, the World Eater for 42 damage.
+    Player HP: 110 -> 110 | Enemy HP: 320 -> 278
+ACT-001166 | 2026-11-08 00:04:42 | Enemy Attack | Player PLY-018 | Enemy BS-001 | Vharok, the World Eater attacked Player for 12 damage.
+    Player HP: 110 -> 98 | Enemy HP: 278 -> 278
+ACT-001167 | 2026-11-08 00:04:44 | Attack | Player PLY-018 | Enemy BS-001 | Player attacked Vharok, the World Eater for 45 damage.
+    Player HP: 98 -> 98 | Enemy HP: 278 -> 233
+ACT-001168 | 2026-11-08 00:04:46 | Enemy Attack | Player PLY-018 | Enemy BS-001 | Vharok, the World Eater attacked Player for 11 damage.
+    Player HP: 98 -> 87 | Enemy HP: 233 -> 233
+ACT-001169 | 2026-11-08 00:05:02 | Attack | Player PLY-018 | Enemy BS-001 | Player attacked Vharok, the World Eater for 70 damage (critical).
+    Player HP: 87 -> 87 | Enemy HP: 233 -> 163
+ACT-001170 | 2026-11-08 00:05:03 | Enemy Attack | Player PLY-018 | Enemy BS-001 | Vharok, the World Eater attacked Player for 13 damage.
+    Player HP: 87 -> 74 | Enemy HP: 163 -> 163
+ACT-001171 | 2026-11-08 00:05:06 | Attack | Player PLY-018 | Enemy BS-001 | Player attacked Vharok, the World Eater for 43 damage.
+    Player HP: 74 -> 74 | Enemy HP: 163 -> 120
+ACT-001172 | 2026-11-08 00:05:07 | Enrage | Player PLY-018 | Enemy BS-001 | Vharok, the World Eater became enraged.
+    Player HP: 74 -> 74 | Enemy HP: 120 -> 120
+ACT-001173 | 2026-11-08 00:05:09 | Enemy Attack | Player PLY-018 | Enemy BS-001 | Vharok, the World Eater attacked Player for 17 damage.
+    Player HP: 74 -> 57 | Enemy HP: 120 -> 120
+ACT-001174 | 2026-11-08 00:05:13 | Potion Use | Player PLY-018 | Enemy BS-001 | Player used one Health Potion and restored 56 HP.
+    Player HP: 57 -> 113 | Enemy HP: 120 -> 120
+ACT-001175 | 2026-11-08 00:05:14 | Enemy Attack | Player PLY-018 | Enemy BS-001 | Vharok, the World Eater attacked Player for 18 damage.
+    Player HP: 113 -> 95 | Enemy HP: 120 -> 120
+ACT-001176 | 2026-11-08 00:05:23 | Attack | Player PLY-018 | Enemy BS-001 | Player attacked Vharok, the World Eater for 77 damage (critical).
+    Player HP: 95 -> 95 | Enemy HP: 120 -> 43
+ACT-001177 | 2026-11-08 00:05:25 | Enemy Attack | Player PLY-018 | Enemy BS-001 | Vharok, the World Eater attacked Player for 18 damage.
+    Player HP: 95 -> 77 | Enemy HP: 43 -> 43
+ACT-001178 | 2026-11-08 00:05:28 | Attack | Player PLY-018 | Enemy BS-001 | Player attacked Vharok, the World Eater for 40 damage.
+    Player HP: 77 -> 77 | Enemy HP: 43 -> 3
+ACT-001179 | 2026-11-08 00:05:29 | Enemy Attack | Player PLY-018 | Enemy BS-001 | Vharok, the World Eater attacked Player for 17 damage.
+    Player HP: 77 -> 60 | Enemy HP: 3 -> 3
+ACT-001180 | 2026-11-08 00:06:50 | Attack | Player PLY-018 | Enemy BS-001 | Player attacked Vharok, the World Eater for 43 damage.
+    Player HP: 60 -> 60 | Enemy HP: 3 -> 0
+ACT-001181 | 2026-11-08 00:06:50 | Victory | Player PLY-018 | Enemy BS-001 | Player defeated Vharok, the World Eater.
+    Player HP: 60 -> 60 | Enemy HP: 0 -> 0
+ACT-001182 | 2026-11-08 00:06:50 | Reward | Player PLY-018 | Enemy BS-001 | Player received 300 gold.
+    Player HP: 60 -> 60 | Enemy HP: 0 -> 0
+ACT-001183 | 2026-11-08 00:06:50 | Reward | Player PLY-018 | Enemy BS-001 | Player earned 600 score points.
+    Player HP: 60 -> 60 | Enemy HP: 0 -> 0
+ACT-001184 | 2026-11-08 00:06:50 | Level Complete | Player PLY-018 | Enemy BS-001 | Boss level completed. Attack 29 -> 34, Max HP 160 -> 180.
+    Player HP: 80 -> 80 | Enemy HP: 0 -> 0
+ACT-001185 | 2026-11-08 00:08:14 | Travel | Player PLY-018 | Enemy N/A | Player traveled to The Last Gate via Sealed Exit Door.
+    Player HP: 80 -> 80 | Enemy HP: None -> None
+ACT-001186 | 2026-11-08 00:08:15 | Dungeon Escape | Player PLY-018 | Enemy N/A | Player escaped the dungeon and earned 500 score.
+    Player HP: 80 -> 80 | Enemy HP: None -> None
+ACT-001187 | 2026-11-08 00:31:57 | Travel | Player PLY-024 | Enemy N/A | Player traveled to Rotting Sewers via Rusted Grate.
+    Player HP: 100 -> 100 | Enemy HP: None -> None
+ACT-001188 | 2026-11-08 00:32:16 | Undo | Player PLY-024 | Enemy N/A | Undid: Travel to Rotting Sewers.
+    Player HP: 100 -> 100 | Enemy HP: None -> None
+ACT-001189 | 2026-11-08 00:32:32 | Travel | Player PLY-024 | Enemy N/A | Player traveled to Rotting Sewers via Rusted Grate.
+    Player HP: 100 -> 100 | Enemy HP: None -> None
+ACT-001190 | 2026-11-08 00:33:54 | Battle Start | Player PLY-024 | Enemy ENM-001 | Battle started with Gravefang Rat.
+    Player HP: 100 -> 100 | Enemy HP: 55 -> 55
+ACT-001191 | 2026-11-08 00:33:57 | Attack | Player PLY-024 | Enemy ENM-001 | Player attacked Gravefang Rat for 18 damage.
+    Player HP: 100 -> 100 | Enemy HP: 55 -> 37
+ACT-001192 | 2026-11-08 00:33:59 | Enemy Attack | Player PLY-024 | Enemy ENM-001 | Gravefang Rat attacked Player for 4 damage.
+    Player HP: 100 -> 96 | Enemy HP: 37 -> 37
+ACT-001193 | 2026-11-08 00:34:02 | Attack | Player PLY-024 | Enemy ENM-001 | Player attacked Gravefang Rat for 22 damage (critical).
+    Player HP: 96 -> 96 | Enemy HP: 37 -> 15
+ACT-001194 | 2026-11-08 00:34:03 | Enemy Attack | Player PLY-024 | Enemy ENM-001 | Gravefang Rat attacked Player for 6 damage.
+    Player HP: 96 -> 90 | Enemy HP: 15 -> 15
+ACT-001195 | 2026-11-08 00:34:06 | Attack | Player PLY-024 | Enemy ENM-001 | Player attacked Gravefang Rat for 14 damage.
+    Player HP: 90 -> 90 | Enemy HP: 15 -> 1
+ACT-001196 | 2026-11-08 00:34:07 | Enemy Attack | Player PLY-024 | Enemy ENM-001 | Gravefang Rat attacked Player for 5 damage.
+    Player HP: 90 -> 85 | Enemy HP: 1 -> 1

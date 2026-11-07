@@ -7,3 +7,4 @@
   2026-11-07 17:06:11 | PLY-001   | player   | ENM-005  | Boneguard Executioner | Defeat  | 4     | -60  | 0
   2026-11-07 17:08:34 | PLY-001   | player   | ENM-005  | Boneguard Executioner | Victory | 5     | 60   | 120
   2026-11-07 17:09:25 | PLY-001   | player   | ENM-006  | Hellchain Marauder    | Victory | 6     | 150  | 140
+  2026-11-07 19:36:58 | PLY-001   | player   | ENM-007  | Dreadfang Berserker   | Victory | 6     | 85   | 180

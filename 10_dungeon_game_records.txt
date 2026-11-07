@@ -1,32 +1,32 @@
 DREADVEIL: THE LAST GATE - SAVED GAME
-Saved At: 2026-11-07 18:00:12
+Saved At: 2026-11-07 19:37:38
 
 PLAYER INFORMATION
 id: PLY-001
 name: player
 role: Player
-hp: 39
+hp: 140
 max_hp: 140
 atk: 24
-gold: 375
-score: 550
-wins: 6
+gold: 280
+score: 730
+wins: 7
 losses: 1
 status: Active
-defeated_ids: ['ENM-001', 'ENM-002', 'ENM-003', 'ENM-004', 'ENM-005', 'ENM-006']
+defeated_ids: ['ENM-001', 'ENM-002', 'ENM-003', 'ENM-004', 'ENM-005', 'ENM-006', 'ENM-007']
 completed_levels: ['Weak', 'Intermediate']
 inventory: {}
 wounds: {}
 owned_equipment: []
 equipped: {}
-location: ROOM-002
+location: ROOM-003
 treasures: ['ROOM-001']
-Current Room: Bloodstone Hall
+Current Room: War-Torn Catacombs
 
 PROGRESSION
 Rank: Elite
 Unlocked Difficulties: Weak, Intermediate, Strong
-Next Goal: Boss unlocks after 3 Strong victories (0/3)
+Next Goal: Boss unlocks after 3 Strong victories (1/3)
 Completed Levels: Weak, Intermediate
 
 INVENTORY
@@ -43,7 +43,7 @@ ENM-003 | Ashen Ghoul | HP: 0/85 | ATK: 11 | Difficulty: Weak | Status: Defeated
 ENM-004 | Ironjaw Reaver | HP: 0/105 | ATK: 12 | Difficulty: Intermediate | Status: Defeated | Gold: 50 | Score: 100 | Room: Bloodstone Hall
 ENM-005 | Boneguard Executioner | HP: 0/120 | ATK: 13 | Difficulty: Intermediate | Status: Defeated | Gold: 60 | Score: 120 | Room: Bloodstone Hall
 ENM-006 | Hellchain Marauder | HP: 0/135 | ATK: 14 | Difficulty: Intermediate | Status: Defeated | Gold: 70 | Score: 140 | Room: Bloodstone Hall
-ENM-007 | Dreadfang Berserker | HP: 150/150 | ATK: 16 | Difficulty: Strong | Status: Active | Gold: 85 | Score: 180 | Room: War-Torn Catacombs
+ENM-007 | Dreadfang Berserker | HP: 0/150 | ATK: 16 | Difficulty: Strong | Status: Defeated | Gold: 85 | Score: 180 | Room: War-Torn Catacombs
 ENM-008 | Abyssal Death Knight | HP: 165/165 | ATK: 17 | Difficulty: Strong | Status: Active | Gold: 95 | Score: 200 | Room: War-Torn Catacombs
 ENM-009 | Soulreaper Wraith | HP: 180/180 | ATK: 18 | Difficulty: Strong | Status: Active | Gold: 110 | Score: 220 | Room: War-Torn Catacombs
 BS-001 | Vharok, the World Eater | HP: 320/320 | ATK: 22 | Difficulty: Boss | Status: Active | Gold: 300 | Score: 600 | Room: Throne of Ruin
@@ -55,7 +55,8 @@ CURRENT BATTLE
 NO ACTIVE BATTLE
 
 UNDO STACK (TOP TO BOTTOM)
-EMPTY
+Before: Rest at camp
+Before: Rest at camp
 
 DUNGEON MAP
 Legend: [E] Entrance  [O] Open  [Q] Quota met/optional foes  [C] Cleared all  [L] Locked
@@ -75,7 +76,7 @@ Legend: [E] Entrance  [O] Open  [Q] Quota met/optional foes  [C] Cleared all  [L
       Link  : <-> ROOM-001 Rotting Sewers via Crimson Gate
       Link  : <-> ROOM-003 War-Torn Catacombs via Iron Drawbridge
 [O] ROOM-003 War-Torn Catacombs (Open)
-      Enemy : ENM-007 Dreadfang Berserker (Strong, Active)
+      Enemy : ENM-007 Dreadfang Berserker (Strong, Defeated)
       Enemy : ENM-008 Abyssal Death Knight (Strong, Active)
       Enemy : ENM-009 Soulreaper Wraith (Strong, Active)
       Link  : <-> ROOM-002 Bloodstone Hall via Iron Drawbridge

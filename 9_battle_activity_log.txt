@@ -212,3 +212,53 @@ ACT-000106 | 2026-11-07 17:09:24 | Equipment Upgrade | Player PLY-001 | Enemy EN
     Player HP: 39 -> 39 | Enemy HP: 0 -> 0
 ACT-000107 | 2026-11-07 17:09:24 | Progression | Player PLY-001 | Enemy ENM-006 | Rank increased from Adventurer to Elite.
     Player HP: 39 -> 39 | Enemy HP: 0 -> 0
+ACT-000108 | 2026-11-07 19:35:03 | Purchase | Player PLY-001 | Enemy N/A | Player bought 1 Dice of Fate for 100 gold.
+    Player HP: 39 -> 39 | Enemy HP: None -> None
+ACT-000109 | 2026-11-07 19:35:14 | Travel | Player PLY-001 | Enemy N/A | Player traveled to War-Torn Catacombs via Iron Drawbridge.
+    Player HP: 39 -> 39 | Enemy HP: None -> None
+ACT-000110 | 2026-11-07 19:35:17 | Battle Start | Player PLY-001 | Enemy ENM-007 | Battle started with Dreadfang Berserker.
+    Player HP: 39 -> 39 | Enemy HP: 150 -> 150
+ACT-000111 | 2026-11-07 19:35:26 | Item Use | Player PLY-001 | Enemy ENM-007 | Player rolled 1 on Dice of Fate. Cursed Roll: lost 15 HP.
+    Player HP: 39 -> 24 | Enemy HP: 150 -> 150
+ACT-000112 | 2026-11-07 19:35:28 | Enemy Attack | Player PLY-001 | Enemy ENM-007 | Dreadfang Berserker attacked Player for 10 damage.
+    Player HP: 24 -> 14 | Enemy HP: 150 -> 150
+ACT-000113 | 2026-11-07 19:35:44 | Challenge | Player PLY-001 | Enemy ENM-007 | Player answered QST-008 correctly and earned +32 challenge attack damage; dealt 66 total damage to Dreadfang Berserker.
+    Player HP: 14 -> 14 | Enemy HP: 150 -> 84
+ACT-000114 | 2026-11-07 19:35:45 | Enemy Attack | Player PLY-001 | Enemy ENM-007 | Dreadfang Berserker attacked Player for 11 damage.
+    Player HP: 14 -> 3 | Enemy HP: 84 -> 84
+ACT-000115 | 2026-11-07 19:35:57 | Undo | Player PLY-001 | Enemy ENM-007 | Undid: Challenge question QST-008.
+    Player HP: 14 -> 14 | Enemy HP: 150 -> 150
+ACT-000116 | 2026-11-07 19:36:02 | Undo | Player PLY-001 | Enemy ENM-007 | Undid: Use Dice of Fate.
+    Player HP: 39 -> 39 | Enemy HP: 150 -> 150
+ACT-000117 | 2026-11-07 19:36:07 | Item Use | Player PLY-001 | Enemy ENM-007 | Player rolled 2 on Dice of Fate. Dark Shield: blocks up to 30 damage from the next hit.
+    Player HP: 39 -> 39 | Enemy HP: 150 -> 150
+ACT-000118 | 2026-11-07 19:36:09 | Enemy Attack | Player PLY-001 | Enemy ENM-007 | Dreadfang Berserker attacked Player for 0 damage (Dice of Fate blocked 11).
+    Player HP: 39 -> 39 | Enemy HP: 150 -> 150
+ACT-000119 | 2026-11-07 19:36:37 | Challenge | Player PLY-001 | Enemy ENM-007 | Player answered QST-008 correctly and earned +32 challenge attack damage; dealt 67 total damage to Dreadfang Berserker.
+    Player HP: 39 -> 39 | Enemy HP: 150 -> 83
+ACT-000120 | 2026-11-07 19:36:39 | Enemy Attack | Player PLY-001 | Enemy ENM-007 | Dreadfang Berserker attacked Player for 8 damage.
+    Player HP: 39 -> 31 | Enemy HP: 83 -> 83
+ACT-000121 | 2026-11-07 19:36:42 | Attack | Player PLY-001 | Enemy ENM-007 | Player attacked Dreadfang Berserker for 31 damage.
+    Player HP: 31 -> 31 | Enemy HP: 83 -> 52
+ACT-000122 | 2026-11-07 19:36:43 | Enemy Attack | Player PLY-001 | Enemy ENM-007 | Dreadfang Berserker attacked Player for 8 damage.
+    Player HP: 31 -> 23 | Enemy HP: 52 -> 52
+ACT-000123 | 2026-11-07 19:36:46 | Attack | Player PLY-001 | Enemy ENM-007 | Player attacked Dreadfang Berserker for 33 damage.
+    Player HP: 23 -> 23 | Enemy HP: 52 -> 19
+ACT-000124 | 2026-11-07 19:36:48 | Enemy Attack | Player PLY-001 | Enemy ENM-007 | Dreadfang Berserker attacked Player for 17 damage.
+    Player HP: 23 -> 6 | Enemy HP: 19 -> 19
+ACT-000125 | 2026-11-07 19:36:51 | Defend | Player PLY-001 | Enemy ENM-007 | Player defended against Dreadfang Berserker.
+    Player HP: 6 -> 6 | Enemy HP: 19 -> 19
+ACT-000126 | 2026-11-07 19:36:53 | Enemy Attack | Player PLY-001 | Enemy ENM-007 | Dreadfang Berserker attacked Player for 4 damage (blocked by your guard).
+    Player HP: 6 -> 2 | Enemy HP: 19 -> 19
+ACT-000127 | 2026-11-07 19:36:57 | Attack | Player PLY-001 | Enemy ENM-007 | Player attacked Dreadfang Berserker for 40 damage.
+    Player HP: 2 -> 2 | Enemy HP: 19 -> 0
+ACT-000128 | 2026-11-07 19:36:57 | Victory | Player PLY-001 | Enemy ENM-007 | Player defeated Dreadfang Berserker.
+    Player HP: 2 -> 2 | Enemy HP: 0 -> 0
+ACT-000129 | 2026-11-07 19:36:57 | Reward | Player PLY-001 | Enemy ENM-007 | Player received 85 gold.
+    Player HP: 2 -> 2 | Enemy HP: 0 -> 0
+ACT-000130 | 2026-11-07 19:36:57 | Reward | Player PLY-001 | Enemy ENM-007 | Player earned 180 score points.
+    Player HP: 2 -> 2 | Enemy HP: 0 -> 0
+ACT-000131 | 2026-11-07 19:37:07 | Camp Rest | Player PLY-001 | Enemy N/A | Player rested and restored 70 HP.
+    Player HP: 2 -> 72 | Enemy HP: None -> None
+ACT-000132 | 2026-11-07 19:37:11 | Camp Rest | Player PLY-001 | Enemy N/A | Player rested and restored 68 HP.
+    Player HP: 72 -> 140 | Enemy HP: None -> None

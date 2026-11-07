@@ -275,8 +275,8 @@ These functions use the same saved records that appear in the TXT/JSON files. Ta
 
 **A player cannot start a battle.** Confirm the current room has an eligible undefeated enemy and that the room is accessible.
 
-
 **Undo is unavailable.** The player can undo only actions with an active saved snapshot. Permanent completed outcomes cannot be reversed.
+
 **Changes are not saved.** Check folder permissions, available disk space, and whether another program is locking the records. Review the error shown by the program before continuing.
 
 **The console layout looks crowded.** Use a wider terminal window so tables and the game HUD can be displayed properly.

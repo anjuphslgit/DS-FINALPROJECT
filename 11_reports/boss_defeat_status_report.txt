@@ -1,0 +1,11 @@
+BOSS DEFEAT STATUS REPORT
+Generated: 2026-11-07 21:57:19
+
+Bosses: Vharok, the World Eater
+
++----------+---------------+-----------------+
+| Username | Boss Defeated | Dungeon Escaped |
++==========+===============+=================+
+| player   | No            | No              |
+| test     | Yes           | Yes             |
++----------+---------------+-----------------+

@@ -1,8 +1,8 @@
 {
-  "next_action_number": 133,
+  "next_action_number": 329,
   "next_account_numbers": {
-    "PLY": 3,
-    "ADM": 2
+    "PLY": 7,
+    "ADM": 6
   },
   "players": {
     "player": {
@@ -1586,6 +1586,143 @@
           "log_size": 126
         }
       ],
+      "current_enemy_id": null,
+      "effects": [
+        0,
+        0,
+        false,
+        0,
+        false,
+        false,
+        0,
+        0,
+        0
+      ]
+    },
+    "test": {
+      "history": [
+        {
+          "action_id": "ACT-000319",
+          "player_id": "PLY-003",
+          "enemy_id": "N/A",
+          "action_type": "Travel",
+          "description": "Player traveled to Rotting Sewers via Rusted Grate.",
+          "player_hp_before": 100,
+          "player_hp_after": 100,
+          "enemy_hp_before": null,
+          "enemy_hp_after": null,
+          "date_time": "2026-11-07 22:06:11"
+        },
+        {
+          "action_id": "ACT-000320",
+          "player_id": "PLY-003",
+          "enemy_id": "ENM-001",
+          "action_type": "Battle Start",
+          "description": "Battle started with Gravefang Rat.",
+          "player_hp_before": 100,
+          "player_hp_after": 100,
+          "enemy_hp_before": 55,
+          "enemy_hp_after": 55,
+          "date_time": "2026-11-07 22:06:14"
+        },
+        {
+          "action_id": "ACT-000321",
+          "player_id": "PLY-003",
+          "enemy_id": "ENM-001",
+          "action_type": "Attack",
+          "description": "Player attacked Gravefang Rat for 29 damage (critical).",
+          "player_hp_before": 100,
+          "player_hp_after": 100,
+          "enemy_hp_before": 55,
+          "enemy_hp_after": 26,
+          "date_time": "2026-11-07 22:06:17"
+        },
+        {
+          "action_id": "ACT-000322",
+          "player_id": "PLY-003",
+          "enemy_id": "ENM-001",
+          "action_type": "Enemy Attack",
+          "description": "Gravefang Rat attacked Player for 7 damage.",
+          "player_hp_before": 100,
+          "player_hp_after": 93,
+          "enemy_hp_before": 26,
+          "enemy_hp_after": 26,
+          "date_time": "2026-11-07 22:06:19"
+        },
+        {
+          "action_id": "ACT-000323",
+          "player_id": "PLY-003",
+          "enemy_id": "ENM-001",
+          "action_type": "Attack",
+          "description": "Player attacked Gravefang Rat for 19 damage.",
+          "player_hp_before": 93,
+          "player_hp_after": 93,
+          "enemy_hp_before": 26,
+          "enemy_hp_after": 7,
+          "date_time": "2026-11-07 22:06:20"
+        },
+        {
+          "action_id": "ACT-000324",
+          "player_id": "PLY-003",
+          "enemy_id": "ENM-001",
+          "action_type": "Enemy Attack",
+          "description": "Gravefang Rat attacked Player for 5 damage.",
+          "player_hp_before": 93,
+          "player_hp_after": 88,
+          "enemy_hp_before": 7,
+          "enemy_hp_after": 7,
+          "date_time": "2026-11-07 22:06:22"
+        },
+        {
+          "action_id": "ACT-000325",
+          "player_id": "PLY-003",
+          "enemy_id": "ENM-001",
+          "action_type": "Attack",
+          "description": "Player attacked Gravefang Rat for 16 damage.",
+          "player_hp_before": 88,
+          "player_hp_after": 88,
+          "enemy_hp_before": 7,
+          "enemy_hp_after": 0,
+          "date_time": "2026-11-07 22:06:24"
+        },
+        {
+          "action_id": "ACT-000326",
+          "player_id": "PLY-003",
+          "enemy_id": "ENM-001",
+          "action_type": "Victory",
+          "description": "Player defeated Gravefang Rat.",
+          "player_hp_before": 88,
+          "player_hp_after": 88,
+          "enemy_hp_before": 0,
+          "enemy_hp_after": 0,
+          "date_time": "2026-11-07 22:06:24"
+        },
+        {
+          "action_id": "ACT-000327",
+          "player_id": "PLY-003",
+          "enemy_id": "ENM-001",
+          "action_type": "Reward",
+          "description": "Player received 25 gold.",
+          "player_hp_before": 88,
+          "player_hp_after": 88,
+          "enemy_hp_before": 0,
+          "enemy_hp_after": 0,
+          "date_time": "2026-11-07 22:06:24"
+        },
+        {
+          "action_id": "ACT-000328",
+          "player_id": "PLY-003",
+          "enemy_id": "ENM-001",
+          "action_type": "Reward",
+          "description": "Player earned 40 score points.",
+          "player_hp_before": 88,
+          "player_hp_after": 88,
+          "enemy_hp_before": 0,
+          "enemy_hp_after": 0,
+          "date_time": "2026-11-07 22:06:24"
+        }
+      ],
+      "undo": [],
       "current_enemy_id": null,
       "effects": [
         0,

@@ -1,49 +1,50 @@
 DREADVEIL: THE LAST GATE - SAVED GAME
-Saved At: 2026-11-07 19:37:38
+Saved At: 2026-11-07 22:06:39
 
 PLAYER INFORMATION
-id: PLY-001
-name: player
+id: PLY-003
+name: test
 role: Player
-hp: 140
-max_hp: 140
-atk: 24
-gold: 280
-score: 730
-wins: 7
-losses: 1
+hp: 88
+max_hp: 100
+atk: 14
+gold: 85
+score: 40
+wins: 1
+losses: 0
 status: Active
-defeated_ids: ['ENM-001', 'ENM-002', 'ENM-003', 'ENM-004', 'ENM-005', 'ENM-006', 'ENM-007']
-completed_levels: ['Weak', 'Intermediate']
-inventory: {}
+defeated_ids: ['ENM-001']
+completed_levels: []
+inventory: {'ITM-001': 1}
 wounds: {}
 owned_equipment: []
 equipped: {}
-location: ROOM-003
-treasures: ['ROOM-001']
-Current Room: War-Torn Catacombs
+location: ROOM-001
+treasures: []
+Current Room: Rotting Sewers
 
 PROGRESSION
-Rank: Elite
-Unlocked Difficulties: Weak, Intermediate, Strong
-Next Goal: Boss unlocks after 3 Strong victories (1/3)
-Completed Levels: Weak, Intermediate
+Rank: Beginner
+Unlocked Difficulties: Weak
+Next Goal: Intermediate unlocks after 3 Weak victories (1/3)
+Completed Levels: None
 
 INVENTORY
+ITM-001 | Health Potion | 1
 
 EQUIPMENT
-Worn sword: Steel Sword | ATK: +10 | SPD: +8% | Free Strong Gear
-Worn shield: Steel Shield | BLOCK: 15% | Free Strong Gear
-Worn armor: Steel Armor | DEF: -4 per hit | Free Strong Gear
+Worn sword: Rusty Sword | ATK: +2 | SPD: +0% | Free Weak Gear
+Worn shield: Wooden Shield | BLOCK: 4% | Free Weak Gear
+Worn armor: Cloth Armor | DEF: -1 per hit | Free Weak Gear
 
 ENEMY INFORMATION
 ENM-001 | Gravefang Rat | HP: 0/55 | ATK: 7 | Difficulty: Weak | Status: Defeated | Gold: 25 | Score: 40 | Room: Rotting Sewers
-ENM-002 | Hollowbone Goblin | HP: 0/70 | ATK: 9 | Difficulty: Weak | Status: Defeated | Gold: 30 | Score: 60 | Room: Rotting Sewers
-ENM-003 | Ashen Ghoul | HP: 0/85 | ATK: 11 | Difficulty: Weak | Status: Defeated | Gold: 35 | Score: 80 | Room: Rotting Sewers
-ENM-004 | Ironjaw Reaver | HP: 0/105 | ATK: 12 | Difficulty: Intermediate | Status: Defeated | Gold: 50 | Score: 100 | Room: Bloodstone Hall
-ENM-005 | Boneguard Executioner | HP: 0/120 | ATK: 13 | Difficulty: Intermediate | Status: Defeated | Gold: 60 | Score: 120 | Room: Bloodstone Hall
-ENM-006 | Hellchain Marauder | HP: 0/135 | ATK: 14 | Difficulty: Intermediate | Status: Defeated | Gold: 70 | Score: 140 | Room: Bloodstone Hall
-ENM-007 | Dreadfang Berserker | HP: 0/150 | ATK: 16 | Difficulty: Strong | Status: Defeated | Gold: 85 | Score: 180 | Room: War-Torn Catacombs
+ENM-002 | Hollowbone Goblin | HP: 70/70 | ATK: 9 | Difficulty: Weak | Status: Active | Gold: 30 | Score: 60 | Room: Rotting Sewers
+ENM-003 | Ashen Ghoul | HP: 85/85 | ATK: 11 | Difficulty: Weak | Status: Active | Gold: 35 | Score: 80 | Room: Rotting Sewers
+ENM-004 | Ironjaw Reaver | HP: 105/105 | ATK: 12 | Difficulty: Intermediate | Status: Active | Gold: 50 | Score: 100 | Room: Bloodstone Hall
+ENM-005 | Boneguard Executioner | HP: 120/120 | ATK: 13 | Difficulty: Intermediate | Status: Active | Gold: 60 | Score: 120 | Room: Bloodstone Hall
+ENM-006 | Hellchain Marauder | HP: 135/135 | ATK: 14 | Difficulty: Intermediate | Status: Active | Gold: 70 | Score: 140 | Room: Bloodstone Hall
+ENM-007 | Dreadfang Berserker | HP: 150/150 | ATK: 16 | Difficulty: Strong | Status: Active | Gold: 85 | Score: 180 | Room: War-Torn Catacombs
 ENM-008 | Abyssal Death Knight | HP: 165/165 | ATK: 17 | Difficulty: Strong | Status: Active | Gold: 95 | Score: 200 | Room: War-Torn Catacombs
 ENM-009 | Soulreaper Wraith | HP: 180/180 | ATK: 18 | Difficulty: Strong | Status: Active | Gold: 110 | Score: 220 | Room: War-Torn Catacombs
 BS-001 | Vharok, the World Eater | HP: 320/320 | ATK: 22 | Difficulty: Boss | Status: Active | Gold: 300 | Score: 600 | Room: Throne of Ruin
@@ -55,28 +56,27 @@ CURRENT BATTLE
 NO ACTIVE BATTLE
 
 UNDO STACK (TOP TO BOTTOM)
-Before: Rest at camp
-Before: Rest at camp
+EMPTY
 
 DUNGEON MAP
 Legend: [E] Entrance  [O] Open  [Q] Quota met/optional foes  [C] Cleared all  [L] Locked
 
 [E] ROOM-000 Dreadveil Entrance (Entrance)
       Link  : <-> ROOM-001 Rotting Sewers via Rusted Grate
-[C] ROOM-001 Rotting Sewers (Cleared)
+[O] ROOM-001 Rotting Sewers (Open)
       Enemy : ENM-001 Gravefang Rat (Weak, Defeated)
-      Enemy : ENM-002 Hollowbone Goblin (Weak, Defeated)
-      Enemy : ENM-003 Ashen Ghoul (Weak, Defeated)
+      Enemy : ENM-002 Hollowbone Goblin (Weak, Active)
+      Enemy : ENM-003 Ashen Ghoul (Weak, Active)
       Link  : <-> ROOM-000 Dreadveil Entrance via Rusted Grate
       Link  : <-> ROOM-002 Bloodstone Hall via Crimson Gate
-[C] ROOM-002 Bloodstone Hall (Cleared)
-      Enemy : ENM-004 Ironjaw Reaver (Intermediate, Defeated)
-      Enemy : ENM-005 Boneguard Executioner (Intermediate, Defeated)
-      Enemy : ENM-006 Hellchain Marauder (Intermediate, Defeated)
+[L] ROOM-002 Bloodstone Hall (Locked)
+      Enemy : ENM-004 Ironjaw Reaver (Intermediate, Active)
+      Enemy : ENM-005 Boneguard Executioner (Intermediate, Active)
+      Enemy : ENM-006 Hellchain Marauder (Intermediate, Active)
       Link  : <-> ROOM-001 Rotting Sewers via Crimson Gate
       Link  : <-> ROOM-003 War-Torn Catacombs via Iron Drawbridge
-[O] ROOM-003 War-Torn Catacombs (Open)
-      Enemy : ENM-007 Dreadfang Berserker (Strong, Defeated)
+[L] ROOM-003 War-Torn Catacombs (Locked)
+      Enemy : ENM-007 Dreadfang Berserker (Strong, Active)
       Enemy : ENM-008 Abyssal Death Knight (Strong, Active)
       Enemy : ENM-009 Soulreaper Wraith (Strong, Active)
       Link  : <-> ROOM-002 Bloodstone Hall via Iron Drawbridge

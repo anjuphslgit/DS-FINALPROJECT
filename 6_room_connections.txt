@@ -1,7 +1,0 @@
-# DREADVEIL: THE LAST GATE ROOM CONNECTIONS (GRAPH EDGES, TWO-WAY)
-# room_a   | room_b   | passage_name
-  ROOM-000 | ROOM-001 | Rusted Grate
-  ROOM-001 | ROOM-002 | Crimson Gate
-  ROOM-002 | ROOM-003 | Iron Drawbridge
-  ROOM-003 | ROOM-004 | Throne Gate
-  ROOM-004 | ROOM-005 | Sealed Exit Door

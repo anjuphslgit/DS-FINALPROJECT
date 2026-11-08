@@ -1,65 +1,62 @@
-
-# We import the built-in modules needed for the console, battle rules, and saving.
-
-import os         # We use this for clearing the screen and handling file operations.
-import math       # We use this when battle or reward calculations need math functions.
-import json       # Our session data is written and restored as JSON.
-import io         # We use in-memory text streams when collecting output.
-import copy       # We need full copies of saved states before risky changes or Undo.
-import shutil     # We use file copies when we need to restore records after a failed save.
-import tempfile   # We write temporary files first instead of risking the original save.
-import random     # We use randomness for battle hits, damage, and item chances.
-import sys        # We check the terminal and write animation output through this module.
-import textwrap   # We wrap descriptions and story messages so our console layout stays neat.
-import time       # We use short delays in the story and battle animations.
-from datetime import datetime  # We save the actual date and time of each game event.
-from pathlib import Path       # We check whether our record files and folders exist.
+import os         # Clears the console and works with file paths.
+import math       # Math functions used in game calculations.
+import json       # Reads and writes saved game sessions in JSON format.
+import io         # Creates text streams for reports and saved output.
+import copy       # Makes separate copies of game states for Undo and recovery.
+import shutil     # Copies files when a save needs to be restored.
+import tempfile   # Creates temporary files for safer record saving.
+import random     # Generates random attacks, damage, and item effects.
+import sys        # Handles terminal output and animation support.
+import textwrap   # Wraps long descriptions to fit the console layout.
+import time       # Adds short delays to story and battle animations.
+from datetime import datetime  # Records the date and time of game events.
+from pathlib import Path       # Checks whether save files and folders exist.
 
 
-# We use these file paths throughout the program to keep each record type separate.
-# We keep account stats and saved progress in this TXT file.
+# File names for the different game records. Each type is saved separately.
+# Stores account details, statistics, and saved progress.
 ACCOUNT_FILE = "1_player_accounts.txt"
-# We store enemy profiles here; the enemy list is not created only for the Queue.
+# Stores all enemy profiles, including enemies not placed in the queue.
 ENEMY_FILE = "2_enemy_records.txt"
-# We keep consumable items and their effects separate from player inventory.
+# Keeps consumable items and their effects separate from player inventory.
 ITEM_FILE = "3_item_records.txt"
-# We save shop equipment here so the admin and player use the same records.
+# Stores equipment records shared by the shop and admin menu.
 EQUIPMENT_FILE = "4_equipment_records.txt"
-# We keep the six room names and descriptions in this file.
+# Stores the six dungeon rooms and their descriptions.
 ROOM_FILE = "5_room_records.txt"
-# We save which rooms are connected and the names of their passages.
+# Stores room connections and passage names for the map graph.
 CONNECTION_FILE = "6_room_connections.txt"
-# We keep the questions and correct answers used during challenges.
+# Stores the questions, choices, answers, and challenge bonuses.
 QUESTION_FILE = "7_question_records.txt"
-# We save finished battle results so our reports have actual records.
+# Stores completed battle results used in reports.
 BATTLE_HISTORY_FILE = "8_battle_history_records.txt"
-# We keep the action history with unique action IDs.
+# Stores each battle action with a unique ID.
 BATTLE_LOG_FILE = "9_battle_activity_log.txt"
-# We store an overall record of game runs and their progress here.
+# Stores the progress and results of game runs.
 GAME_RECORD_FILE = "10_dungeon_game_records.txt"
-# Our exported report text files are saved inside this folder.
+# Folder for exported TXT reports.
 REPORT_FOLDER = "11_reports"
-# We keep unfinished battles and undo snapshots in this JSON file.
+# Stores active battles, enemy queues, and Undo snapshots in JSON.
 BATTLE_SESSION_FILE = "12_battle_session_records.json"
 
 # ---------------------------------------------------------------
 # GAME BALANCE
 # ---------------------------------------------------------------
 
-# We set the base stats used whenever we register a new player.
-# These values are used only when we create a new player.
+# Starting stats for newly registered players.
+# These are the initial values before battles or rewards.
 STARTING_STATS = {"hp": 100, "max_hp": 100, "atk": 14, "gold": 60}
-# We give each new player one Health Potion to start the dungeon.
+# Every new player starts with one Health Potion.
 STARTING_ITEMS = {"ITM-001": 1}
 
 # Player attack rules
-# Our attack damage can move up or down by this random amount.
+# Maximum random variation added to or subtracted from attack damage.
 PLAYER_DAMAGE_SPREAD = 3
-# This is the base chance that a player attack fails to hit.
+# Base percentage chance for an attack to miss.
 PLAYER_MISS_CHANCE = 7
-# This is the base chance of landing a critical hit.
+# Base percentage chance for a critical hit.
 PLAYER_CRIT_CHANCE = 12
-# We multiply attack damage by this value when a player lands a critical hit.
+# Multiplies attack damage by this value when a player lands a critical hit.
 PLAYER_CRIT_MULTIPLIER = 1.75
 
 # Enemy attack rules
@@ -77,15 +74,15 @@ BOSS_ENRAGE_MULTIPLIER = 1.3
 DEFEND_DAMAGE_TAKEN = 0.4
 # Defending prepares this extra value for the next counterattack.
 DEFEND_COUNTER_BONUS = 30
-# Our stun items succeed with this percentage chance.
+# Chance for a stun item to work.
 STUN_CHANCE = 75
 # Attack boosts are active for this many player attacks.
 BOOST_ATTACKS = 3
 
-# We give these rewards after 3 wins in one regular difficulty (not after every enemy).
-# We add this much base ATK after meeting a level quota.
+# A room-clear reward is earned after all enemies in that room are defeated.
+# ATK bonus granted once when a room is cleared.
 ATTACK_BONUS_PER_LEVEL = 5
-# We add this much Max HP after meeting a level quota.
+# Max HP bonus granted once when a room is cleared.
 MAX_HP_BONUS_PER_LEVEL = 20
 # Each regular tier gives its own one-time extra Gold reward.
 LEVEL_COMPLETION_GOLD = {"Weak": 40, "Intermediate": 80, "Strong": 150}
@@ -95,9 +92,9 @@ LEVEL_COMPLETION_GOLD = {"Weak": 40, "Intermediate": 80, "Strong": 150}
 REST_COST = 40
 # Resting heals this percentage of Max HP, capped at the player's HP limit.
 REST_HEAL_PERCENT = 50
-# We take this percentage of current Gold when the player loses.
+# Takes this percentage of current Gold when the player loses.
 DEFEAT_GOLD_LOSS_PERCENT = 25
-# After defeat, we restore this percentage of the player's Max HP.
+# After defeat, the player recovers this percentage of Max HP.
 DEFEAT_REVIVE_PERCENT = 50
 # The player earns this score when the final escape is completed.
 ESCAPE_SCORE_BONUS = 500
@@ -107,16 +104,16 @@ ESCAPE_SCORE_BONUS = 500
 # ENTRANCE -> WEAK -> INTERMEDIATE -> STRONG -> BOSS -> EXIT
 # ---------------------------------------------------------------
 
-# We keep the fixed entrance-to-exit room IDs in travel order.
+# Room IDs in the order the player travels through the dungeon.
 ROOM_ORDER = ["ROOM-000", "ROOM-001", "ROOM-002", "ROOM-003", "ROOM-004",
               "ROOM-005"]
-# We use one constant for the entrance ID in travel and defeat messages.
+# Uses one constant for the entrance ID in travel and defeat messages.
 ENTRANCE_ROOM_ID = ROOM_ORDER[0]
-# We use one constant for the exit ID rather than copying the text everywhere.
+# Uses one constant for the exit ID rather than copying the text everywhere.
 EXIT_ROOM_ID = ROOM_ORDER[5]
 
 # Each difficulty level lives in exactly one room
-# Our difficulty-to-room mapping makes newly added enemies appear in the correct area.
+# Each difficulty belongs to one room, including enemies added by an admin.
 ROOM_FOR_DIFFICULTY = {
     "Weak": "ROOM-001",
     "Intermediate": "ROOM-002",
@@ -125,11 +122,10 @@ ROOM_FOR_DIFFICULTY = {
 }
 
 DIFFICULTY_ORDER = {"Weak": 1, "Intermediate": 2, "Strong": 3, "Boss": 4}
-# Rank progression requires three victories at each regular difficulty.
-# Do not let admin edits remove enemies needed to unlock the next stage.
-# We keep at least three enemies per normal tier so progression stays possible.
-MIN_ENEMIES_PER_DIFFICULTY = {"Weak": 3, "Intermediate": 3,
-                              "Strong": 3, "Boss": 1}
+# Every enemy currently assigned to a room is required for its clearance.
+# Admins may add or remove enemies, but cannot leave a fighting room empty.
+MIN_ENEMIES_PER_DIFFICULTY = {"Weak": 1, "Intermediate": 1,
+                              "Strong": 1, "Boss": 1}
 LEVEL_ORDER = ["Weak", "Intermediate", "Strong", "Boss"]
 PLAYER_STATUSES = ["Active", "In Battle", "Defeated", "Retreated", "Victorious"]
 
@@ -140,9 +136,9 @@ PLAYER_STATUSES = ["Active", "In Battle", "Defeated", "Retreated", "Victorious"]
 # These are the three types of gear the player can equip at once.
 EQUIPMENT_SLOTS = ["sword", "shield", "armor"]
 
-# We unlock the next level after 3 victories in the previous difficulty. Each unlocked
-# level grants three FREE pieces; the shop sells only optional CURRENT-level
-# alternatives (two upgrade choices per slot).
+# A new equipment tier unlocks after its previous room is cleared. The tier
+# includes three free items, while the shop sells optional upgrades for the
+# current tier (two shop choices per equipment slot).
 TIER_UNLOCK_REQUIREMENT = {
     "Weak": None, "Intermediate": "Weak", "Strong": "Intermediate",
     "Boss": "Strong"
@@ -159,7 +155,7 @@ SLOT_STAT_TEXT = {
 # Fields: id, name, slot, tier, bonus, price, description, speed.
 # Sword speed affects accuracy and critical-hit chance.
 
-# These are our starter shop gear records; each one has a slot, tier, price, and bonus.
+# These are the starter shop gear records; each one has a slot, tier, price, and bonus.
 DEFAULT_EQUIPMENT = [
     ("EQP-001", "Rusty Sword +1", "sword", "Weak", 4, 40,
      "A nimble sewer blade; a first taste of faster strikes.", 2),
@@ -213,10 +209,10 @@ DEFAULT_EQUIPMENT = [
 
 
 
-# Each unlocked level supplies a standard equipment set.
+# Each unlocked tier includes a free standard equipment set.
 # Purchased equipment stays in the player's inventory when the tier changes.
 # Tuples: name, combat bonus, sword speed (0 for shield and armor).
-# We automatically provide standard gear when a new tier is unlocked.
+# Unlocking a tier gives the player its free standard equipment.
 STANDARD_EQUIPMENT = {
     "sword": [
         ("Rusty Sword", 2, 0), ("Bloodstone Sword", 6, 4),
@@ -285,19 +281,19 @@ ROOM_STORY = {
     "ROOM-001": [
         "Rotting water echoes through the sewers. Claws scrape stone "
         "while the first guardians emerge from the dark.",
-        "Learn to attack, defend and use potions. Defeat three Weak "
-        "guardians to unseal the Crimson Gate. Extra enemies are optional."
+        "Learn to attack, defend and use potions. Defeat every Weak "
+        "guardian to unseal the Crimson Gate."
     ],
     "ROOM-002": [
         "Bloodstone crystals glow through the walls like trapped stars. "
         "Dreadveil's mist coils between their crimson reflections.",
         "The guardians here strike harder. Use careful defense and "
-        "timing to unseal the Iron Drawbridge. Three victories are enough."
+        "timing to unseal the Iron Drawbridge. Defeat every guardian."
     ],
     "ROOM-003": [
         "Broken shields cover the War-Torn Catacombs. The veil grows "
         "heavier, and the strongest guardians bar the road to Vharok.",
-        "Prepare your equipment, recover your strength and defeat three "
+        "Prepare your equipment, recover your strength and defeat all "
         "Strong guardians to unseal the Throne Gate."
     ],
     "ROOM-004": [
@@ -356,7 +352,7 @@ ENDING_TEXT = [
 # DEFAULT RECORDS (written to the text files on the first run)
 # ---------------------------------------------------------------
 
-# We create these demo profiles only if the account file has no usable records.
+# Creates these demo profiles only if the account file has no usable records.
 DEFAULT_ACCOUNTS = [
     # username, password, role, hp, max_hp, atk, gold, score, wins, losses,
     # defeated ids, completed levels, inventory
@@ -364,7 +360,7 @@ DEFAULT_ACCOUNTS = [
     ("player", "player123", "Player", 100, 100, 14, 60, 0, 0, 0, [], [], {"ITM-001": 1})
 ]
 
-# Our starter list includes three regular enemies per tier and one boss.
+# The starter list includes three regular enemies per tier and one boss.
 DEFAULT_ENEMIES = [
     # id, name, type, max_hp, atk, gold, score, room
     ("ENM-001", "Gravefang Rat", "Weak", 55, 7, 25, 40, "ROOM-001"),
@@ -386,7 +382,7 @@ DEFAULT_ENEMIES = [
      "ROOM-004")
 ]
 
-# We create these starting consumables when there is no saved item catalog.
+# Creates these starting consumables when there is no saved item catalog.
 DEFAULT_ITEMS = [
     # id, name, effect, power, price, max carry, description
     ("ITM-001", "Health Potion", "heal", 35, 30, 10,
@@ -401,9 +397,9 @@ DEFAULT_ITEMS = [
      "A cursed die with six outcomes, from danger to powerful blessings.")
 ]
 
-# We define the six built-in rooms using stable IDs for travel and progression.
+# Defines the six built-in rooms using stable IDs for travel and progression.
 # The entrance is ROOM-000, and the other rooms follow the dungeon route.
-# We use these room names when no saved room file is available.
+# Uses these room names when no saved room file is available.
 DEFAULT_ROOMS = [
     ("ROOM-000", "Dreadveil Entrance", "A cold stone gate where every expedition begins."),
     ("ROOM-001", "Rotting Sewers", "Knee-deep filth and the scratching of claws. Home of the Weak enemies."),
@@ -413,9 +409,9 @@ DEFAULT_ROOMS = [
     ("ROOM-005", "The Last Gate", "A stairway of daylight. The real dungeon exit.")
 ]
 
-# We connect the rooms with two-way passages so the map works as a graph.
+# Connects the rooms with two-way passages so the map works as a graph.
 DEFAULT_CONNECTIONS = [
-    # We keep each passage name together with its two connected room IDs.
+    # Keeps each passage name together with its two connected room IDs.
     ("ROOM-000", "ROOM-001", "Rusted Grate"),
     ("ROOM-001", "ROOM-002", "Crimson Gate"),
     ("ROOM-002", "ROOM-003", "Iron Drawbridge"),
@@ -423,10 +419,10 @@ DEFAULT_CONNECTIONS = [
     ("ROOM-004", "ROOM-005", "Sealed Exit Door")
 ]
 
-# We recognize standard room-name aliases when loading saved maps.
-# We leave room names changed by an admin alone when they are not known aliases.
-# This lets us load saved maps without resetting every custom description.
-# We only normalize recognized built-in text, not every saved room name.
+# Recognizes standard room-name aliases when loading saved maps.
+# Leaves room names changed by an admin alone when they are not known aliases.
+# This lets the game load saved maps without resetting every custom description.
+# Only normalizes known room aliases. Custom names stay unchanged.
 KNOWN_BUILTIN_ROOMS = {
     "ROOM-000": [
         ("Dungeon Entrance", "A cold stone gate where every expedition begins."),
@@ -442,20 +438,20 @@ KNOWN_BUILTIN_ROOMS = {
     "ROOM-005": [
         ("The Last Gate", "The final passage out of Dreadveil, unsealed only when Vharok falls.")]
 }
-# We match recognized alternate passage labels to the standard map labels.
+# Matches recognized alternate passage labels to the standard map labels.
 KNOWN_THEMED_PASSAGE_LABELS = {
     frozenset(("ROOM-000", "ROOM-001")): "Veilrot Grate",
     frozenset(("ROOM-002", "ROOM-003")): "Ashen Drawbridge",
     frozenset(("ROOM-004", "ROOM-005")): "Last Gate Archway"
 }
 
-# We group questions by difficulty so enemies can use a matching question pool.
+# Groups questions by difficulty so enemies can use a matching question pool.
 # Question damage bonuses increase from Weak to Intermediate, Strong, and Boss.
-# We keep a dedicated question ID for the final boss encounter.
+# Keeps a dedicated question ID for the final boss encounter.
 BOSS_CHALLENGE_ID = "BQST-001"
-# We provide the starting question pool for each difficulty level.
+# Provides the starting question pool for each difficulty level.
 DEFAULT_QUESTIONS = [
-    # We store each question ID, four choices, correct choice, bonus, and difficulty.
+    # Stores each question ID, four choices, correct choice, bonus, and difficulty.
     ("QST-001", "Which data structure follows First-In, First-Out (FIFO)?",
      ["Stack", "Queue", "Tree", "Graph"], 2, 10, "ENM-001"),
     ("QST-002", "Which data structure follows Last-In, First-Out (LIFO)?",
@@ -478,7 +474,7 @@ DEFAULT_QUESTIONS = [
      ["Oo", "Yes", "Syempre", "God is good!"], 4, 50, "BS-001")
 ]
 
-# We recognize saved bonus values so the question data stays compatible when loaded.
+# Older saved question bonuses are recognized when records are loaded.
 LEGACY_QUESTION_BONUSES = {
     "QST-001": 10, "QST-002": 10, "QST-003": 15,
     "QST-004": 15, "QST-005": 15, "QST-006": 15,
@@ -491,8 +487,8 @@ DEFAULT_QUESTION_BY_ID = {record[0]: record for record in DEFAULT_QUESTIONS}
 # LIVE RECORDS
 # ---------------------------------------------------------------
 
-# We store all registered accounts (players and admins)
-# Our dictionary stores all loaded player and admin profiles by username.
+# Stores all registered accounts (players and admins)
+# The dictionary stores all loaded player and admin profiles by username.
 account_records = {}
 
 # Information of the player who is currently logged in
@@ -500,46 +496,46 @@ account_records = {}
 player = {}
 
 # Enemy, item, equipment, room, connection and question records
-# Our list contains enemy profiles the Queue and battles use.
+# The list contains enemy profiles the Queue and battles use.
 mob_list = []
-# We look up item effects and shop prices from this dictionary.
+# Looks up item effects and shop prices from this dictionary.
 item_records = {}
-# We look up equipment bonuses and shop prices using equipment IDs.
+# Looks up equipment bonuses and shop prices using equipment IDs.
 equipment_records = {}
-# Our graph vertices are the room IDs in this dictionary.
+# The graph vertices are the room IDs in this dictionary.
 room_records = {}
-# Our graph edges are the passages between those rooms.
+# The graph edges are the passages between those rooms.
 room_connections = []
 # These question records are used during battle challenges.
 question_records = []
-# We keep each player's saved battle history and undo snapshots separate.
+# Keeps each player's saved battle history and undo snapshots separate.
 session_archive = {"next_action_number": 1, "next_account_numbers": {"PLY": 1, "ADM": 1}, "players": {}}
 outcome_save_active = False
 outcome_actions_pending = []
 outcome_checkpoint = None
 
-# We track changes to the saved dungeon room layout
+# Tracks whether the room layout needs to be rebuilt.
 ROOMS_RESET = False
 
-# QUEUE: enemies of the current room, ordered from front to rear
-# We add enemies at the REAR and remove them from the FRONT, following FIFO.
+# QUEUE (FIFO): selected enemies stay in order, even when changing rooms.
+# Enemies enter at the REAR and leave from the FRONT (First In, First Out).
 encounter_lineup = []
 
-# We keep the complete action history separately from the undoable states.
-# We store actual battle events in the order they happened.
+# Activity history is separate from the stack of undoable game states.
+# Battle events stay in chronological order for history and reports.
 battle_history = []
 
-# We PUSH a snapshot before a reversible action, then POP the newest one on Undo.
-# That is why our Undo Stack follows Last-In, First-Out (LIFO).
-# This is our LIFO Stack of reversible state snapshots.
+# A snapshot is pushed before a reversible action and popped during Undo (LIFO).
+# This follows Last In, First Out (LIFO).
+# The top snapshot is always the next state restored by Undo.
 undo_stack = []
 
-# We store the enemy currently being fought
-# We use this ID to know which enemy is currently being fought.
+# Tracks the enemy involved in the active battle.
+# None means the player is not currently fighting an enemy.
 current_enemy_id = None
 
-# We give each battle action its own ID
-# This counter helps give each recorded battle action an ID.
+# Stores the next battle-action ID.
+# Each recorded action uses a different number.
 action_counter = 0
 
 # Temporary battle effects
@@ -561,42 +557,42 @@ intro_shown = False
 # GENERAL HELPERS
 # ---------------------------------------------------------------
 
-# We draw the heading used by every screen so the menus have the same layout.
+# Prints the same title box on every menu screen.
 def header(txt):
-    # Boxed title bar used by every screen
-    # We print the same heading box on every screen so our menus look consistent.
+    # Uses a fixed-width title so menu screens look consistent.
+    # Keeps the title centered inside the border.
     print()
     print(color("+" + "=" * 103 + "+", "cyan"))
     print(color("|" + f" {txt.upper()} ".center(103) + "|", "bold"))
     print(color("+" + "=" * 103 + "+", "cyan"))
 
 
-# We stop the menu from changing until the player has read the result.
+# Waits for Enter before going back to the menu.
 def pause():
-    # We stop the screen here so the player has time to read the result.
+    # Prevents messages from disappearing right away.
     input("\nPress Enter to continue...")
 
 
-# We print menu options in columns instead of one long vertical list.
+# Prints menu options in columns instead of one long vertical list.
 def print_menu_row(*options, width=26):
-    # We print menu options side by side in fixed-width columns
-    # We arrange menu choices side by side instead of printing one option per line.
+    # Places menu choices in evenly spaced columns.
+    # Each option uses the same column width.
     print("".join(f"{option:<{width}}" for option in options).rstrip())
 
 
-# We separate the options on a screen into smaller labeled groups.
+# Separates menu options using a short section heading.
 def section(title):
     # Small coloured section title used inside menus
-    # We use a smaller divider to separate parts of a long menu.
+    # Prints a short divider between menu sections.
     print("\n" + color(f"-- {title} " + "-" * max(3, 101 - len(title)),
                        "yellow"))
 
 
-# We wrap each story line inside a box and adds a short delay for the story effect.
+# Shows story text in a bordered panel with a short delay per line.
 def story_panel(title, lines, tone="cyan"):
     # Story box: shown for room entries, boss scenes and the ending.
     # It uses the same width as every screen header and table.
-    # We wrap the story into a bordered panel and reveal it one line at a time.
+    # Long story text wraps inside the panel instead of overflowing.
     width = 105
     edge = "+" + "=" * (width - 2) + "+"
 
@@ -615,10 +611,9 @@ def story_panel(title, lines, tone="cyan"):
     print(color(edge, tone))
 
 
-# We check whether a table value looks numeric so it can be aligned properly.
+# Checks whether a table value looks numeric so it can be aligned properly.
 def is_number_text(text):
     # True for values such as 55, 55/100, +30 or 75%
-    # We check whether table values look numeric so the columns can be aligned correctly.
     digits = text.replace("/", "").replace("%", "").replace("+", "")
     return digits.replace("-", "", 1).isdigit()
 
@@ -626,10 +621,10 @@ def is_number_text(text):
 # Measures column widths, wraps long cells, and builds the table one row at a time.
 # The same function is used for records, rewards, and reports.
 def table_lines(columns, rows, max_width=24):
-    # We build a bordered text table. Long values wrap onto extra lines,
+    # Builds a bordered text table. Long values wrap onto extra lines,
     # "\n" starts a new line inside a cell, and number columns are
     # aligned to the right.
-    # We calculate column widths, wrap long entries, and build one readable table.
+    # Calculates column widths, wraps long entries, and builds a readable table.
     rows = [[str(value) for value in row] for row in rows]
 
     widths = []
@@ -655,7 +650,7 @@ def table_lines(columns, rows, max_width=24):
 
         return lines
 
-    # We add the table borders around one row of text.
+    # Adds the table borders around one row of text.
     def text_row(cells):
         return "| " + " | ".join(cells) + " |"
 
@@ -692,9 +687,9 @@ def table_lines(columns, rows, max_width=24):
     return lines
 
 
-# We add optional row numbers and prints the table produced by table_lines().
+# Adds optional row numbers and prints the table produced by table_lines().
 def print_table(columns, rows, max_width=24, numbered=False):
-    # We optionally number the rows before sending everything to our table printer.
+    # Optionally number the rows before sending everything to the table printer.
     if numbered:
         columns = ["No."] + list(columns)
         rows = [[str(number)] + list(row)
@@ -703,36 +698,82 @@ def print_table(columns, rows, max_width=24, numbered=False):
         print(line)
 
 
-# We clear the terminal before opening another screen; Windows and other systems differ.
+# Clears the terminal before opening another screen; Windows and other systems differ.
 def clear_screen():
-    # We clear the console so each menu starts on a fresh screen
-    # We clear the previous menu before displaying the next one.
-    os.system("cls" if os.name == "nt" else "clear")
+    # Removes the old menu and terminal scrollback before drawing the next screen.
+    # VS Code may capture stdout during debugging, so stdin and its terminal
+    # environment are checked as well as stdout.
+    terminal_available = (
+        sys.stdout.isatty()
+        or sys.stdin.isatty()
+        or os.environ.get("TERM_PROGRAM", "").lower() == "vscode"
+        or bool(os.environ.get("VSCODE_PID"))
+        or bool(os.environ.get("WT_SESSION"))
+    )
+    if terminal_available:
+        # 2J clears the visible screen; 3J also clears older scrollback lines.
+        # H moves the cursor to the top before the next menu is printed.
+        sys.stdout.write("\033[2J\033[3J\033[H")
+        sys.stdout.flush()
 
 
 INVALID_CHOICE_TEXT = "Invalid menu option. Please enter a valid choice."
 
 
-# We show this message when a menu choice is outside the allowed options.
+# Shows this message when a menu choice is outside the allowed options.
 def invalid_choice():
-    # The menu is shown again right away, so no Enter press is needed
-    # We reuse this message whenever someone chooses an option that does not exist.
+    # Shows the message for options that are not part of a menu.
     print(f"\n{INVALID_CHOICE_TEXT}")
 
 
-# We get the date and time used in battle records and saved activity.
+# Checks menu input without filling the terminal with repeated prompts.
+def read_menu_choice(prompt, minimum=0, maximum=None, allowed=None):
+    # Accepts only the numbers that are available in the current menu.
+    if allowed is None:
+        allowed = {str(number) for number in range(minimum, maximum + 1)}
+    else:
+        allowed = {str(number) for number in allowed}
+
+    # A terminal supports cursor movement, so previous failed attempts can be erased.
+    # This keeps the menu visible while showing only one error and one input prompt.
+    can_redraw = sys.stdout.isatty()
+    failed_before = False
+    retry_prompt = prompt.lstrip("\n")
+
+    while True:
+        # The first prompt keeps its usual spacing below the menu.
+        choice = input(retry_prompt if failed_before and can_redraw else prompt).strip()
+        if choice in allowed:
+            if failed_before and can_redraw:
+                # Clear the old validation message before opening the selected screen.
+                sys.stdout.write("\033[2A\r\033[J")
+                sys.stdout.flush()
+            return choice
+
+        if can_redraw:
+            # After the first invalid input, only the prompt line needs clearing.
+            # Later retries clear both the old message and the old input line.
+            lines_to_erase = 2 if failed_before else 1
+            sys.stdout.write(f"\033[{lines_to_erase}A\r\033[J")
+            sys.stdout.flush()
+
+        print("Invalid choice. Please try again.")
+        failed_before = True
+
+
+# Gets the date and time used in battle records and saved activity.
 def now_text():
-    # We use the current date and time when saving action and battle history.
+    # Uses the current date and time when saving action and battle history.
     return datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
 
-# We ask again for a required field if the player enters nothing.
-# We also reject the | character so it cannot break our TXT columns.
+# Asks again for a required field if the player enters nothing.
+# Also rejects the | character because it separates fields in TXT files.
 def ask_text(prompt, default=None, banned="|"):
-    # We ask for text that must not be blank. During updates, pressing
+    # Asks for text that must not be blank. During updates, pressing
     # Enter keeps the current value (the default).
-    # We keep asking until a required text field is valid; updates may keep their old value.
-    # We repeat this menu or action until the player gives a valid choice or leaves.
+    # Keeps asking until a required text field is valid; updates may keep their old value.
+
     while True:
         value = input(prompt).strip()
 
@@ -750,12 +791,12 @@ def ask_text(prompt, default=None, banned="|"):
         return value
 
 
-# We keep asking for an integer until the input is valid.
+# Keeps asking for an integer until the input is valid.
 # The minimum and maximum bounds prevent invalid menu and record values.
 def ask_int(prompt, minimum=0, maximum=None, default=None):
-    # We ask for a whole number inside the allowed range
-    # We check that the input is a whole number within the allowed range.
-    # We repeat this menu or action until the player gives a valid choice or leaves.
+    # Asks for a whole number inside the allowed range
+    # Checks that the input is a whole number within the allowed range.
+
     while True:
         raw = input(prompt).strip()
 
@@ -766,7 +807,7 @@ def ask_int(prompt, minimum=0, maximum=None, default=None):
             print("Input must not be blank.")
             continue
 
-        # We catch nonnumeric input and ask for a valid whole number.
+        # Catches nonnumeric input and ask for a valid whole number.
         try:
             value = int(raw)
         except ValueError:
@@ -786,14 +827,13 @@ def ask_int(prompt, minimum=0, maximum=None, default=None):
 
 # Accepts Y or YES when the player confirms an action.
 def ask_yes_no(prompt):
-    # We accept Y or YES in either letter case as confirmation.
     return input(prompt).strip().lower() in ("y", "yes")
 
 
-# We show a numbered list and returns the item chosen by the user, not its number.
+# Shows a numbered list and returns the item chosen by the user, not its number.
 def ask_option(title, options, default=None):
-    # We let the user pick one value from a numbered list
-    # We show numbered choices and return the actual selected value.
+    # Allows the user pick one value from a numbered list
+    # Shows numbered choices and returns the selected value.
     print(title)
 
     for number, option in enumerate(options, 1):
@@ -815,16 +855,16 @@ def ask_option(title, options, default=None):
     return options[number - 1]
 
 
-# We look at existing IDs and chooses the next available number for a new record.
+# Looks at existing IDs and chooses the next available number for a new record.
 # Player/admin IDs use a separate saved counter so deleted account IDs are not reused.
 def next_record_id(prefix, existing_ids, start=1):
-    # We create the next unique ID such as ENM-011
-    # We look for the highest existing number so the next record ID does not duplicate it.
+    # Creates the next unique ID such as ENM-011
+    # Looks for the highest existing number so the next record ID does not duplicate it.
     highest = start - 1
 
     for record_id in existing_ids:
         if record_id.startswith(prefix + "-"):
-            # We skip invalid ID suffixes when finding the next record number.
+            # Skips invalid ID suffixes when finding the next record number.
             try:
                 highest = max(highest, int(record_id.split("-")[1]))
             except (ValueError, IndexError):
@@ -833,10 +873,10 @@ def next_record_id(prefix, existing_ids, start=1):
     return f"{prefix}-{highest + 1:03d}"
 
 
-# We convert current HP into filled and empty characters for the health bar.
+# Converts current HP into filled and empty characters for the health bar.
 def hp_bar(current, maximum, width=20):
-    # We draw a small health bar for the battle screen
-    # We convert the health percentage into filled and empty parts of a text bar.
+    # Draws a small health bar for the battle screen
+    # Converts the health percentage into filled and empty parts of a text bar.
     if maximum <= 0:
         return "[" + " " * width + "]"
 
@@ -853,7 +893,7 @@ def hp_bar(current, maximum, width=20):
 ANIMATIONS_ON = sys.stdout.isatty()
 
 if os.name == "nt":
-    # We turn on colour codes in the Windows console
+    # Enables ANSI color support in the Windows terminal.
     os.system("")
 
 COLORS = {
@@ -863,10 +903,9 @@ COLORS = {
 }
 
 
-# We choose the health-bar color based on how much HP is left.
+# Chooses the health-bar color based on how much HP is left.
 def hp_color(current, maximum):
     # Green when healthy, yellow when hurt, red when in danger
-    # We pick the health-bar color based on how much HP remains.
     percent = current * 100 // maximum if maximum > 0 else 0
 
     if percent > 60:
@@ -874,9 +913,9 @@ def hp_color(current, maximum):
     return "yellow" if percent >= 30 else "red"
 
 
-# We add terminal colors only when the terminal supports animations.
+# Adds terminal colors only when the terminal supports animations.
 def color(text, name):
-    # We only print ANSI color codes when the current terminal supports animations.
+    # Only prints ANSI colors when the terminal supports them.
     if not ANIMATIONS_ON:
         return text
     return f"{COLORS[name]}{text}{COLORS['reset']}"
@@ -884,7 +923,7 @@ def color(text, name):
 
 # Skips animation delays when output is redirected or the game is being tested.
 def wait(seconds):
-    # We skip animation delays when the program is running without an interactive terminal.
+    # Skips animation delays when the program is running without an interactive terminal.
     if ANIMATIONS_ON:
         time.sleep(seconds)
 
@@ -892,15 +931,15 @@ def wait(seconds):
 # Replaces the current terminal line to make the attack animation move.
 def draw_line(text):
     # Redraws the current console line in place
-    # We redraw one console line to create the moving battle effect.
+    # Redraws one console line to create the moving battle effect.
     sys.stdout.write("\r\033[K" + text)
     sys.stdout.flush()
 
 
-# We display story text one character at a time in an interactive terminal.
+# Displays story text one character at a time in an interactive terminal.
 def type_out(text, delay=0.02, name=None):
-    # We print text one letter at a time
-    # We print letters gradually during animations but use normal printing in tests.
+    # Prints text one letter at a time
+    # Prints letters gradually in the terminal and prints normally otherwise.
     if not ANIMATIONS_ON:
         print(text)
         return
@@ -912,10 +951,10 @@ def type_out(text, delay=0.02, name=None):
     print()
 
 
-# We move an attack symbol toward the enemy and shows miss or critical effects.
+# Moves an attack symbol toward the enemy and shows miss or critical effects.
 def animate_strike(attacker, target, missed=False, critical=False):
     # A projectile flies from the attacker to the target
-    # We animate the attack moving toward the target and show a different result for misses or critical hits.
+    # Animates the attack and shows whether it missed, hit, or landed a critical strike.
     if not ANIMATIONS_ON:
         return
 
@@ -946,7 +985,7 @@ def animate_strike(attacker, target, missed=False, critical=False):
 # Animates the health bar from the old HP to the new HP after damage or healing.
 def animate_hp_change(label, before, after, maximum, width=20):
     # Drains (or refills) the health bar a little at a time
-    # We move from the old HP value to the new HP value in several small steps.
+    # Moves from the old HP value to the new HP value in several small steps.
     if not ANIMATIONS_ON or before == after:
         return
 
@@ -963,10 +1002,10 @@ def animate_hp_change(label, before, after, maximum, width=20):
     print()
 
 
-# We show a short effect animation for potions, guards, and status changes.
+# Shows a short effect animation for potions, guards, and status changes.
 def animate_effect(text, name, symbol="*", frames=6):
     # Short sparkle used for potions, guards and status effects
-    # We show a short sparkle message for an item or special combat effect.
+    # Shows a short sparkle message for an item or special combat effect.
     if not ANIMATIONS_ON:
         return
 
@@ -978,10 +1017,9 @@ def animate_effect(text, name, symbol="*", frames=6):
     draw_line("")
 
 
-# We show the player and enemy facing each other before the fight starts.
+# Shows the player and enemy facing each other before the fight starts.
 def animate_battle_intro(mob):
     # "VS" splash shown when a battle starts
-    # We show the player and the enemy facing each other before combat.
     if not ANIMATIONS_ON:
         return
 
@@ -1002,10 +1040,10 @@ def animate_battle_intro(mob):
     print()
 
 
-# We print the victory or defeat banner; flashing is optional for non-terminal output.
+# Prints the victory or defeat banner; flashing is optional for non-terminal output.
 def animate_banner(text, name):
     # Big blinking banner for victory and defeat
-    # We display a noticeable victory or defeat title without changing any game stats.
+    # Displays a noticeable victory or defeat title without changing any game stats.
     border = "+" + "-" * (len(text) + 6) + "+"
     middle = f"|   {text}   |"
 
@@ -1026,19 +1064,19 @@ def animate_banner(text, name):
 # FILE HANDLING
 # ---------------------------------------------------------------
 
-# We read a saved text file into fields separated by the vertical bar (|).
+# Reads a saved text file into fields separated by the vertical bar (|).
 # Header lines and blank lines are ignored so only actual records are loaded.
 def read_record_rows(path):
-    # We read a "|" separated text file. Missing files return no rows.
-    # We load pipe-separated TXT records and ignore blank lines and column headers.
+    # Reads a "|" separated text file. Missing files return no rows.
+    # Loads records separated by | and ignores blank lines and headers.
     rows = []
 
     if not Path(path).exists():
         return rows
 
-    # We handle file read errors so a missing or locked record does not crash the menu.
+    # Handles file read errors so a missing or locked record does not crash the menu.
     try:
-        # We close the input file automatically after reading its record rows.
+        # Closes the input file automatically after reading its record rows.
         with open(path, "r", encoding="utf-8") as file:
             for line in file:
                 line = line.strip()
@@ -1054,9 +1092,9 @@ def read_record_rows(path):
     return rows
 
 
-# We build a readable table-shaped text string for writing a record file.
+# Builds a readable table-shaped text string for writing a record file.
 def render_record_rows(title, columns, rows):
-    # We turn our record values into a readable TXT table with column names.
+    # Converts the record values into a readable TXT table with column names.
     names = columns.split("|")
     texts = [[str(value) for value in row] for row in rows]
     widths = [
@@ -1064,7 +1102,7 @@ def render_record_rows(title, columns, rows):
         for i, name in enumerate(names)
     ]
 
-    # We add spaces so the values line up with the text-file column headings.
+    # Adds spaces so the values line up with the text-file column headings.
     def padded(values):
         return " | ".join(
             value.ljust(widths[i]) if i < len(widths) else value
@@ -1075,55 +1113,55 @@ def render_record_rows(title, columns, rows):
             + "".join(f"  {padded(row)}\n" for row in texts))
 
 
-# We prepare new record contents in temporary files before replacing saved files.
-# We restore earlier file contents if any required replacement fails.
-# We also try the session recovery path if its normal file cannot be written.
+# Prepares new record contents in temporary files before replacing saved files.
+# Restores earlier file contents if any required replacement fails.
+# Also tries the recovery file if the main session file cannot be saved.
 def atomic_record_updates(updates, allow_session_recovery=True):
-    # We save several related files together and restore their old versions if a write fails.
-    # Our TXT and JSON files are separate, so we first write temporary copies before replacing anything.
-    # If one replace operation fails, we use the backups to put earlier records back.
+    # Saves related files together and restores their earlier data if saving fails.
+    # The TXT and JSON files are saved through temporary copies first.
+    # If saving fails, the backups restore the earlier records.
     pending = {str(k): v for k, v in updates.items()}
     for attempt in range(2):
         temporary = {}
         backups = {}
         changed = []
         failed_path = None
-        # We clean up temporary writes if any new file cannot be prepared.
+        # Cleans up temporary writes if any new file cannot be prepared.
         try:
-            # We prepare each temporary file beside its destination before the replace step.
+            # Prepares each temporary file beside its destination before the replace step.
             # This keeps the temporary file on the same filesystem as the real record.
             for name, content in pending.items():
                 target = Path(name)
-                # We write the new content to a temporary file in the record folder.
+                # Writes the new content to a temporary file in the record folder.
                 with tempfile.NamedTemporaryFile(
                         mode="w", encoding="utf-8", prefix=".dreadveil_",
                         suffix=".tmp", dir=str(target.parent), delete=False) as file:
                     temporary[name] = Path(file.name)
                     file.write(content)
                     file.flush()
-                    # We flush the write to disk before treating the temporary file as ready.
+                    # Flushes the write to disk before treating the temporary file as ready.
                     os.fsync(file.fileno())
                 if target.exists():
-                    # We copy the original content into a backup before replacing it.
+                    # Copies the original content into a backup before replacing it.
                     with tempfile.NamedTemporaryFile(
                             prefix=".dreadveil_backup_", suffix=".tmp",
                             dir=str(target.parent), delete=False) as backup:
                         backups[name] = Path(backup.name)
-                    # We keep the previous file so we can restore it if another write fails.
+                    # Keeps the previous file so the game can restore it if another write fails.
                     shutil.copyfile(target, backups[name])
                 else:
                     backups[name] = None
-            # We commit the prepared files only after every temporary write succeeds.
+            # Commits the prepared files only after every temporary write succeeds.
             for name, staged in temporary.items():
                 failed_path = name
-                # We replace the destination with the finished temporary file only after writing succeeds.
+                # Replaces the destination with the finished temporary file only after writing succeeds.
                 os.replace(staged, name)
                 changed.append(name)
             if BATTLE_SESSION_FILE in pending:
                 alternate = Path(BATTLE_SESSION_FILE).with_name(
                     Path(BATTLE_SESSION_FILE).stem + ".recovery.json")
                 if str(alternate) not in pending:
-                    # We attempt to delete the temporary recovery copy after a successful commit.
+                    # Attempts to delete the temporary recovery copy after a successful commit.
                     try:
                         alternate.unlink(missing_ok=True)
                     except OSError:
@@ -1131,9 +1169,9 @@ def atomic_record_updates(updates, allow_session_recovery=True):
             return True
         except OSError as error:
             rollback_ok = True
-            # We restore the earlier files in reverse order if a commit fails.
+            # Restores the earlier files in reverse order if a commit fails.
             for name in reversed(changed):
-                # We restore saved files from backups if any replacement fails.
+                # Restores saved files from backups if any replacement fails.
                 try:
                     if backups[name] is None:
                         Path(name).unlink(missing_ok=True)
@@ -1155,7 +1193,7 @@ def atomic_record_updates(updates, allow_session_recovery=True):
             return False
         finally:
             for candidate in list(temporary.values()) + [b for b in backups.values() if b]:
-                # We remove temporary files that are no longer needed after saving.
+                # Removes temporary files that are no longer needed after saving.
                 try:
                     candidate.unlink(missing_ok=True)
                 except OSError:
@@ -1163,12 +1201,12 @@ def atomic_record_updates(updates, allow_session_recovery=True):
     return False
 
 
-# We use the common file format and saves the generated record text.
+# Uses the common file format and saves the generated record text.
 def write_record_rows(path, title, columns, rows, content_only=False):
-    # We write records into a "|" separated text file. The columns are
+    # Writes records into a "|" separated text file. The columns are
     # padded so the file reads like a table (spaces are ignored when
     # the file is loaded again).
-    # We prepare a TXT file and either return its text or save it immediately.
+    # Prepares TXT content and either returns it or saves it to a file.
     content = render_record_rows(title, columns, rows)
     if content_only:
         return content
@@ -1176,7 +1214,7 @@ def write_record_rows(path, title, columns, rows, content_only=False):
 
 # Changes the inventory dictionary into item ID and quantity pairs for saving.
 def inventory_to_text(inventory):
-    # We write item quantities as item-ID and quantity pairs inside an account record.
+    # Writes item quantities as item-ID and quantity pairs inside an account record.
     return ",".join(
         f"{item_id}:{qty}"
         for item_id, qty in inventory.items()
@@ -1184,9 +1222,9 @@ def inventory_to_text(inventory):
     )
 
 
-# We convert saved item quantities back into a dictionary and ignores bad entries.
+# Converts saved item quantities back into a dictionary and ignores bad entries.
 def inventory_from_text(text):
-    # We rebuild the player's item quantities from the saved account text.
+    # Rebuilds the player's item quantities from the saved account text.
     inventory = {}
 
     for entry in text.split(","):
@@ -1195,7 +1233,7 @@ def inventory_from_text(text):
 
         item_id, qty = entry.split(":", 1)
 
-        # We skip inventory quantities that cannot be converted to whole numbers.
+        # Skips inventory quantities that cannot be converted to whole numbers.
         try:
             qty = int(qty)
         except ValueError:
@@ -1209,20 +1247,20 @@ def inventory_from_text(text):
 
 # Splits comma-separated IDs and removes empty entries from saved lists.
 def id_list_from_text(text):
-    # We turn a comma-separated list of saved IDs into a Python list.
+    # Converts a comma-separated list of saved IDs into a Python list.
     return [x.strip() for x in text.split(",") if x.strip()]
 
 
-# We store each equipment slot and its selected item ID in a short text value.
+# Stores each equipment slot and its selected item ID in a short text value.
 def equipped_to_text(equipped):
     # Example: sword=EQP-001;shield=EQP-003
-    # We save the currently equipped item IDs beside their sword, shield, or armor slots.
+    # Saves the currently equipped item IDs beside their sword, shield, or armor slots.
     return ";".join(f"{slot}={eid}" for slot, eid in equipped.items() if eid)
 
 
-# We read equipped-item values and ignores slots the game does not recognize.
+# Reads equipped-item values and ignores slots the game does not recognize.
 def equipped_from_text(text):
-    # We read the saved slot assignments and ignore invalid slot names.
+    # Reads saved equipment slots and ignores invalid slot names.
     equipped = {}
 
     for entry in text.split(";"):
@@ -1237,11 +1275,11 @@ def equipped_from_text(text):
 
 # ----- Accounts -----
 
-# We create the starting values for a new player or administrator account.
+# Creates the starting values for a new player or administrator account.
 # All the fields are included here so every new account has the same structure.
 def new_account_data(player_id, password, role="Player"):
-    # We create an account using the starting player stats
-    # We prepare every field a new account needs, including progress, inventory, and location.
+    # Creates an account using the starting player stats
+    # Prepares every field a new account needs, including progress, inventory, and location.
     return {
         "id": player_id,
         "password": password,
@@ -1266,10 +1304,10 @@ def new_account_data(player_id, password, role="Player"):
     }
 
 
-# We create the first admin and player accounts when there is no account file yet.
+# Creates the first admin and player accounts when there is no account file yet.
 def create_default_accounts():
-    # We create the first account file if none exists yet
-    # We create starter admin and player profiles only when there are no saved accounts.
+    # Creates the first account file if none exists yet
+    # Creates starter admin and player profiles only when there are no saved accounts.
     account_records.clear()
     player_number = 0
 
@@ -1295,10 +1333,10 @@ def create_default_accounts():
     save_all_accounts()
 
 
-# We turn one current-format account record into the fields used by the game.
+# Converts one current-format account record into the fields used by the game.
 def parse_account_row(parts):
     # Current format: role, inventory, saved queue, wounds, equipment, room
-    # We read one current-format account row and convert numeric and list fields back into Python values.
+    # Reads one account record and converts saved numbers and lists into Python values.
     return parts[0], {
         "id": parts[1],
         "password": parts[2],
@@ -1329,10 +1367,10 @@ def parse_account_row(parts):
     }
 
 
-# We recognize the alternate account column layout when reading a saved record.
+# Recognizes the alternate account column layout when reading a saved record.
 def parse_legacy_account_row(parts):
-    # We read account rows containing fixed inventory fields
-    # We convert that layout into the fields we use for each active account.
+    # Reads account rows containing fixed inventory fields
+    # Converts that layout into the fields used for active accounts.
     data = new_account_data(parts[1], parts[2])
     data.update({
         "hp": int(parts[3]),
@@ -1359,16 +1397,16 @@ def parse_legacy_account_row(parts):
     return parts[0], data
 
 
-# We load saved accounts and skips records that cannot be parsed.
-# We also clean invalid item references and ensure an Admin account exists.
+# Loads saved accounts and skips records that cannot be parsed.
+# Also removes invalid item references and ensures an admin account exists.
 def load_accounts():
-    # We load all saved accounts from the text file
-    # We read all valid accounts, clean outdated values, and restore default accounts only when needed.
+    # Loads all saved accounts from the text file
+    # Loads valid accounts, cleans outdated values, and restores defaults when needed.
     account_records.clear()
 
-    # We read accounts one at a time, so a damaged row does not stop all logins.
+    # Reads accounts one at a time, so a damaged row does not stop all logins.
     for parts in read_record_rows(ACCOUNT_FILE):
-        # We skip damaged account rows rather than blocking every valid login.
+        # Skips damaged account rows rather than blocking every valid login.
         try:
             if len(parts) in range(15, 22) and not parts[3].isdigit():
                 username, data = parse_account_row(parts)
@@ -1382,9 +1420,9 @@ def load_accounts():
         if username and username not in account_records:
             account_records[username] = data
 
-    # We remove saved inventory items that no longer have a matching item profile.
+    # Removes saved inventory items that no longer have a matching item profile.
     legacy_data_cleaned = False
-    # We check each player inventory for IDs missing from the item catalog.
+    # Checks each player inventory for IDs missing from the item catalog.
     for data in account_records.values():
         inventory = data.get("inventory", {})
         for item_id in list(inventory):
@@ -1398,8 +1436,8 @@ def load_accounts():
     if legacy_data_cleaned:
         save_all_accounts()
 
-    # Create starter profiles only when no valid saved accounts were loaded.
-    # We make default accounts only if there are no saved accounts to load.
+    # Creates starter profiles only when there are no valid saved accounts.
+    # Makes default accounts only if there are no saved accounts to load.
     if not account_records:
         create_default_accounts()
         return
@@ -1413,13 +1451,13 @@ def load_accounts():
             save_all_accounts()
 
 
-# We collect the latest account data and writes it to the player account file.
+# Collects the latest account data and writes it to the player account file.
 def save_all_accounts(content_only=False):
-    # We save all registered accounts into the account file
-    # We write the current accounts and progress back into the player-account TXT file.
+    # Saves all registered accounts into the account file
+    # Writes the current accounts and progress back into the player-account TXT file.
     rows = []
 
-    # We write one account row per username, including Queue, Equipment, and progress.
+    # Writes one account row per username, including Queue, Equipment, and progress.
     for username, data in account_records.items():
         rows.append([
             username, data["id"], data["password"], data["role"],
@@ -1451,9 +1489,9 @@ def save_all_accounts(content_only=False):
 
 # ----- Enemies -----
 
-# We create an enemy dictionary using the stats entered by the admin or starter records.
+# Creates an enemy dictionary using the stats entered by the admin or starter records.
 def make_enemy(enemy_id, name, enemy_type, max_hp, atk, gold, score, room):
-    # We build an enemy record with its starting HP, difficulty, rewards, and room.
+    # Builds an enemy record with its starting HP, difficulty, rewards, and room.
     return {
         "id": enemy_id,
         "name": name,
@@ -1469,13 +1507,12 @@ def make_enemy(enemy_id, name, enemy_type, max_hp, atk, gold, score, room):
     }
 
 
-# We keep each enemy in the room assigned to its difficulty level.
+# Keeps each enemy in the room assigned to its difficulty level.
 def sync_enemy_rooms():
     # Every difficulty level lives in exactly one room
-    # We keep each enemy in the room assigned to its difficulty.
     changed = False
 
-    # We assign each enemy to the room for its saved difficulty level.
+    # Assigns each enemy to the room for its saved difficulty level.
     for mob in mob_list:
         target = ROOM_FOR_DIFFICULTY[mob["type"]]
 
@@ -1487,9 +1524,9 @@ def sync_enemy_rooms():
         save_enemies()
 
 
-# We load unique enemy records, validates the difficulty, and creates defaults if empty.
+# Loads unique enemy records, validates the difficulty, and creates defaults if empty.
 def load_enemies():
-    # We read the enemy profiles from disk and create the starter enemies if the file has no valid records.
+    # Loads saved enemy profiles or creates starter enemies if no valid records exist.
     mob_list.clear()
 
     for parts in read_record_rows(ENEMY_FILE):
@@ -1499,7 +1536,7 @@ def load_enemies():
         if get_enemy_by_id(parts[0]) is not None:
             continue
 
-        # We reject enemy rows containing invalid numeric fields.
+        # Rejects enemy rows containing invalid numeric fields.
         try:
             mob_list.append(make_enemy(
                 parts[0], parts[1], parts[2], int(parts[3]),
@@ -1508,7 +1545,7 @@ def load_enemies():
         except ValueError:
             continue
 
-    # We use the starter enemies only when the saved enemy list is empty.
+    # Uses the starter enemies only when the saved enemy list is empty.
     if not mob_list:
         for record in DEFAULT_ENEMIES:
             mob_list.append(make_enemy(*record))
@@ -1517,9 +1554,9 @@ def load_enemies():
     sync_enemy_rooms()
 
 
-# We save all enemy profiles and the gold/score values used in battles.
+# Saves all enemy profiles and the gold/score values used in battles.
 def save_enemies(content_only=False):
-    # We write current enemy profiles to the TXT file used by our admin menu.
+    # Writes current enemy profiles to the TXT file used by the admin menu.
     return write_record_rows(
         ENEMY_FILE,
         "DREADVEIL: THE LAST GATE ENEMY RECORDS",
@@ -1535,9 +1572,9 @@ def save_enemies(content_only=False):
 
 # ----- Items -----
 
-# We load valid item effects and skip records with unsupported effect types.
+# Loads items with valid effects and skips unsupported effect types.
 def load_items():
-    # We read usable items and skip unsupported or duplicate item records.
+    # Loads usable items and skips duplicate or unsupported records.
     item_records.clear()
 
     legacy_escape_items_removed = False
@@ -1552,7 +1589,7 @@ def load_items():
         if parts[0] in item_records:
             continue
 
-        # We skip malformed item prices, powers, or carrying limits.
+        # Skips malformed item prices, powers, or carrying limits.
         try:
             item_records[parts[0]] = {
                 "id": parts[0],
@@ -1566,7 +1603,7 @@ def load_items():
         except ValueError:
             continue
 
-    # We create starter items only when no usable saved items were loaded.
+    # Creates starter items only when no usable saved items were loaded.
     if not item_records:
         for (item_id, name, effect, power, price, carry,
              description) in DEFAULT_ITEMS:
@@ -1577,7 +1614,7 @@ def load_items():
             }
         save_items()
     else:
-        # We add Dice of Fate to a matching four-item catalog without altering custom items.
+        # Adds Dice of Fate to a matching four-item catalog without altering custom items.
         known_defaults = {entry[0]: entry for entry in DEFAULT_ITEMS}
         original_four = all(
             key in item_records
@@ -1597,9 +1634,9 @@ def load_items():
             save_items()
 
 
-# We save the item stats, prices, carry limits, and effects used in shops and battles.
+# Saves the item stats, prices, carry limits, and effects used in shops and battles.
 def save_items(content_only=False):
-    # We save item effects, prices, carrying limits, and descriptions.
+    # Saves item effects, prices, carrying limits, and descriptions.
     return write_record_rows(
         ITEM_FILE,
         "DREADVEIL: THE LAST GATE ITEM RECORDS",
@@ -1615,9 +1652,9 @@ def save_items(content_only=False):
 
 # ----- Equipment -----
 
-# We sort equipment by tier, slot, and stats for a consistent shop display.
+# Sorts equipment by tier, slot, and stats for a consistent shop display.
 def ordered_equipment_records(items):
-    # We sort equipment by difficulty and slot so the shop stays easy to browse.
+    # Sorts equipment by difficulty and slot so the shop stays easy to browse.
     tier_positions = {tier: index for index, tier in enumerate(EQUIPMENT_LEVELS)}
     slot_positions = {slot: index for index, slot in enumerate(EQUIPMENT_SLOTS)}
     return sorted(items, key=lambda e: (
@@ -1627,9 +1664,9 @@ def ordered_equipment_records(items):
     ))
 
 
-# We load equipment and checks that its slot and tier belong to the allowed choices.
+# Loads equipment and checks that its slot and tier belong to the allowed choices.
 def load_equipment():
-    # We rebuild equipment records, including sword speed when the saved format contains it.
+    # Rebuilds equipment records, including sword speed when the saved format contains it.
     equipment_records.clear()
 
     for parts in read_record_rows(EQUIPMENT_FILE):
@@ -1642,7 +1679,7 @@ def load_equipment():
         if parts[0] in equipment_records:
             continue
 
-        # We skip Equipment records whose numeric fields are not valid.
+        # Skips Equipment records whose numeric fields are not valid.
         try:
             equipment_records[parts[0]] = {
                 "id": parts[0], "name": parts[1], "slot": parts[2],
@@ -1653,7 +1690,7 @@ def load_equipment():
         except ValueError:
             continue
 
-    # We restore the default equipment catalog only when necessary.
+    # Restores the default equipment catalog only when necessary.
     if not equipment_records:
         for (eid, name, slot, tier, bonus, price,
              description, speed) in DEFAULT_EQUIPMENT:
@@ -1665,9 +1702,9 @@ def load_equipment():
         save_equipment()
 
 
-# We write the equipment catalog in the same sorted order used on screen.
+# Writes the equipment catalog in the same sorted order used on screen.
 def save_equipment(content_only=False):
-    # We write equipment records in a consistent order.
+    # Writes equipment records in a consistent order.
     return write_record_rows(
         EQUIPMENT_FILE,
         "DREADVEIL: THE LAST GATE EQUIPMENT RECORDS",
@@ -1683,16 +1720,16 @@ def save_equipment(content_only=False):
 
 # ----- Rooms and connections (graph) -----
 
-# We load the six required room records. Missing or extra room IDs reset to the route.
+# Loads the six required room records. Missing or extra room IDs reset to the route.
 # Room names/descriptions may still be edited without changing those required IDs.
 def load_rooms():
     # Verify that saved rooms match the required six-room dungeon layout.
-    # We load the six mapped rooms and normalize only recognized built-in aliases.
-    # We identify the entrance by ROOM-000 and keep stable IDs for the other rooms.
-    # We preserve a custom room name or description entered by the Admin.
+    # Loads the six mapped rooms and normalize only recognized built-in aliases.
+    # Uses ROOM-000 for the entrance and keeps the other room IDs unchanged.
+    # Preserves a custom room name or description entered by the Admin.
     global ROOMS_RESET
 
-    # We reset the room dictionary before rebuilding it from the selected records.
+    # Resets the room dictionary before rebuilding it from the selected records.
     room_records.clear()
     ROOMS_RESET = False
 
@@ -1704,7 +1741,7 @@ def load_rooms():
             "id": parts[0], "name": parts[1], "description": parts[2]
         }
 
-    # The dungeon uses six fixed room IDs; the names can still be customized.
+    # The six room IDs stay the same, but admins can edit their names.
     if set(room_records) != set(ROOM_ORDER):
         room_records.clear()
 
@@ -1716,12 +1753,12 @@ def load_rooms():
         ROOMS_RESET = True
         save_rooms()
 
-    # We keep the rooms in route order
+    # Keeps the rooms in route order
     ordered = {r: room_records[r] for r in ROOM_ORDER}
     room_records.clear()
     room_records.update(ordered)
 
-    # We replace only built-in aliases, so custom names remain unchanged.
+    # Replaces only built-in aliases, so custom names remain unchanged.
     # A manually customized name or description is always preserved.
     names_changed = False
     defaults = {room_id: (name, description)
@@ -1740,9 +1777,9 @@ def load_rooms():
         save_rooms()
 
 
-# We save the room vertices used by both the dungeon map and the travel system.
+# Saves the room vertices used by both the dungeon map and the travel system.
 def save_rooms():
-    # We save the room names and descriptions that the graph uses.
+    # Saves the room names and descriptions that the graph uses.
     return write_record_rows(
         ROOM_FILE,
         "DREADVEIL: THE LAST GATE ROOM RECORDS (GRAPH VERTICES)",
@@ -1752,16 +1789,16 @@ def save_rooms():
     )
 
 
-# We load the room passages and keeps only connections allowed by the route rules.
+# Loads the room passages and keeps only connections allowed by the route rules.
 def load_connections():
-    # We load saved passages, keep valid room links, and restore default passages if necessary.
-    # We accept only passages that connect real rooms and meet the graph rules.
+    # Loads saved passages, keeps valid links, and restores defaults if needed.
+    # Accepts only passages that connect real rooms and meet the graph rules.
     # The passage labels come from saved data, so changing a label also changes what the map shows.
-    # We rebuild saved graph edges from valid room-to-room connections.
+    # Rebuilds saved graph edges from valid room-to-room connections.
     room_connections.clear()
     file_existed = Path(CONNECTION_FILE).exists()
 
-    # We keep valid saved passages when an existing map is loaded.
+    # Keeps valid saved passages when an existing map is loaded.
     if file_existed and not ROOMS_RESET:
         for parts in read_record_rows(CONNECTION_FILE):
             if len(parts) != 3:
@@ -1773,7 +1810,7 @@ def load_connections():
                     {"a": parts[0], "b": parts[1], "label": parts[2]}
                 )
 
-    # We use the starter passages only when the map was reset or is missing.
+    # Uses the starter passages only when the map was reset or is missing.
     if ROOMS_RESET or not file_existed:
         room_connections.clear()
 
@@ -1785,14 +1822,14 @@ def load_connections():
 
         save_connections()
     else:
-        # We use the standard passage names only for recognized built-in aliases.
+        # Uses the standard passage names only for recognized built-in aliases.
         # Retain any manually customized passage labels.
         new_labels = {frozenset((a, b)): label for a, b, label
                       in DEFAULT_CONNECTIONS}
-        # We leave customized passage labels as they are.
+        # Leaves customized passage labels as they are.
         # untouched.
         changed_labels = False
-        # We compare stored passage labels with the recognized built-in aliases.
+        # Compares stored passage labels with the recognized built-in aliases.
         for connection in room_connections:
             key = frozenset((connection["a"], connection["b"]))
             old_theme_label = KNOWN_THEMED_PASSAGE_LABELS.get(key)
@@ -1804,9 +1841,9 @@ def load_connections():
             save_connections()
 
 
-# We save the passage labels and connected room IDs used in graph operations.
+# Saves the passage labels and connected room IDs used in graph operations.
 def save_connections():
-    # We save our graph edges with both room IDs and the passage name.
+    # Saves the graph edges with both room IDs and the passage name.
     return write_record_rows(
         CONNECTION_FILE,
         "DREADVEIL: THE LAST GATE ROOM CONNECTIONS (GRAPH EDGES, TWO-WAY)",
@@ -1817,10 +1854,9 @@ def save_connections():
 
 # ----- Challenge questions -----
 
-# We find the challenge question assigned to the selected enemy.
+# Finds the challenge question assigned to the selected enemy.
 def question_for_enemy(mob):
-    # We find the question assigned to the selected enemy.
-    # We stop here if the enemy ID does not match an existing enemy.
+    # Stops if the chosen enemy ID is not found.
     if mob is None:
         return None
     if mob["type"] == "Boss":
@@ -1830,16 +1866,16 @@ def question_for_enemy(mob):
     return random.choice(pool) if pool else None
 
 
-# We load challenge questions and checks their answer choices and enemy links.
+# Loads challenge questions and checks their answer choices and enemy links.
 def load_questions():
-    # We load challenge questions and check that their enemy references are usable.
+    # Loads challenge questions and checks that their enemy IDs exist.
     question_records.clear()
     changed = False
     for parts in read_record_rows(QUESTION_FILE):
         if len(parts) not in (5, 6):
             continue
         choices = [c.strip() for c in parts[2].split(";")]
-        # We verify that question answers and damage bonuses are numbers.
+        # Verifies that question answers and damage bonuses are numbers.
         try:
             answer = int(parts[3])
             bonus = int(parts[4])
@@ -1892,9 +1928,9 @@ def load_questions():
         save_questions()
 
 
-# We save the questions, correct answers, and extra damage bonuses.
+# Saves the questions, correct answers, and extra damage bonuses.
 def save_questions():
-    # We write question text, answer choices, correct answers, and bonuses.
+    # Writes question text, answer choices, correct answers, and bonuses.
     return write_record_rows(
         QUESTION_FILE, "DREADVEIL: THE LAST GATE CHALLENGE QUESTIONS",
         "question_id|question|choices_separated_by_semicolon|"
@@ -1904,14 +1940,14 @@ def save_questions():
     )
 
 
-# We restore saved battle sessions, undo snapshots, and action-number counters.
-# We restore the most recent valid session or recovery record when loading.
+# Restores saved battle sessions, undo snapshots, and action-number counters.
+# Restores the most recent valid session or recovery record when loading.
 # checked.
 # This avoids restarting action numbers after reopening the game.
 def load_session_archive():
-    # We restore battle sessions, undo states, and ID counters from the JSON file or its recovery copy.
-    # We prefer the newest usable JSON copy and check its shape before trusting the values.
-    # We scan action histories too, so the next action ID is not reused.
+    # Restores battle sessions, undo states, and ID counters from the JSON file or its recovery copy.
+    # Reads the most recent valid session JSON and checks its required fields.
+    # Scans action histories too, so the next action ID is not reused.
     global session_archive
     session_archive = {"next_action_number": 1,
                        "next_account_numbers": {"PLY": 1, "ADM": 1},
@@ -1923,7 +1959,7 @@ def load_session_archive():
                         reverse=True)
     # Try the newest valid session file first, then the recovery copy if needed.
     for candidate in candidates:
-        # We try each session candidate and use only a valid JSON player archive.
+        # Tries the available save files and loads only valid session data.
         try:
             data = json.loads(candidate.read_text(encoding="utf-8"))
             if isinstance(data, dict) and isinstance(data.get("players"), dict):
@@ -1931,7 +1967,7 @@ def load_session_archive():
                 saved_ids = data.get("next_account_numbers", {})
                 if isinstance(saved_ids, dict):
                     for prefix in ("PLY", "ADM"):
-                        # We ignore invalid saved account counters and keep a safe minimum.
+                        # Ignores invalid account counters and keeps a valid minimum ID.
                         try:
                             session_archive["next_account_numbers"][prefix] = max(
                                 1, int(saved_ids.get(prefix, 1)))
@@ -1945,20 +1981,20 @@ def load_session_archive():
     else:
         if candidates:
             print("Saved session data could not be loaded. Check the files.")
-    # Look for the highest saved ACT number so a new action ID will not be repeated.
+    # Finds the highest saved action ID to avoid reusing an existing ID.
     largest = 0
     for line in Path(BATTLE_LOG_FILE).read_text(encoding="utf-8").splitlines() if Path(BATTLE_LOG_FILE).exists() else []:
         if line.startswith("ACT-"):
-            # We read action ID numbers from the activity log when possible.
+            # Reads action ID numbers from the activity log when possible.
             try:
                 largest = max(largest, int(line.split(" |", 1)[0][4:]))
             except ValueError:
                 continue
-    # We examine saved action IDs to continue numbering without duplicates.
+    # Examines saved action IDs to continue numbering without duplicates.
     for saved in session_archive["players"].values():
         if isinstance(saved, dict):
             for action in saved.get("history", []):
-                # We skip incomplete action IDs inside stored player sessions.
+                # Skips incomplete action IDs inside stored player sessions.
                 try:
                     largest = max(largest, int(action["action_id"][4:]))
                 except (ValueError, TypeError, KeyError):
@@ -1976,7 +2012,7 @@ def load_session_archive():
             username = owners.get(parts[3][7:])
             if not username or username in session_archive["players"]:
                 continue
-            # We parse saved activity details without letting one malformed entry stop the load.
+            # Parses saved activity details without letting one malformed entry stop the load.
             try:
                 stamp = parts[1]
                 hp_text = lines[index + 1] if index + 1 < len(lines) else ""
@@ -2001,12 +2037,12 @@ def load_session_archive():
     synchronize_account_id_counters()
 
 
-# We check current accounts and historical records before choosing future IDs.
+# Checks current accounts and historical records before choosing future IDs.
 # This prevents a new player from receiving an ID that already appears in battle
 # history.
 def synchronize_account_id_counters():
     """Do not recycle an ID when its old account was deleted."""
-    # We check current and past IDs so deleting an account will not let us reuse its ID.
+    # Checks current and past IDs so deleting an account will not let the game reuse its ID.
     counters = session_archive.setdefault(
         "next_account_numbers", {"PLY": 1, "ADM": 1})
     # IDs must remain unique even after their accounts are deleted.
@@ -2015,7 +2051,7 @@ def synchronize_account_id_counters():
                if len(row) >= 2)
     ids.extend(row[3][7:] for row in read_record_rows(BATTLE_LOG_FILE)
                if len(row) >= 4 and row[3].startswith("Player "))
-    # We include player IDs found in saved session histories.
+    # Includes player IDs found in saved session histories.
     for saved in session_archive.get("players", {}).values():
         if not isinstance(saved, dict):
             continue
@@ -2032,36 +2068,36 @@ def synchronize_account_id_counters():
 
 # Reserves the next player or admin ID and moves the saved counter forward.
 def allocate_account_id(prefix):
-    """Reserve a monotonically increasing ID; caller persists it atomically."""
-    # We reserve the next player or admin ID and increase its saved counter.
+    """Gets the next account ID so deleted IDs cannot be reused."""
+    # Reserves the next player or admin ID and increases the saved counter.
     synchronize_account_id_counters()
     number = session_archive["next_account_numbers"][prefix]
     session_archive["next_account_numbers"][prefix] = number + 1
     return f"{prefix}-{number:03d}"
 
 
-# We create an account and saves the record plus ID counter together.
-# We cancel registration if the new account or its ID counter cannot be saved.
+# Creates an account and saves the record plus ID counter together.
+# Cancels registration if the new account or its ID counter cannot be saved.
 def create_account_with_unique_id(username, password, role="Player"):
     """Write the new account and ID counter together or revert both."""
-    # We save the new account and its ID counter as one operation so both stay in sync.
+    # Saves the new account and its ID counter as one operation so both stay in sync.
     if (not username or not password or role not in ("Player", "Admin")
             or "|" in username or "," in username or "|" in password
             or any(name.lower() == username.lower() for name in account_records)):
         return False
-    # We keep the counter value in case registration must be canceled.
-    # We copy nested data so changing the new state will not also change our backup.
+    # Keeps the counter value in case registration must be canceled.
+    # Copies nested values so changes do not affect the rollback copy.
     prior_counters = copy.deepcopy(session_archive["next_account_numbers"])
     prefix = "ADM" if role == "Admin" else "PLY"
     record_id = allocate_account_id(prefix)
     account_records[username] = new_account_data(record_id, password, role)
     updates = {
         ACCOUNT_FILE: save_all_accounts(content_only=True),
-        # We turn the session archive into JSON while keeping its nested battle data.
+        # Converts the session archive into JSON without losing nested state.
         BATTLE_SESSION_FILE: json.dumps(session_archive,
                                          ensure_ascii=False, indent=2)
     }
-    # We save the linked records as one group so partial changes do not get left behind.
+    # Saves related records together to avoid partially saved results.
     if atomic_record_updates(updates):
         return True
     account_records.pop(username, None)
@@ -2072,23 +2108,23 @@ def create_account_with_unique_id(username, password, role="Player"):
 session_save_mode = "Ready"
 
 
-# We write the current sessions to JSON and keeps a recovery copy when needed.
+# Writes the current sessions to JSON and keeps a recovery copy when needed.
 def save_session_archive():
-    # We write saved sessions to JSON, with a recovery-file fallback if the main write fails.
+    # Writes saved sessions to JSON, with a recovery-file fallback if the main write fails.
     global session_save_mode
-    # We turn the session archive into JSON while keeping its nested battle data.
+    # Converts the session archive into JSON without losing nested state.
     text = json.dumps(session_archive, ensure_ascii=False, indent=2)
     saved = atomic_record_updates({BATTLE_SESSION_FILE: text})
     recovery = Path(BATTLE_SESSION_FILE).with_name(
         Path(BATTLE_SESSION_FILE).stem + ".recovery.json")
     if not saved:
-        # We attempt the recovery session file when its primary path is unavailable.
+        # Attempts the recovery session file when its primary path is unavailable.
         try:
-            # We write and flush a backup JSON file for session recovery.
+            # Writes a backup JSON file and flushes the data to disk.
             with open(recovery, "w", encoding="utf-8") as file:
                 file.write(text)
                 file.flush()
-                # We flush the write to disk before treating the temporary file as ready.
+                # Flushes the write to disk before treating the temporary file as ready.
                 os.fsync(file.fileno())
             saved = True
         except OSError as error:
@@ -2097,7 +2133,7 @@ def save_session_archive():
                          "Recovery file" if recovery.exists() else "Saved")
     return saved
 
-# We store our temporary battle effects in a fixed order for Undo and reload.
+# Stores the temporary battle effects in a fixed order for Undo and reload.
 def battle_effect_values():
     # The last two entries hold the Dice of Fate shield and next-attack bonus.
     return [boost_turns_left, boost_percent, guard_bonus_ready,
@@ -2105,7 +2141,7 @@ def battle_effect_values():
             battle_turns, fate_barrier, fate_next_attack_bonus]
 
 
-# We restore saved battle effects, using zero values for effects not in a record.
+# Restores saved battle effects, using zero values for effects not in a record.
 def restore_battle_effect_values(values):
     global boost_turns_left, boost_percent, guard_bonus_ready
     global enemy_stunned_turns, challenge_used, boss_enrage_announced
@@ -2122,12 +2158,12 @@ def restore_battle_effect_values(values):
 # Copies the current player's battle history, undo stack, and effects into the
 # archive.
 def sync_active_session():
-    # We copy this player's history, undo list, active enemy, and effects into the session archive.
+    # Copies this player's history, undo list, active enemy, and effects into the session archive.
     username = player.get("name")
     if not username or username not in account_records:
         return False
     # The archive keeps each player session separate by username.
-    # We store each player's session separately so accounts do not share histories.
+    # Each account keeps its own queue, battle session, and Undo history.
     session_archive["players"][username] = {
         "history": [dict(a) for a in battle_history],
         "undo": [dict(s) for s in undo_stack],
@@ -2137,24 +2173,30 @@ def sync_active_session():
     return True
 
 
-# We save the current player session after syncing the active battle information.
+# Saves the current player session after syncing the active battle information.
 def save_battle_state():
-    # We synchronize the active battle before writing the session JSON.
+    # Synchronizes the active battle before writing the session JSON.
     if not sync_active_session():
         return False
     return save_session_archive()
 
-# We restore an unfinished fight only if the saved enemy is still the queue front.
+# Restores an unfinished fight only if the saved enemy is still the queue front.
 # Invalid or outdated battle state is not resumed, which avoids fighting the wrong
 # enemy.
 def restore_battle_state():
-    # We resume a saved battle only when the saved enemy still matches the queue front.
     global current_enemy_id, boost_turns_left, boost_percent, guard_bonus_ready
     global enemy_stunned_turns, challenge_used, boss_enrage_announced, battle_turns
-    # We restore only the logged-in player's own session, not another player's battle.
+    # Restores only the logged-in player's own session, not another player's battle.
     data = session_archive["players"].get(player["name"], {})
     battle_history[:] = data.get("history", [])
     undo_stack[:] = data.get("undo", [])
+    if player["status"] == "Victorious":
+        # Old saves may contain a reversible escape snapshot. Discard it.
+        undo_stack.clear()
+        current_enemy_id = None
+        reset_battle_effects()
+        sync_active_session()
+        return
     candidate = data.get("current_enemy_id")
     # Only resume if the enemy is still active AND still first in the queue.
     if (player["status"] == "In Battle" and candidate in encounter_lineup
@@ -2169,15 +2211,14 @@ def restore_battle_state():
         current_enemy_id = None
         if player["status"] == "In Battle":
             player["status"] = "Active"
-        undo_stack[:] = [s for s in undo_stack if s.get("enemy_id") is None]
 
 
 # Appends one action to the activity log instead of replacing the earlier actions.
 def append_battle_log_action(action):
-    # We format one battle activity and add it to the permanent text log.
-    # We append the action and both HP values to the permanent activity log.
+    # Formats a battle action and adds it to the permanent log.
+    # Appends the action and both HP values to the permanent activity log.
     try:
-        # We open the activity log in append mode so past actions remain.
+        # Opens the activity log in append mode so past actions remain.
         with open(BATTLE_LOG_FILE, "a", encoding="utf-8") as file:
             file.write(
                 f"{action['action_id']} | {action['date_time']} | "
@@ -2194,14 +2235,14 @@ def append_battle_log_action(action):
 
 # ----- Battle history (permanent record of every battle result) -----
 
-# We record each finished battle with its result, rewards, and turn count.
+# Records each finished battle with its result, rewards, and turn count.
 # This history is later used for the admin reports.
 def record_battle_result(mob, result, gold_change, score_change, turns=0):
-    # We add one line to the permanent battle history file. The whole file
+    # Adds one line to the permanent battle history file. The whole file
     # is rewritten so every column stays lined up like a table.
-    # We save one completed battle result together with the updated records needed by reports.
-    # Reports need completed results, so we record the result and changed balances together.
-    # We first confirm that existing battle history can be read safely.
+    # Saves one completed battle result together with the updated records needed by reports.
+    # Reports use completed results, so the result and balance changes are saved together.
+    # First checks that battle history can be read safely.
     try:
         if Path(BATTLE_HISTORY_FILE).exists():
             Path(BATTLE_HISTORY_FILE).read_text(encoding="utf-8")
@@ -2230,7 +2271,7 @@ def record_battle_result(mob, result, gold_change, score_change, turns=0):
     username = player.get("name")
     if not username or username not in account_records:
         return False
-    # We copy nested data so changing the new state will not also change our backup.
+    # Copies nested values so changes do not affect the rollback copy.
     previous_account = copy.deepcopy(account_records[username])
     previous_session = copy.deepcopy(session_archive["players"].get(username))
     record = account_records[username]
@@ -2245,12 +2286,12 @@ def record_battle_result(mob, result, gold_change, score_change, turns=0):
     updates = {
         BATTLE_HISTORY_FILE: history,
         ACCOUNT_FILE: save_all_accounts(content_only=True),
-        # We turn the session archive into JSON while keeping its nested battle data.
+        # Converts the session archive into JSON without losing nested state.
         BATTLE_SESSION_FILE: json.dumps(session_archive, ensure_ascii=False, indent=2),
         GAME_RECORD_FILE: write_game_snapshot(content_only=True)
     }
     if outcome_actions_pending:
-        # We read the existing activity log before adding the completed result.
+        # Reads the existing activity log before adding the completed result.
         try:
             original_log = Path(BATTLE_LOG_FILE).read_text(encoding="utf-8") if Path(BATTLE_LOG_FILE).exists() else ""
         except OSError as error:
@@ -2258,7 +2299,7 @@ def record_battle_result(mob, result, gold_change, score_change, turns=0):
             if previous_session is None:
                 session_archive["players"].pop(username, None)
             else:
-                # We store each player's session separately so accounts do not share histories.
+                # Each account keeps its own queue, battle session, and Undo history.
                 session_archive["players"][username] = previous_session
             print(f"Unable to read the activity log: {error}")
             return False
@@ -2272,7 +2313,7 @@ def record_battle_result(mob, result, gold_change, score_change, turns=0):
                          f"Enemy HP: {action['enemy_hp_before']} -> "
                          f"{action['enemy_hp_after']}\n")
         updates[BATTLE_LOG_FILE] = original_log + "".join(lines)
-    # We save the linked records as one group so partial changes do not get left behind.
+    # Saves related records together to avoid partially saved results.
     if atomic_record_updates(updates):
         return True
     account_records[username] = previous_account
@@ -2284,9 +2325,9 @@ def record_battle_result(mob, result, gold_change, score_change, turns=0):
     return False
 
 
-# We load completed encounters from the battle-history TXT for Admin reports.
+# Loads completed encounters from the battle-history TXT for Admin reports.
 def load_battle_results():
-    # We read saved battle results so reports use real past outcomes.
+    # Reads saved battle results so reports use real past outcomes.
     results = []
 
     for parts in read_record_rows(BATTLE_HISTORY_FILE):
@@ -2305,10 +2346,10 @@ def load_battle_results():
 
 
 
-# We load the profiles and related save files in an order that preserves references.
+# Loads the profiles and related save files in an order that preserves references.
 def load_all_records():
     # Rooms load before connections so that links can be validated
-    # We load game data in the correct order because some records depend on others.
+    # Loads game data in the correct order because some records depend on others.
     load_rooms()
     load_connections()
     load_items()
@@ -2323,47 +2364,47 @@ def load_all_records():
 # PLAYER SESSION
 # ---------------------------------------------------------------
 
-# We look up an enemy using its saved ID instead of assuming a list position.
+# Looks up an enemy using its saved ID instead of assuming a list position.
 def get_enemy_by_id(enemy_id):
-    # We find an enemy using its ID
-    # We search our enemy list for one exact enemy ID.
-    # We look for an enemy whose ID matches the requested ID.
+    # Finds an enemy using its ID
+    # Searches the enemy list for one exact enemy ID.
+    # Looks up an enemy using the selected enemy ID.
     for mob in mob_list:
         if mob["id"].upper() == enemy_id.upper():
             return mob
     return None
 
 
-# We return the enemy involved in the currently active battle, if any.
+# Returns the enemy involved in the currently active battle, if any.
 def get_current_enemy():
-    # We get the enemy currently being fought
-    # We return the opponent being fought, or nothing if no fight is active.
-    # We check whether the player currently has an active enemy.
+    # Gets the enemy currently being fought
+    # Returns the opponent being fought, or nothing if no fight is active.
+    # Checks whether the player currently has an active enemy.
     if current_enemy_id is None:
         return None
     return get_enemy_by_id(current_enemy_id)
 
 
-# We convert saved enemy flags into the status shown on screen.
+# Converts saved enemy flags into the status shown on screen.
 def enemy_status(mob):
-    # We give the interface a short label for an enemy's current state.
-    # We do not allow defeated enemies to be treated as available opponents.
+    # Gives the interface a short label for an enemy's current state.
+    # Defeated enemies are not available for another battle.
     if mob["defeated"]:
         return "Defeated"
     return "Fighting" if mob.get("engaged") else "Active"
 
 
-# We look up the current room name so messages match admin-edited room records.
+# Looks up the current room name so messages match admin-edited room records.
 def room_name(room_id):
-    # We look up the saved room name instead of repeating a hard-coded name in messages.
+    # Looks up the saved room name instead of repeating a hard-coded name in messages.
     room = room_records.get(room_id)
     return room["name"] if room else f"Unknown Room ({room_id})"
 
 
-# We clear one-battle effects before another encounter begins.
+# Clears one-battle effects before another encounter begins.
 def reset_battle_effects():
-    # We clear every temporary battle effect
-    # We clear temporary buffs and status effects so they do not carry into another fight.
+    # Clears every temporary battle effect
+    # Clears temporary buffs and status effects so they do not carry into another fight.
     global boost_turns_left, boost_percent, guard_bonus_ready
     global enemy_stunned_turns, challenge_used, boss_enrage_announced
     global battle_turns, fate_barrier, fate_next_attack_bonus
@@ -2379,13 +2420,13 @@ def reset_battle_effects():
     battle_turns = 0
 
 
-# We clear temporary login data without deleting the player's saved account.
+# Clears temporary login data without deleting the player's saved account.
 def reset_session_state():
-    # We clear temporary battle information when changing accounts
-    # We clear the previous player's active battle data before another login.
+    # Clears temporary battle information when changing accounts
+    # Clears the previous player's active battle data before another login.
     global current_enemy_id, action_counter, intro_shown
 
-    # We empty the old lineup because the player is starting again after defeat.
+    # Clears the in-memory queue when switching accounts; saved queues are loaded separately.
     encounter_lineup.clear()
     battle_history.clear()
     undo_stack.clear()
@@ -2394,7 +2435,7 @@ def reset_session_state():
     intro_shown = False
     reset_battle_effects()
 
-    # We clear the engaged flag on each enemy when switching accounts.
+    # Clears the engaged flag on each enemy when switching accounts.
     for mob in mob_list:
         mob["engaged"] = False
 
@@ -2402,7 +2443,7 @@ def reset_session_state():
 # Copies a selected account into the active player state and restores their session.
 def load_player_from_account(username):
     # Copies the selected account into the active player data
-    # We copy a saved player profile into the active player and rebuild their battle state.
+    # Loads the selected player profile and rebuilds its battle state.
     data = account_records[username]
 
     player.clear()
@@ -2442,7 +2483,7 @@ def load_player_from_account(username):
             del player["equipped"][slot]
 
     if player["location"] not in room_records:
-        # We return the player to the entrance room after losing the fight.
+        # Returns the player to the entrance room after losing the fight.
         player["location"] = ENTRANCE_ROOM_ID
 
     apply_player_enemy_progress()
@@ -2453,9 +2494,9 @@ def load_player_from_account(username):
     restore_saved_lineup(data.get("lineup", []))
     restore_battle_state()
     if migrated_milestones:
-        # We restore and save active battle/queue state BEFORE changing files.
+        # Restores and saves the current battle and queue before updating the records.
         # The corrected threshold must never erase an unfinished encounter.
-        # We cancel or reverse the change when the player record cannot be saved.
+        # Restores the earlier values when saving fails.
         if not save_current_player_account():
             print("Progression rewards could not be saved; retry after checking access.")
     if (player["status"] == "Defeated" and player["hp"] > 0
@@ -2464,13 +2505,11 @@ def load_player_from_account(username):
         save_current_player_account()
 
 
-# We restore the player's queued enemies, leaving out invalid or already defeated IDs.
+# Restores the player's queued enemies, leaving out invalid or already defeated IDs.
 def restore_saved_lineup(saved_ids):
-    # We rebuild the saved Encounter Queue in the same FIFO order.
-    # Enemies that were deleted, defeated or are no longer in the player's
-    # room are skipped so the queue always follows the game rules.
-    # We restore the saved encounter order but discard enemies that should no longer be queued.
-    # We empty the old lineup because the player is starting again after defeat.
+    # Restore the same FIFO order across room changes and saved sessions.
+    # Discard only missing, defeated, duplicate or no-longer-eligible records.
+    # Restore the complete saved FIFO queue for the current player.
     encounter_lineup.clear()
     skipped = []
 
@@ -2481,14 +2520,11 @@ def restore_saved_lineup(saved_ids):
             mob is None
             or mob["defeated"]
             or enemy_id in encounter_lineup
-            or not can_player_select_enemy(mob)
-            or not is_enemy_reachable(mob)
-            or mob["room"] != player["location"]
         ):
             skipped.append(enemy_id)
             continue
 
-        # We add a valid enemy to the REAR of the queue.
+        # Adds a valid enemy to the REAR of the queue.
         encounter_lineup.append(mob["id"])
 
     return skipped
@@ -2496,15 +2532,15 @@ def restore_saved_lineup(saved_ids):
 
 # Copies the active player values into account records before saving.
 # Related session and battle files are written together so one change is not lost.
-def save_current_player_account(new_action=None):
-    # We save the active player's account, queue, and session details after a real game change.
+def save_current_player_account(new_action=None, additional_updates=None):
+    # Saves the active player's account, queue, and session details after a real game change.
     username = player.get("name")
     # Only a real logged-in player can write gameplay progress.
-    # We do not leave a partial account or session update after a failed save.
+    # Does not leave a partial account or session update after a failed save.
     if not username or username not in account_records:
         return False
 
-    # We copy nested data so changing the new state will not also change our backup.
+    # Copies nested values so changes do not affect the rollback copy.
     previous_account = copy.deepcopy(account_records[username])
     previous_session = copy.deepcopy(session_archive["players"].get(username))
     record = account_records[username]
@@ -2516,27 +2552,32 @@ def save_current_player_account(new_action=None):
     record["defeated_ids"] = list(player["defeated_ids"])
     record["completed_levels"] = list(player["completed_levels"])
     record["inventory"] = dict(player["inventory"])
-    # We save the encounter order so FIFO is the same after relaunching.
+    # Saves the encounter order so FIFO is the same after relaunching.
     record["lineup"] = list(encounter_lineup)
     wounds = dict(player["wounds"])
-    # We check if a battle is already active before allowing this action.
+    # Checks for an active battle before continuing.
     if current_enemy_id is not None:
         mob = get_current_enemy()
-        # We do not allow defeated enemies to be treated as available opponents.
+        # Defeated enemies are not available for another battle.
         if mob is not None and not mob["defeated"]:
             wounds[mob["id"]] = mob["hp"]
     record["wounds"] = wounds
     record["owned_equipment"] = list(player["owned_equipment"])
     record["equipped"] = dict(player["equipped"])
     record["treasures"] = list(player["treasures"])
+    if player["status"] == "Victorious":
+        # Never save a new Undo checkpoint after the final ending.
+        undo_stack.clear()
     sync_active_session()
 
     updates = {
         ACCOUNT_FILE: save_all_accounts(content_only=True),
-        # We turn the session archive into JSON while keeping its nested battle data.
+        # Converts the session archive into JSON without losing nested state.
         BATTLE_SESSION_FILE: json.dumps(session_archive, ensure_ascii=False, indent=2),
         GAME_RECORD_FILE: write_game_snapshot(content_only=True)
     }
+    if additional_updates:
+        updates.update(additional_updates)
     if new_action is not None:
         line = (f"{new_action['action_id']} | {new_action['date_time']} | "
                 f"{new_action['action_type']} | Player {new_action['player_id']} | "
@@ -2545,22 +2586,22 @@ def save_current_player_account(new_action=None):
                 f"{new_action['player_hp_after']} | "
                 f"Enemy HP: {new_action['enemy_hp_before']} -> "
                 f"{new_action['enemy_hp_after']}\n")
-        # We combine the current log with the next action before saving it.
+        # Combines the current log with the next action before saving it.
         try:
             previous_log = Path(BATTLE_LOG_FILE).read_text(encoding="utf-8") if Path(BATTLE_LOG_FILE).exists() else ""
             updates[BATTLE_LOG_FILE] = previous_log + line
         except OSError as error:
-            # We restore the in-memory copy if saving fails.
+            # Restores the in-memory copy if saving fails.
             account_records[username] = previous_account
             if previous_session is None:
                 session_archive["players"].pop(username, None)
             else:
-                # We store each player's session separately so accounts do not share histories.
+                # Each account keeps its own queue, battle session, and Undo history.
                 session_archive["players"][username] = previous_session
             print(f"Unable to read the activity log: {error}")
             return False
     # Accounts, battles, and session updates must succeed together.
-    # We save the linked records as one group so partial changes do not get left behind.
+    # Saves related records together to avoid partially saved results.
     if atomic_record_updates(updates):
         return True
 
@@ -2571,20 +2612,20 @@ def save_current_player_account(new_action=None):
         session_archive["players"][username] = previous_session
     return False
 
-# We apply a player's saved defeated enemies and wounded-enemy HP to the current room.
+# Applies a player's saved defeated enemies and wounded-enemy HP to the current room.
 def apply_player_enemy_progress():
-    # We update enemy status for the active player. Retreat and defeat
+    # Updates enemy status for the active player. Retreat and defeat
     # clear the affected enemy's saved wounds, so its HP reloads fully.
-    # We rebuild enemy defeat or wound information from the active player's saved progress.
+    # Rebuilds enemy defeat or wound information from the active player's saved progress.
     defeated = set(player.get("defeated_ids", []))
     wounds = player.get("wounds", {})
 
-    # We rebuild each enemy's defeated state from this player's saved progress.
+    # Rebuilds each enemy's defeated state from this player's saved progress.
     for mob in mob_list:
         mob["defeated"] = mob["id"] in defeated
         mob["engaged"] = False
 
-        # We do not allow defeated enemies to be treated as available opponents.
+        # Defeated enemies are not available for another battle.
         if mob["defeated"]:
             mob["hp"] = 0
         else:
@@ -2594,20 +2635,19 @@ def apply_player_enemy_progress():
 # Changes the status shown in player statistics and the main game screen.
 def set_player_status(status):
     # A player who already escaped the dungeon keeps the Victorious status
-    # We keep the active status and saved account status consistent.
+    # Keeps the active status and saved account status consistent.
     if player["status"] != "Victorious":
         player["status"] = status
 
 
-# We read how many copies of an item the player currently owns.
+# Reads how many copies of an item the player currently owns.
 def item_quantity(item_id):
-    # We read how many of a specific item the player currently owns.
     return player["inventory"].get(item_id, 0)
 
 
-# We add or removes an item quantity while keeping inventory values valid.
+# Adds or removes an item quantity while keeping inventory values valid.
 def change_item_quantity(item_id, amount):
-    # We add or remove item quantities without allowing a negative inventory.
+    # Adds or removes items without allowing the quantity to go below zero.
     new_qty = item_quantity(item_id) + amount
 
     if new_qty > 0:
@@ -2616,9 +2656,9 @@ def change_item_quantity(item_id, amount):
         player["inventory"].pop(item_id, None)
 
 
-# We make a readable description from the item's effect type and power.
+# Makes a readable description from the item's effect type and power.
 def describe_item_effect(item):
-    # We turn an item effect and its power into a description the player can understand.
+    # Converts an item effect and its power into a description the player can understand.
     text = ITEM_EFFECTS.get(item["effect"], "No effect")
     return text.format(
         power=item["power"],
@@ -2632,30 +2672,30 @@ def describe_item_effect(item):
 # Equipped items change the real battle numbers.
 # ---------------------------------------------------------------
 
-# We format the equipment bonuses shown in shop and inventory screens.
+# Formats the equipment bonuses shown in shop and inventory screens.
 def describe_equipment(item):
-    # We show what bonus an equipment record gives in battle.
+    # Shows what bonus an equipment record gives in battle.
     return describe_piece(item)
 
 
-# We find the standard gear tier that belongs to the current player progress.
+# Finds the standard gear tier that belongs to the current player progress.
 def standard_level():
     # The current gear tier is the current unlocked level. Clearing Boss
     # ends the game without inventing a fifth equipment tier.
-    # We identify the standard gear level that matches the player's progress.
+    # Identifies the standard gear level that matches the player's progress.
     done = player.get("completed_levels", [])
     return min(3, sum(1 for level in STANDARD_UPGRADE_LEVELS if level in done))
 
 
-# We get the tier of equipment currently available to the player.
+# Gets the tier of equipment currently available to the player.
 def current_equipment_tier():
-    # We identify which difficulty tier of free equipment the player has reached.
+    # Identifies which difficulty tier of free equipment the player has reached.
     return EQUIPMENT_LEVELS[standard_level()]
 
 
-# We return the free standard sword, shield, or armor for the current tier.
+# Returns the free standard sword, shield, or armor for the current tier.
 def standard_piece(slot, level=None):
-    # We build the default sword, shield, or armor for the unlocked tier.
+    # Builds the default sword, shield, or armor for the unlocked tier.
     level = standard_level() if level is None else level
     name, bonus, speed = STANDARD_EQUIPMENT[slot][level]
     return {"id": None, "name": name, "slot": slot, "bonus": bonus,
@@ -2663,10 +2703,10 @@ def standard_piece(slot, level=None):
             "source": f"Free {EQUIPMENT_LEVELS[level]} Gear"}
 
 
-# We return the currently used equipment for a slot, or standard gear if none is set.
+# Returns the currently used equipment for a slot, or standard gear if none is set.
 def equipped_piece(slot):
     # Gear from cleared levels remains owned but cannot replace current-tier gear.
-    # We find the selected gear in a slot, or use the unlocked standard piece.
+    # Finds equipped gear or uses the standard gear for the unlocked tier.
     eid = player.get("equipped", {}).get(slot)
     rec = equipment_records.get(eid)
     if (rec is not None and rec["slot"] == slot
@@ -2678,46 +2718,46 @@ def equipped_piece(slot):
     return standard_piece(slot)
 
 
-# We read the stat bonus from the equipment currently being used.
+# Reads the stat bonus from the equipment currently being used.
 def equipped_bonus(slot):
-    # We get the combat bonus from one equipped slot.
+    # Gets the combat bonus from one equipped slot.
     return equipped_piece(slot)["bonus"]
 
 
-# We get the speed modifier used when calculating hit and critical chances.
+# Gets the speed modifier used when calculating hit and critical chances.
 def sword_speed():
-    # We read the sword speed used in miss and critical-hit calculations.
+    # Reads the sword speed used in miss and critical-hit calculations.
     return equipped_piece("sword").get("speed", 0)
 
 
-# We calculate the player's miss chance after equipment modifiers.
+# Calculates the player's miss chance after equipment modifiers.
 def player_miss_chance():
     # Sword speed makes strikes more accurate (at least 1% miss chance).
-    # We adjust the chance of missing based on the equipped sword.
+    # Adjusts the chance of missing based on the equipped sword.
     return max(1, PLAYER_MISS_CHANCE - sword_speed() // 2)
 
 
-# We calculate the player's critical-hit chance from the current equipment.
+# Calculates the player's critical-hit chance from the current equipment.
 def player_crit_chance():
     # Each speed point adds one percentage point to critical-hit chance.
-    # We adjust the chance of a critical hit based on the equipped sword.
+    # Adjusts the chance of a critical hit based on the equipped sword.
     return min(35, PLAYER_CRIT_CHANCE + sword_speed())
 
 
-# We convert one sword, shield, or armor record into its displayed stats.
+# Converts one sword, shield, or armor record into its displayed stats.
 def describe_piece(piece):
-    # We format a piece of equipment and its combat effects.
+    # Formats a piece of equipment and its combat effects.
     result = SLOT_STAT_TEXT[piece["slot"]].format(b=piece["bonus"])
     if piece["slot"] == "sword":
         result += f" | SPD: +{piece.get('speed', 0)}%"
     return result
 
 
-# We format the old and new gear stats so the player can compare upgrades.
+# Formats the old and new gear stats so the player can compare upgrades.
 def compare_text(eq):
     # An actionable comparison with gear currently equipped (not with an
     # unseen locked item). The sword compares BOTH attack and speed.
-    # We compare an available piece of gear with what the player has equipped.
+    # Compares an available piece of gear with what the player has equipped.
     worn = equipped_piece(eq["slot"])
     diff = eq["bonus"] - worn["bonus"]
     label = {"sword": "ATK", "shield": "BLOCK", "armor": "DEF"}[eq["slot"]]
@@ -2728,50 +2768,53 @@ def compare_text(eq):
     return ", ".join(changes)
 
 
-# We add the player's base attack and equipped sword bonus.
+# Adds the player's base attack and equipped sword bonus.
 def total_atk():
-    # We combine base attack power and equipment bonuses.
+    # Combines base attack power and equipment bonuses.
     return player["atk"] + equipped_bonus("sword")
 
 
-# We read the damage reduction provided by the equipped armor.
+# Reads the damage reduction provided by the equipped armor.
 def armor_defense():
-    # We return the damage reduction supplied by armor.
+    # Returns the damage reduction supplied by armor.
     return equipped_bonus("armor")
 
 
-# We read the block percentage provided by the equipped shield.
+# Reads the block percentage provided by the equipped shield.
 def shield_block():
-    # We return the shield's percentage reduction for incoming damage.
+    # Returns the shield's percentage reduction for incoming damage.
     return min(75, equipped_bonus("shield"))
 
 
-# We apply armor and blocking rules to incoming damage.
+# Applies armor and blocking rules to incoming damage.
 def mitigate_damage(damage):
     # Armor reduces raw damage first, then shield blocks a percentage.
-    # We subtract armor protection and apply the shield reduction to an enemy hit.
+    # Subtracts armor protection and applies the shield reduction to damage.
     damage = max(1, damage - armor_defense())
     return max(1, damage * (100 - shield_block()) // 100)
 
 
-# We check whether the player completed the previous tier required for this gear.
+# Checks whether the player completed the previous tier required for this gear.
 def tier_unlocked(tier):
-    # We check whether the player has reached the required equipment tier.
+    # Checks whether the player has reached the required equipment tier.
     required = TIER_UNLOCK_REQUIREMENT.get(tier)
     return tier in TIER_UNLOCK_REQUIREMENT and (
         required is None or required in player["completed_levels"])
 
 
-# Explains which three enemy victories are needed to unlock the next gear tier.
+# Explains how many room enemies must be beaten to unlock the next gear tier.
 def tier_requirement_text(tier):
-    # We explain which difficulty must be completed before equipment can be unlocked.
+    """Explain the live requirement to unlock an equipment tier."""
     required = TIER_UNLOCK_REQUIREMENT.get(tier)
-    return f"Defeat 3 {required} enemies to unlock this tier" if required else ""
+    if required is None:
+        return ""
+    beaten, total = room_enemy_progress(required)
+    return (f"Clear all {total} {required} enemies to unlock this tier "
+            f"({beaten}/{total})")
 
 
-# Labels equipment as equipped, owned, archived, or not yet owned.
 def equipment_state(eid):
-    # We report the gear the player currently owns and has equipped.
+    # Reports the gear the player currently owns and has equipped.
     rec = equipment_records[eid]
     if eid in player["owned_equipment"] and rec["tier"] != current_equipment_tier():
         return "Archived (previous level)"
@@ -2785,73 +2828,68 @@ def equipment_state(eid):
 # PROGRESSION (rank and level completion)
 # ---------------------------------------------------------------
 
-# We count unique defeated enemies from THIS difficulty only.
-# Extra Weak victories cannot replace the three Intermediate victories needed later.
+# Counts distinct defeated enemies assigned to this difficulty.
+# Enemy defeats only count toward the room where those enemies belong.
+def room_enemy_progress(difficulty, defeated_ids=None):
+    """Return (defeated, total) for enemies currently assigned to a tier's room.
+
+    Admin changes are reflected immediately. Only distinct existing enemy IDs
+    count, so deleted enemies and victories in other rooms cannot advance a gate.
+    """
+    room_id = ROOM_FOR_DIFFICULTY.get(difficulty)
+    if room_id is None:
+        return 0, 0
+    defeated = set(player.get("defeated_ids", []) if defeated_ids is None
+                   else defeated_ids)
+    enemies = get_room_enemies(room_id)
+    return sum(mob["id"] in defeated for mob in enemies), len(enemies)
+
+
+def required_room_enemy_count(difficulty):
+    """Live requirement for the chosen difficulty, including admin additions."""
+    return room_enemy_progress(difficulty)[1]
+
+
 def defeated_count_for_difficulty(difficulty, defeated_ids=None):
-    """Count distinct saved enemy IDs of this tier, not total wins.
-
-    Admin-added enemies count just like starter enemies. Extra victories
-    after the 3 required kills remain optional and never remove progress.
-    """
-    # We count unique defeated enemies of one difficulty, not all wins mixed together.
-    if defeated_ids is None:
-        defeated_ids = player.get("defeated_ids", [])
-    # We use a set here so the same enemy ID is not counted twice.
-    defeated = set(defeated_ids)
-    # We count distinct enemy IDs that match this difficulty, not repeated fights.
-    return sum(m["id"] in defeated and m["type"] == difficulty
-               for m in mob_list)
+    """Count enemies defeated in this difficulty's actual room."""
+    return room_enemy_progress(difficulty, defeated_ids)[0]
 
 
-# Sets the rank from three Weak, three Intermediate, and three Strong victories.
-# Total wins are shown in statistics, but only the right tier counts for a room
-# unlock.
 def get_rank_info(wins, defeated_ids=None):
-    """Rank is earned by 3 unique victories in EACH preceding tier.
-
-    The wins value is retained for caller compatibility and statistics,
-    but cannot substitute for the required tier-specific victories.
-    """
-    # We unlock ranks using three Weak, three Intermediate, and three Strong victories in order.
-    # Three Weak victories unlock Intermediate; another three Intermediate unlock Strong.
-    # Three Strong victories unlock Boss. More wins in an earlier tier are optional.
+    """Rank advances only when ALL enemies in each preceding room are beaten."""
     if defeated_ids is None:
         defeated_ids = player.get("defeated_ids", [])
-    # Count victories by tier so extra weaker enemies do not skip a level.
-    # We count wins for this specific tier; extra weaker enemies cannot skip the next tier.
-    weak = defeated_count_for_difficulty("Weak", defeated_ids)
-    intermediate = defeated_count_for_difficulty("Intermediate", defeated_ids)
-    strong = defeated_count_for_difficulty("Strong", defeated_ids)
-    # We unlock the boss only after all three regular tiers have reached their own quota.
-    if weak >= 3 and intermediate >= 3 and strong >= 3:
+    weak_done = is_level_complete("Weak", defeated_ids)
+    mid_done = is_level_complete("Intermediate", defeated_ids)
+    strong_done = is_level_complete("Strong", defeated_ids)
+
+    def next_goal(tier, next_tier):
+        beaten, total = room_enemy_progress(tier, defeated_ids)
+        return f"{next_tier} unlocks after clearing {room_name(ROOM_FOR_DIFFICULTY[tier])} ({beaten}/{total})"
+
+    if weak_done and mid_done and strong_done:
         return {"rank": "Master", "max_difficulty": "Boss",
                 "max_order": 4, "next_unlock": "All difficulties unlocked"}
-    # We unlock Strong only when both Weak and Intermediate requirements are satisfied.
-    if weak >= 3 and intermediate >= 3:
+    if weak_done and mid_done:
         return {"rank": "Elite", "max_difficulty": "Strong",
-                "max_order": 3, "next_unlock":
-                f"Boss unlocks after 3 Strong victories ({min(strong,3)}/3)"}
-    # We unlock Intermediate after three Weak victories, even with more Weak enemies left.
-    if weak >= 3:
+                "max_order": 3, "next_unlock": next_goal("Strong", "Boss")}
+    if weak_done:
         return {"rank": "Adventurer", "max_difficulty": "Intermediate",
-                "max_order": 2, "next_unlock":
-                f"Strong unlocks after 3 Intermediate victories ({min(intermediate,3)}/3)"}
+                "max_order": 2, "next_unlock": next_goal("Intermediate", "Strong")}
     return {"rank": "Beginner", "max_difficulty": "Weak",
-            "max_order": 1, "next_unlock":
-            f"Intermediate unlocks after 3 Weak victories ({min(weak,3)}/3)"}
+            "max_order": 1, "next_unlock": next_goal("Weak", "Intermediate")}
 
 
-# We get the active player's rank using their saved defeated enemy IDs.
 def get_player_rank_info():
-    # We calculate the current player's rank from their saved defeated enemy IDs.
-    # We check the tier-specific victory counts to decide the currently unlocked difficulty.
+    # Calculates the current player's rank from their saved defeated enemy IDs.
+    # The current enemy list decides which difficulty is unlocked.
     return get_rank_info(player["wins"], player.get("defeated_ids", []))
 
 
-# We make the text list of difficulty levels the player may currently enter.
+# Makes the text list of difficulty levels the player may currently enter.
 def get_unlocked_difficulties():
-    # We create a list of the difficulty levels currently available
-    # We list only the enemy difficulty tiers that the player may enter.
+    # Creates a list of the difficulty levels currently available
+    # Lists only the enemy difficulty tiers that the player may enter.
     rank = get_player_rank_info()
 
     return ", ".join(
@@ -2861,89 +2899,85 @@ def get_unlocked_difficulties():
     )
 
 
-# We stop players from selecting an enemy above their unlocked difficulty.
+# Stops players from selecting an enemy above their unlocked difficulty.
 def can_player_select_enemy(mob):
-    # We stop the player from selecting an enemy above their rank
-    # We reject opponents whose difficulty is still locked.
+    # Stops the player from selecting an enemy above their rank
+    # Rejects opponents whose difficulty is still locked.
     return DIFFICULTY_ORDER[mob["type"]] <= get_player_rank_info()["max_order"]
 
 
-# We check the three-victory quota, or the defeated boss for the final tier.
-# Extra enemies in a room are optional once the required quota is reached.
+# A room is cleared only after every enemy currently assigned there is defeated.
 def is_level_complete(difficulty, defeated_ids=None):
-    """A tier is completed at its required quota, not full room exhaustion."""
-    # We consider a regular level complete after three wins in that tier, even if extra enemies remain.
+    """A tier is complete only when every current enemy in its room is beaten."""
     if difficulty == "Boss":
         return all_bosses_defeated(
             player.get("defeated_ids", []) if defeated_ids is None else defeated_ids)
-    # We count wins for this specific tier; extra weaker enemies cannot skip the next tier.
-    return defeated_count_for_difficulty(difficulty, defeated_ids) >= 3
+    completed, required = room_enemy_progress(difficulty, defeated_ids)
+    return required > 0 and completed == required
 
 
-# We award any earned level bonuses that are missing from saved progress.
-# Completed-level flags make sure the reward is not given twice.
 def reconcile_threshold_rewards_for_existing_player():
-    """Apply newly-earned tier rewards on legacy saves exactly once.
+    """Grant missing one-time rewards for rooms already fully cleared.
 
-    Old versions waited until *every* enemy died. When admins had added
-    extra enemies, a player with 3 victories might have been denied their
-    one-time level reward. The completed_levels list is the idempotent flag.
+    Existing completion rewards are never duplicated. If an admin adds a new
+    enemy after clearance, the gate relocks until the new enemy is defeated.
+    Already-earned stat rewards remain saved, never granted a second time.
     """
-    # We check earned victory quotas and grant only milestones not recorded yet.
+    # Checks full-room clearance and grant only milestones not recorded yet.
     newly_completed = []
     for difficulty in LEVEL_ORDER:
-        # We compare defeated-enemy counts against the recorded completed levels.
+        # A saved reward flag prevents duplicate bonuses after admin edits.
         if (is_level_complete(difficulty)
                 and difficulty not in player["completed_levels"]):
-            # We remember this milestone so extra enemies do not give another level bonus.
+            # Do not award the same room-clear bonus a second time.
             player["completed_levels"].append(difficulty)
-            # We permanently increase the player's base attack after earning the level reward.
+            # Permanently increases base attack after the room reward is earned.
             player["atk"] += ATTACK_BONUS_PER_LEVEL
-            # We permanently raise the HP limit as part of the level reward.
+            # Permanently raises Max HP as part of the room reward.
             player["max_hp"] += MAX_HP_BONUS_PER_LEVEL
-            # We raise the current HP with the new HP limit so the bonus is immediately useful.
+            # Raises the current HP with the new HP limit so the bonus is immediately useful.
             player["hp"] += MAX_HP_BONUS_PER_LEVEL
             player["gold"] += LEVEL_COMPLETION_GOLD.get(difficulty, 0)
             newly_completed.append(difficulty)
     return newly_completed
 
 
-# We give one-time ATK, Max HP, and Gold rewards when a quota is first met.
+# Grants the room-clear ATK, Max HP, and Gold bonuses only once.
 # It saves the actual Gold before/after values for the reward table.
 # The next standard equipment tier is added without charging the player.
 def process_level_completion(difficulty, enemy):
-    # We give the level reward only once for each difficulty.
-    # We apply the one-time level reward and record the real before-and-after Gold values.
-    # We give this bonus once per difficulty, not every time another optional enemy is defeated.
+    # Gives the level reward only once for each difficulty.
+    # Applies the one-time reward and records the Gold balance before and after.
+    # Gives the bonus once per difficulty, only when the room is fully cleared.
     # The Gold Before amount is taken after the enemy reward and before the separate level bonus.
-    # We use the completed-level list to prevent earning this reward twice.
+    # Uses the completed-level list to prevent earning this reward twice.
     if difficulty in player["completed_levels"]:
         return None
 
-    # No reward until three enemies from this exact difficulty are defeated.
+    # No reward until every enemy in this room has been defeated.
     if not is_level_complete(difficulty):
         return None
 
-    # We remember all the starting stats before applying this level reward.
+    # Stores all the starting stats before applying this level reward.
     old_atk = player["atk"]
     old_max_hp = player["max_hp"]
     # Remember the gold balance before adding the level bonus.
-    # We save the Gold balance before the bonus so our reward table can show a real Before value.
+    # Saves the Gold balance before the bonus so the reward table can show a real Before value.
     old_gold = player["gold"]
     bonus_gold = LEVEL_COMPLETION_GOLD.get(difficulty, 0)
     old_gear = {slot: equipped_piece(slot) for slot in EQUIPMENT_SLOTS}
     old_tier = current_equipment_tier()
 
     # Remember this completion permanently to avoid duplicate bonuses.
-    # We remember this milestone so extra enemies do not give another level bonus.
+    # Do not award the same room-clear bonus a second time.
     player["completed_levels"].append(difficulty)
-    # We permanently increase the player's base attack after earning the level reward.
+    # Permanently increases base attack after the room reward is earned.
     player["atk"] += ATTACK_BONUS_PER_LEVEL
-    # We permanently raise the HP limit as part of the level reward.
+    # Permanently raises Max HP as part of the room reward.
     player["max_hp"] += MAX_HP_BONUS_PER_LEVEL
-    # We raise the current HP with the new HP limit so the bonus is immediately useful.
+    # Raises the current HP with the new HP limit so the bonus is immediately useful.
     player["hp"] += MAX_HP_BONUS_PER_LEVEL
-    # We add the level-completion Gold only after the required victories are met.
+    # Adds the level-completion Gold only after the required victories are met.
     player["gold"] += bonus_gold
 
     display_name = difficulty
@@ -2963,7 +2997,7 @@ def process_level_completion(difficulty, enemy):
     gear_notes = []
     gear_changes = []
     if current_equipment_tier() != old_tier:
-        # We switch to the next free standard gear set while keeping purchased gear owned.
+        # Switches to the next free standard gear set while keeping purchased gear owned.
         player["equipped"].clear()
         for slot in EQUIPMENT_SLOTS:
             new_piece = standard_piece(slot)
@@ -2982,7 +3016,7 @@ def process_level_completion(difficulty, enemy):
             enemy=enemy
         )
 
-    # We return the before-and-after data so the reward screen can show actual numbers.
+    # Returns the before-and-after data so the reward screen can show actual numbers.
     return {
         "gear_notes": gear_notes,
         "gear_changes": gear_changes,
@@ -2993,36 +3027,37 @@ def process_level_completion(difficulty, enemy):
         "new_atk": player["atk"],
         "old_max_hp": old_max_hp,
         "new_max_hp": player["max_hp"],
-        # We include the original Gold balance so the display can compare it with the result.
+        # Includes the original Gold balance so the display can compare it with the result.
         "old_gold": old_gold,
-        # We include the updated Gold balance after adding the bonus.
+        # Includes the updated Gold balance after adding the bonus.
         "new_gold": player["gold"],
         "gold_bonus": bonus_gold
     }
 
 
-# We show the real stats before and after the new level reward.
-# We show actual Gold before and after the level bonus; enemy Gold was added earlier.
+# Shows the real stats before and after the new level reward.
+# Shows the Gold change from the one-time room-clear bonus only.
 def show_level_completion_rewards(reward, old_rank, new_rank):
     """Readable reward summary after meeting a difficulty milestone."""
-    # We display the stat changes, Gold bonus, new gear, and next-room instructions.
+    # Displays the stat changes, Gold bonus, new gear, and next-room instructions.
     section(f"LEVEL REQUIREMENT MET: {reward['difficulty'].upper()}")
-    # We only show this part when the corresponding reward was actually granted.
+    # Displays this part only when the reward was earned.
     if reward["difficulty"] == "Boss":
         print("The final Boss has been defeated. Well done!")
     else:
-        print(f"3 required {reward['difficulty']} victories achieved! ")
-        print("The next room is unlocked; remaining enemies are optional.")
+        beaten, total = room_enemy_progress(reward["difficulty"])
+        print(f"{room_name(ROOM_FOR_DIFFICULTY[reward['difficulty']])} cleared ({beaten}/{total}).")
+        print("Next room unlocked.")
 
     section("YOUR LEVEL REWARDS")
-    # We show each reward with its previous value, new value, and actual increase.
+    # Shows each reward with its previous value, new value, and actual increase.
     print_table(
         ["Stat", "Before", "After", "Gained"],
         [["Base ATK", reward["old_atk"], reward["new_atk"],
           f"+{reward['new_atk'] - reward['old_atk']}"],
          ["Max HP", reward["old_max_hp"], reward["new_max_hp"],
           f"+{reward['new_max_hp'] - reward['old_max_hp']}"],
-         # We show the actual Gold balance before and after the level bonus.
+         # Shows the actual Gold balance before and after the level bonus.
          ["Gold", reward["old_gold"], reward["new_gold"],
           f"+{reward['gold_bonus']} Gold"]],
         max_width=22
@@ -3031,7 +3066,7 @@ def show_level_completion_rewards(reward, old_rank, new_rank):
     if old_rank["rank"] != new_rank["rank"]:
         print(f"Rank Up: {old_rank['rank']} -> {new_rank['rank']}")
 
-    # We only show this part when the corresponding reward was actually granted.
+    # Displays this part only when the reward was earned.
     if reward["gear_changes"]:
         section("FREE EQUIPMENT - AUTOMATICALLY EQUIPPED")
         print_table(["Slot", "Previously Using", "New Free Gear", "New Stats"],
@@ -3039,56 +3074,43 @@ def show_level_completion_rewards(reward, old_rank, new_rank):
         print("Your old shop purchases remain owned and can be found in Inventory.")
 
     section("NEWLY UNLOCKED")
-    # We only show this part when the corresponding reward was actually granted.
+    # Displays this part only when the reward was earned.
     if reward["next_tier"]:
         print(f"Next Level: {reward['next_tier']}")
         print(f"New Shop Upgrades: {reward['next_tier']} equipment is now available.")
-        print("Next Step: Choose Travel to Room and explore the next area.")
-        print("Beyond the next gate, the veil hides stronger steel...")
+        print(f"Objective: {current_objective_text()}")
     else:
         print("Vharok has fallen! Dreadveil\'s seal on the Last Gate is broken.")
-        print("Next Step: Travel to the Last Gate and leave the curse behind.")
+        print(f"Objective: {current_objective_text()}")
 
 
-# We show how many wins count toward each three-enemy requirement.
+# Shows how many of the room's current enemies have been defeated.
 def show_progress_summary():
-    # We show the player's current rank and how many wins count in each tier.
-    # We show how close the player is to the three-victory quota for each tier.
+    """Display live requirements, including enemies added by the admin."""
     rank = get_player_rank_info()
-
     print(f"Rank                 : {rank['rank']}")
     print(f"Total Wins           : {player['wins']}")
     for difficulty in ("Weak", "Intermediate", "Strong"):
-        # We count wins for this specific tier; extra weaker enemies cannot skip the next tier.
-        count = defeated_count_for_difficulty(difficulty)
-        print(f"{difficulty:<20} : {min(count, 3)}/3 required"
-              f" ({max(0, count - 3)} bonus victories)")
+        done, total = room_enemy_progress(difficulty)
+        print(f"{difficulty:<20} : {done}/{total} defeated"
+              f" ({max(0, total - done)} remaining)")
     print(f"Unlocked Difficulties: {get_unlocked_difficulties()}")
-    print(f"Next Goal            : {rank['next_unlock']}")
-    print(
-        f"Completed Levels     : "
-        f"{', '.join(player['completed_levels']) or 'None'}"
-    )
-    print(
-        f"Level Clear Bonus    : +{ATTACK_BONUS_PER_LEVEL} ATK, "
-        f"+{MAX_HP_BONUS_PER_LEVEL} Max HP"
-    )
+    print(f"Next Goal            : {current_objective_text()}")
+    print("Rooms Cleared        : "
+          + (", ".join(level for level in LEVEL_ORDER
+                       if is_level_complete(level)) or "None"))
+    print("Clear Rewards Earned : "
+          + (", ".join(player['completed_levels']) or "None"))
+    print(f"Level Clear Bonus    : +{ATTACK_BONUS_PER_LEVEL} ATK, "
+          f"+{MAX_HP_BONUS_PER_LEVEL} Max HP (once per room)")
 
 
-# ---------------------------------------------------------------
-# DUNGEON MAP (GRAPH)
-# Rooms are vertices and passages are two-way labelled edges.
-# A room can be entered only if a path from the entrance exists that
-# passes through quota-completed rooms, in difficulty order.
-# ---------------------------------------------------------------
-
-# We find all connected rooms from the saved passages, not a prewritten route.
 def get_neighbors(room_id):
-    # We return every room connected to the given room
-    # We find directly connected rooms from our stored graph edges.
+    # Returns every room connected to the given room
+    # Finds directly connected rooms from the stored graph edges.
     neighbors = []
 
-    # We collect neighbors by looking at both ends of every stored passage.
+    # Collects neighbors by looking at both ends of every stored passage.
     for link in room_connections:
         if link["a"] == room_id:
             neighbors.append((link["b"], link["label"]))
@@ -3098,62 +3120,49 @@ def get_neighbors(room_id):
     return sorted(neighbors)
 
 
-# We return only the enemies assigned to the selected room.
+# Returns only the enemies assigned to the selected room.
 def get_room_enemies(room_id):
-    # We select the enemies assigned to a particular room.
+    # Selects the enemies assigned to a particular room.
     return [mob for mob in mob_list if mob["room"] == room_id]
 
 
-# We return true if every enemy in a room was defeated by this player.
-# This is separate from meeting the three-victory requirement for progression.
+# Returns true if every enemy in a room was defeated by this player.
+# This uses the same full-clear requirement as room progression.
 def is_room_cleared(room_id, cleared_ids):
     # A room is cleared when every enemy inside it is in cleared_ids
-    # We check if every enemy in the room has been beaten, which matters for optional treasure rewards.
+    # Room clearance controls both outgoing gates and treasure rewards.
     return all(mob["id"] in cleared_ids for mob in get_room_enemies(room_id))
 
 
-# We make a set of enemy IDs the current player has defeated.
+# Makes a set of enemy IDs the current player has defeated.
 def player_cleared_ids():
     # Only enemies the player really defeated count as cleared
-    # We retrieve the IDs of enemies this player has already defeated.
+    # Retrieves the IDs of enemies this player has already defeated.
     return set(player.get("defeated_ids", []))
 
 
-# We check whether the current tier reached three victories before opening the next
-# gate.
-# The exit has a separate condition: the boss must be defeated.
+# Every enemy in the room must be defeated before its outgoing gate opens.
+# The exit requires the final Boss room to be completely cleared.
 def room_gate_satisfied(room_id, cleared_ids):
-    """A gate needs three defeated enemies from the preceding room's tier.
-
-    Clearing every enemy is OPTIONAL. The exit still requires Boss defeat.
-    """
-    # We check the room unlock requirement before allowing travel through a gate.
-    # The room gate uses required tier wins, so we never need to defeat every extra admin-added enemy.
+    """A room unlocks its next passage only after all of its enemies are defeated."""
     if room_id in (ENTRANCE_ROOM_ID, EXIT_ROOM_ID):
         return True
-    difficulty = next((tier for tier, rid in ROOM_FOR_DIFFICULTY.items()
-                       if rid == room_id), None)
-    if difficulty == "Boss":
-        return all_bosses_defeated(cleared_ids)
-    return (difficulty is not None and
-            # We count wins for this specific tier; extra weaker enemies cannot skip the next tier.
-            defeated_count_for_difficulty(difficulty, cleared_ids) >= 3)
+    enemies = get_room_enemies(room_id)
+    return bool(enemies) and all(mob["id"] in cleared_ids for mob in enemies)
 
 
-# We use a graph search from the entrance to find rooms the player can enter.
-# A room is included only when the required earlier tiers have been completed.
 def get_accessible_rooms(cleared_ids=None):
-    # We walk the saved graph while respecting the player's unlocked routes.
+    # Walks the saved graph while respecting the player's unlocked routes.
     if cleared_ids is None:
         cleared_ids = player_cleared_ids()
     if ENTRANCE_ROOM_ID not in room_records:
         return set()
     visited = {ENTRANCE_ROOM_ID}
     frontier = [ENTRANCE_ROOM_ID]
-    # We explore every reachable room in FIFO order for BFS routing.
+    # Explores every reachable room in FIFO order for BFS routing.
     while frontier:
         room_id = frontier.pop(0)
-        # We read neighbors from stored passages rather than assuming every room is connected.
+        # Uses saved passage connections to find adjacent rooms.
         for neighbor, _ in get_neighbors(room_id):
             if neighbor in visited or neighbor not in room_records:
                 continue
@@ -3169,41 +3178,37 @@ def get_accessible_rooms(cleared_ids=None):
     return visited
 
 
-# We check whether the enemy's room is currently reachable.
+# Checks whether the enemy's room is currently reachable.
 def is_enemy_reachable(mob, cleared_ids=None):
-    # We check whether the opponent's room can currently be reached.
     return mob["room"] in get_accessible_rooms(cleared_ids)
 
 
-# We read the player's saved position and falls back to the entrance if invalid.
+# Reads the player's saved position and falls back to the entrance if invalid.
 def current_room_id():
     # The room the player is standing in (saved with the account)
-    # We read the player's present room ID with an entrance fallback.
+    # Reads the player's present room ID with an entrance fallback.
     location = player.get("location", ENTRANCE_ROOM_ID)
     return location if location in room_records else ENTRANCE_ROOM_ID
 
 
-# Marks rooms as locked, open, quota met, or completely cleared for the map.
+# Marks rooms as locked, open, or completely cleared for the map.
 def get_room_status(room_id, defeated_ids, accessible):
-    # We describe whether a room is locked, available, or has optional enemies remaining.
+    """Show locked, open, or fully cleared rooms with no quota-only state."""
     if room_id == ENTRANCE_ROOM_ID:
         return "Entrance"
     if room_id not in accessible:
         return "Locked"
-    # A fully cleared room is different from one with optional enemies left.
+    if room_id == EXIT_ROOM_ID:
+        return "Open"
     if get_room_enemies(room_id) and is_room_cleared(room_id, defeated_ids):
         return "Cleared"
-    if room_gate_satisfied(room_id, defeated_ids):
-        return "Level completed / extras optional"
     return "Open"
 
 
-# We use breadth-first search (BFS) to find a shortest route through room links.
-# The parent records are followed backward to reconstruct the final route.
 def find_route(start_id, target_id):
     # Breadth-first search for the shortest list of rooms between two rooms
-    # We use breadth-first search to find a valid path between rooms on our saved map.
-    # Our breadth-first search explores one layer of rooms at a time to find a short valid path.
+    # Uses breadth-first search to find a valid path between rooms on the saved map.
+    # The breadth-first search explores one layer of rooms at a time to find a short valid path.
     if start_id not in room_records or target_id not in room_records:
         return None
 
@@ -3211,14 +3216,14 @@ def find_route(start_id, target_id):
     parents = {start_id: (None, None)}
     frontier = [start_id]
 
-    # We visit rooms until no unprocessed BFS nodes remain.
+    # Visits rooms until no unprocessed BFS nodes remain.
     while frontier:
         room_id = frontier.pop(0)
 
         if room_id == target_id:
             break
 
-        # We read neighbors from stored passages rather than assuming every room is connected.
+        # Uses saved passage connections to find adjacent rooms.
         for neighbor, label in get_neighbors(room_id):
             if neighbor not in parents:
                 parents[neighbor] = (room_id, label)
@@ -3230,7 +3235,7 @@ def find_route(start_id, target_id):
     route = []
     room_id = target_id
 
-    # We follow the saved parent links backward to rebuild the route.
+    # Follows the saved parent links backward to rebuild the route.
     while room_id is not None:
         parent, label = parents[room_id]
         route.append((room_id, label))
@@ -3241,17 +3246,17 @@ def find_route(start_id, target_id):
     return route
 
 
-# We use a stack to visit connected rooms deeply before returning to earlier paths.
+# Uses depth-first search to explore one route before backtracking.
 def depth_first_traversal(start_id):
     # Visits rooms by going as deep as possible before backtracking
-    # We visit rooms by depth-first search to show a real graph traversal.
-    # Our depth-first traversal explores as far as possible before coming back to another route.
+    # Visits rooms by depth-first search to show a real graph traversal.
+    # The depth-first traversal explores as far as possible before coming back to another route.
     order = []
     visited = set()
     # DFS uses a stack and remembers visited rooms to avoid repeating a loop.
     stack = [start_id]
 
-    # We pop the next room from our DFS stack until it is empty.
+    # Pops the next room from the DFS stack until it is empty.
     while stack:
         room_id = stack.pop()
 
@@ -3261,7 +3266,7 @@ def depth_first_traversal(start_id):
         visited.add(room_id)
         order.append(room_id)
 
-        # We read neighbors from stored passages rather than assuming every room is connected.
+        # Uses saved passage connections to find adjacent rooms.
         for neighbor, _ in reversed(get_neighbors(room_id)):
             if neighbor not in visited:
                 stack.append(neighbor)
@@ -3269,17 +3274,15 @@ def depth_first_traversal(start_id):
     return order
 
 
-# We build the map from actual room, enemy, and passage records.
-# The Q marker means progression is unlocked but optional enemies remain.
+# Builds the map from actual room, enemy, and passage records.
+# Each map status reflects full room clearance.
 def dungeon_map_lines(defeated_ids, lineup_ids=()):
-    # We build the map display from the live room and enemy records
-    # We generate the map from the current rooms and connections.
+    # Builds the map display from the live room and enemy records
+    # Generates the map from the current rooms and connections.
     accessible = get_accessible_rooms(set(defeated_ids))
-    markers = {"Entrance": "E", "Locked": "L", "Cleared": "C", "Open": "O",
-               "Level completed / extras optional": "Q"}
+    markers = {"Entrance": "E", "Locked": "L", "Cleared": "C", "Open": "O"}
 
-    lines = ["Legend: [E] Entrance  [O] Open  [Q] Quota met/optional foes  "
-             "[C] Cleared all  [L] Locked", ""]
+    lines = ["Legend: [E] Entrance  [O] Open  [C] Cleared all  [L] Locked", ""]
 
     for room_id, room in room_records.items():
         status = get_room_status(room_id, set(defeated_ids), accessible)
@@ -3297,7 +3300,7 @@ def dungeon_map_lines(defeated_ids, lineup_ids=()):
                 f"({mob['type']}, {state})"
             )
 
-        # We read neighbors from stored passages rather than assuming every room is connected.
+        # Uses saved passage connections to find adjacent rooms.
         neighbors = get_neighbors(room_id)
 
         if not neighbors:
@@ -3318,22 +3321,22 @@ MAP_MAX_BOX_WIDTH = 31
 MAP_BOX_GAP = 3
 
 
-# We prepare each room's enemy and completion details for the visual map.
+# Prepares each room's enemy and completion details for the visual map.
 def get_room_levels():
-    # We group rooms by their distance (in steps) from the entrance using
+    # Groups rooms by their distance (in steps) from the entrance using
     # breadth-first search. Each group becomes one row of the drawing.
-    # We organize graph rooms by their position in the dungeon layout.
+    # Organizes graph rooms by their position in the dungeon layout.
     if ENTRANCE_ROOM_ID not in room_records:
         return []
 
     depth = {ENTRANCE_ROOM_ID: 0}
     frontier = [ENTRANCE_ROOM_ID]
 
-    # We continue exploring saved connections until every reachable room is checked.
+    # Continues exploring saved connections until every reachable room is checked.
     while frontier:
         room_id = frontier.pop(0)
 
-        # We read neighbors from stored passages rather than assuming every room is connected.
+        # Uses saved passage connections to find adjacent rooms.
         for neighbor, _ in get_neighbors(room_id):
             if neighbor not in depth and neighbor in room_records:
                 depth[neighbor] = depth[room_id] + 1
@@ -3348,7 +3351,7 @@ def get_room_levels():
     for number in range(1, len(levels)):
         above = levels[number - 1]
 
-        # We find where the connected room belongs in the map drawing.
+        # Finds where the connected room belongs in the map drawing.
         def parent_position(room_id):
             parents = [
                 above.index(n) for n, _ in get_neighbors(room_id) if n in above
@@ -3360,14 +3363,13 @@ def get_room_levels():
     return levels
 
 
-# We draw the text box for one room using its real name, status, and contents.
+# Draws the text box for one room using its real name, status, and contents.
 def room_box_lines(room_id, status, defeated_ids, lineup_ids, box_width,
                    here=False):
-    # We build the four text lines of one room box. The player's room is
+    # Builds the four text lines of one room box. The player's room is
     # drawn with a double border.
-    # We draw one room box with its name and status for the text-based map.
-    markers = {"Entrance": "E", "Locked": "L", "Cleared": "C", "Open": "O",
-               "Level completed / extras optional": "Q"}
+    # Draws one room box with its name and status for the text-based map.
+    markers = {"Entrance": "E", "Locked": "L", "Cleared": "C", "Open": "O"}
     inner = box_width - 4
 
     title = f"[{markers[status]}] {room_name(room_id)}"
@@ -3406,9 +3408,9 @@ def room_box_lines(room_id, status, defeated_ids, lineup_ids, box_width,
 # Joins the room boxes and passages into the map displayed in the terminal.
 def dungeon_drawing_lines(defeated_ids, lineup_ids=(), here=None,
                           color_current=False):
-    # We draw the dungeon graph as rows of room boxes joined by lines.
+    # Draws the dungeon graph as rows of room boxes joined by lines.
     # Everything is generated from the live room and passage records.
-    # We combine the room boxes and passage labels into the finished console map.
+    # Combines the room boxes and passage labels into the finished console map.
     levels = get_room_levels()
 
     if not levels:
@@ -3468,7 +3470,7 @@ def dungeon_drawing_lines(defeated_ids, lineup_ids=(), here=None,
         links = [
             (room_id, neighbor)
             for room_id in level
-            # We read neighbors from stored passages rather than assuming every room is connected.
+            # Uses saved passage connections to find adjacent rooms.
             for neighbor, _ in get_neighbors(room_id)
             if neighbor in levels[number + 1]
         ]
@@ -3496,8 +3498,7 @@ def dungeon_drawing_lines(defeated_ids, lineup_ids=(), here=None,
     ]
 
     lines.append("")
-    lines.append("Rooms  : [E] Entrance  [O] Open  [Q] Quota met; extras optional")
-    lines.append("         [C] Fully cleared  [L] Locked")
+    lines.append("Rooms  : [E] Entrance  [O] Open  [C] Fully cleared  [L] Locked")
     lines.append("Enemies: (W)eak (I)ntermediate (S)trong (B)oss "
                  "(Q) In Queue (x) Defeated")
 
@@ -3521,9 +3522,9 @@ def dungeon_drawing_lines(defeated_ids, lineup_ids=(), here=None,
     return lines
 
 
-# We print the dungeon graph so players can see connected and locked rooms.
+# Prints the dungeon graph so players can see connected and locked rooms.
 def display_dungeon_map(pause_after=True):
-    # We print the current graph instead of using a picture that never changes.
+    # Prints the current graph instead of using a picture that never changes.
     header("Dungeon Map (Graph)")
 
     print(f"Current room: {color(room_name(current_room_id()), 'green')}")
@@ -3537,21 +3538,21 @@ def display_dungeon_map(pause_after=True):
         pause()
 
 
-# We show a selected room's information using the current room records.
+# Shows a selected room's information using the current room records.
 def display_room_details():
-    # We show the saved room information and its connecting passages.
+    # Shows the saved room information and its connecting passages.
     header("Room Details and Passages")
 
-    # We print the current map using the player's actual saved progress.
+    # Prints the current map using the player's actual saved progress.
     for line in dungeon_map_lines(player["defeated_ids"], encounter_lineup):
         print(line)
 
     pause()
 
 
-# We let the player choose a room from a numbered list of valid options.
+# Allows the player to choose a room from a numbered list.
 def choose_room(prompt="Enter Room ID or number: ", allow_entrance=True):
-    # We ask for a destination and reject unknown room IDs.
+    # Asks for a destination and rejects unknown room IDs.
     key = input(prompt).strip().upper()
     rooms = list(room_records)
     room_id = (rooms[int(key) - 1] if key.isdigit()
@@ -3568,10 +3569,10 @@ def choose_room(prompt="Enter Room ID or number: ", allow_entrance=True):
     return room_id
 
 
-# We find and shows a route plus whether the player can actually travel it.
+# Finds and shows a route plus whether the player can actually travel it.
 def show_route_to_room():
     # Shortest path search (BFS) from the player's room to a chosen room
-    # We find the route to a selected destination and explain any locked gate.
+    # Finds the route to a selected destination and explain any locked gate.
     header("Find Route to Room")
 
     print_table(["Room ID", "Name"],
@@ -3585,7 +3586,7 @@ def show_route_to_room():
         return
 
     start = current_room_id()
-    # We search the real graph to build the route shown to the player.
+    # Searches the real graph to build the route shown to the player.
     route = find_route(start, target)
 
     if route is None:
@@ -3616,7 +3617,7 @@ def show_route_to_room():
         print("\nThe destination is still sealed.")
 
     if blocked:
-        print("You must meet the 3-enemy requirement in these rooms first: "
+        print("Clear all remaining enemies in: "
               + ", ".join(room_name(r) for r in blocked))
     elif target in accessible:
         print("\nThe route is open.")
@@ -3624,13 +3625,13 @@ def show_route_to_room():
     pause()
 
 
-# We print the DFS visit order so the graph traversal can be demonstrated.
+# Prints the DFS visit order so the graph traversal can be demonstrated.
 def show_traversal():
     # Depth-first traversal of the whole dungeon from the entrance
-    # We display the order returned by the graph traversal code.
+    # Displays the order returned by the graph traversal code.
     header("Dungeon Exploration Order (DFS)")
 
-    # We visit rooms in DFS order using saved connections.
+    # Traverses rooms using depth-first search (DFS) and saved passages.
     order = depth_first_traversal(ENTRANCE_ROOM_ID)
 
     for step, room_id in enumerate(order, 1):
@@ -3645,11 +3646,12 @@ def show_traversal():
     pause()
 
 
-# We group the player's map, room details, route search, and traversal options.
+# Groups the player's map, room details, route search, and traversal options.
 def dungeon_map_menu():
-    # We let the player choose the map, room details, route search, or traversal.
-    # We repeat this menu or action until the player gives a valid choice or leaves.
+    # Allows the player to view the map, inspect rooms, or check routes.
+
     while True:
+        clear_screen()
         header("Dungeon Map and Routes")
         print("[1] View Dungeon Map")
         print("[2] Room Details and Passages")
@@ -3657,7 +3659,7 @@ def dungeon_map_menu():
         print("[4] Exploration Order (DFS Traversal)")
         print("\n[0] Back")
 
-        choice = input("\nEnter choice [0-4]: ").strip()
+        choice = read_menu_choice("\nEnter choice [0-4]: ", 0, 4)
 
         if choice == "1":
             display_dungeon_map()
@@ -3677,26 +3679,27 @@ def dungeon_map_menu():
 # LOGIN
 # ---------------------------------------------------------------
 
-# We check signup details and saves a new player record with a unique ID.
+# Checks signup details and saves a new player record with a unique ID.
 def register_new_account(username, password):
     # IDs are reserved in the session archive, even after account deletion.
-    # We start player registration from the login menu.
+    # Starts player registration from the login menu.
     return create_account_with_unique_id(username, password)
 
 
-# We ask for account credentials, checks the saved records, and opens the right menu.
+# Asks for account credentials, checks the saved records, and opens the right menu.
 def login_screen():
     # Main screen before entering the game
-    # We check the username and password, then load only that account's saved progress.
-    # We repeat this menu or action until the player gives a valid choice or leaves.
+    # Checks the username and password, then load only that account's saved progress.
+
     while True:
+        clear_screen()
         header("Dreadveil: The Last Gate")
 
         print("[1] Login")
         print("[2] Create New Account")
         print("\n[0] Exit Game")
 
-        choice = input("\nEnter choice [0-2]: ").strip()
+        choice = read_menu_choice("\nEnter choice [0-2]: ", 0, 2)
 
         if choice == "1":
             username = input("Enter Username: ").strip()
@@ -3711,7 +3714,7 @@ def login_screen():
                 username in account_records
                 and account_records[username]["password"] == password
             ):
-                # We clear temporary data from the last login session
+                # Clears temporary data from the last login session
                 reset_session_state()
                 load_player_from_account(username)
 
@@ -3730,11 +3733,8 @@ def login_screen():
                         print(f"You are standing in: "
                               f"{room_name(current_room_id())}")
 
-                    if encounter_lineup:
-                        print(
-                            f"Your Encounter Queue was restored "
-                            f"({len(encounter_lineup)} enemies waiting)."
-                        )
+                    if encounter_lineup and player["status"] != "Victorious":
+                        print(f"Queue restored: {len(encounter_lineup)} waiting.")
 
                     pause()
                     open_adventure_menu()
@@ -3762,10 +3762,11 @@ def login_screen():
             invalid_choice()
 
 
-# We collect the new player's details and confirms the account was created.
+# Collects the new player's details and confirms the account was created.
 def signup_screen():
-    # We create a new player account after checking the input
-    # We collect the new account details and reject names that are already taken.
+    # Creates a new player account after checking the input
+    # Collects new account details and rejects usernames that already exist.
+    clear_screen()
     header("Create Account")
 
     username = input("Enter New Username: ").strip()
@@ -3813,35 +3814,59 @@ def signup_screen():
 # PLAYER MENU
 # ---------------------------------------------------------------
 
-# We open the player's options after a successful login.
+# Opens the player's options after a successful login.
 def open_adventure_menu():
-    # Main menu after a player logs in
-    # We load the logged-in player's game and show their available actions.
-    # We repeat this menu or action until the player gives a valid choice or leaves.
+    # Show a read-only archive after a confirmed final escape.
+    # Gameplay actions remain available only before the story ends.
     while True:
+        clear_screen()
         header("Dreadveil: The Last Gate")
+        if player["status"] == "Victorious":
+            section("JOURNEY COMPLETE - RECORDS")
+            print(f"  PLAYER: {player['name']} ({player['id']})")
+            print(f"  FINAL SCORE: {player['score']}  |  "
+                  f"WINS: {player['wins']}  |  LOSSES: {player['losses']}")
+            print("  STATUS: Escaped Dreadveil | Story complete")
+            print("\033[1;91m  The World Eater has fallen. Dreadveil can no longer claim your soul.\033[0m")
+            print("\n[1] Player Statistics")
+            print("[2] Battle History")
+            print("[3] Activity History")
+            print("[4] Dungeon Map and Routes")
+            print("[5] Inventory and Equipment")
+            print("\n[0] Logout")
+            choice = read_menu_choice("\nEnter choice [0-5]: ", 0, 5)
+            if choice == "1":
+                view_stats()
+            elif choice == "2":
+                view_own_battle_history()
+            elif choice == "3":
+                view_own_activity_history()
+            elif choice == "4":
+                dungeon_map_menu()
+            elif choice == "5":
+                view_inventory()
+            elif choice == "0":
+                if not save_current_player_account():
+                    print("\nSave failed. Please check file access.")
+                    pause()
+                    continue
+                reset_session_state()
+                print("\nRecords saved. Logging out...")
+                break
+            else:
+                invalid_choice()
+            continue
 
         show_live_panel()
-
-        print("\n[1] " + ("View Completed Journey" if player["status"]
-                          == "Victorious" else "Enter Dungeon"))
+        print("\n[1] Enter Dungeon")
         print("[2] View Player Statistics")
         print("[3] Dungeon Map and Routes")
         print("[4] Enemy Information")
         print("[5] How to Play")
         print("\n[0] Logout")
-
-        choice = input("\nEnter choice [0-5]: ").strip()
-
+        choice = read_menu_choice("\nEnter choice [0-5]: ", 0, 5)
         if choice == "1":
-            if player["status"] == "Victorious":
-                story_panel("Dreadveil: Journey Complete", ENDING_TEXT, "green")
-                print(f"Final Score: {player['score']}")
-                pause()
-            elif dungeon_menu():
-                reset_session_state()
-                print("\nYour journey has ended. Returning to the main menu...")
-                break
+            dungeon_menu()
         elif choice == "2":
             view_stats()
         elif choice == "3":
@@ -3851,25 +3876,43 @@ def open_adventure_menu():
         elif choice == "5":
             show_instructions()
         elif choice == "0":
-            # We save the player (including the queue) before logging out
-            # We cancel or reverse the change when the player record cannot be saved.
             if not save_current_player_account():
-                print("\nProgress could not be saved. Please check file access.")
+                print("\nSave failed. Please check file access.")
                 pause()
                 continue
             reset_session_state()
-
-            print("\nYour progress has been saved.")
-            print("Logging out...")
+            print("\nYour progress has been saved. Logging out...")
             break
         else:
             invalid_choice()
 
 
-# We display the current player's rank, stats, location, and progression.
+def view_own_battle_history():
+    # Completion records are scoped to the logged-in player's permanent ID.
+    header("My Battle History")
+    for line in battle_history_lines(player["name"]):
+        print(line)
+    pause()
+
+
+def view_own_activity_history():
+    # Completed games still show records, but Undo is disabled.
+    header("My Activity History")
+    entries = read_full_activity_log(player["name"])
+    if not entries:
+        print("No recorded activities.")
+    else:
+        print_table(
+            ["Action ID", "Date / Time", "Action", "Details"],
+            [[item["id"], item["time"], item["action"], item["details"]]
+             for item in entries], max_width=42)
+    pause()
+
+
+# Displays the current player's rank, stats, location, and progression.
 def view_stats(pause_after=True):
-    # We show the player's current information
-    # We show the player's actual rank, HP, attack, Gold, and progress.
+    # Shows the player's current information
+    # Shows the player's actual rank, HP, attack, Gold, and progress.
     header("Player Statistics")
 
     print(f"Player ID         : {player['id']}")
@@ -3897,10 +3940,10 @@ def view_stats(pause_after=True):
         pause()
 
 
-# We show items and equipment from the player's actual saved inventory.
+# Shows items and equipment from the player's actual saved inventory.
 def view_inventory(pause_after=True, show_header=True):
-    # We show how many items the player currently has
-    # We display owned items and equipment using the current account records.
+    # Shows how many items the player currently has
+    # Displays owned items and equipment using the current account records.
     if show_header:
         header("Inventory")
 
@@ -3947,12 +3990,12 @@ def view_inventory(pause_after=True, show_header=True):
         pause()
 
 
-# We list enemies and optionally filters out enemies that cannot be fought now.
+# Lists enemies and optionally filters out enemies that cannot be fought now.
 def view_enemy_records(pause_after=True, only_available=False,
                        show_header=True):
-    # We show information about all enemies. When another screen already
+    # Shows information about all enemies. When another screen already
     # printed the main title, only a sub-heading is shown.
-    # We show real enemies from the stored records, with optional room and availability filters.
+    # Shows real enemies from the stored records, with optional room and availability filters.
     if show_header:
         header("Enemy Information")
     else:
@@ -3964,7 +4007,7 @@ def view_enemy_records(pause_after=True, only_available=False,
 
     print(f"Current Rank    : {rank['rank']}")
     print(f"Unlocked Levels : {get_unlocked_difficulties()}")
-    print(f"Next Goal       : {rank['next_unlock']}")
+    print(f"Next Goal       : {current_objective_text()}")
     print(f"You Are In      : {room_name(here)}")
     print()
 
@@ -3974,7 +4017,7 @@ def view_enemy_records(pause_after=True, only_available=False,
 
     for mob in visible_mobs:
 
-        # We do not allow defeated enemies to be treated as available opponents.
+        # Defeated enemies are not available for another battle.
         if mob["defeated"]:
             status = "Defeated"
         elif mob["id"] in encounter_lineup:
@@ -4013,119 +4056,34 @@ def view_enemy_records(pause_after=True, only_available=False,
         pause()
 
 
-# Explains the actual game rules, including three required wins and optional enemies.
+# Shows a short guide to the main game rules.
 def show_instructions():
-    # We give the player the basic rules of the game
-    # We explain the controls, combat rules, and three-victory unlock system before playing.
+    # Only the important rules are shown here. More details appear in game menus.
     header("How to Play")
 
-    section("Goal")
-    print(f"- Begin at {room_name(ENTRANCE_ROOM_ID)}. Defeat three guardians")
-    print(f"  in each regular difficulty, face Vharok in {room_name('ROOM-004')},")
-    print(f"  and escape through {room_name(EXIT_ROOM_ID)}.")
+    section("Your Goal")
+    print("- Defeat ALL enemies in a room to unlock the next room.")
+    print("- Defeat Vharok, reach The Last Gate, and escape.")
 
-    section("The Six Rooms (one room per difficulty)")
-    print("  " + " -> ".join(room_name(room_id) for room_id in ROOM_ORDER))
-    print("- Move only through connected passages shown on the live map.")
-    print("- Unlock Intermediate with 3 Weak victories (3 total minimum).")
-    print("- Unlock Strong with 3 Intermediate victories (6 total minimum).")
-    print("- Unlock the Boss room with 3 Strong victories (9 total minimum).")
-    print("- Defeat Vharok to open The Last Gate; step through to finish.")
+    section("Travel and Queue (FIFO)")
+    print("- Travel through unlocked rooms. Follow your current OBJECTIVE.")
+    print("- Add an enemy to the queue before choosing Start Battle.")
+    print("- The FRONT enemy fights first. Go to its room to battle.")
+    print("- Your queue stays saved when you travel, retreat, or lose.")
 
-    section("Progression")
-    print("- Beginner: 0-2 Weak victories; Weak available.")
-    print("- Adventurer: 3 Weak victories; Intermediate available.")
-    print("- Elite: 3 Weak + 3 Intermediate victories; Strong available.")
-    print("- Master: 3 Weak + 3 Intermediate + 3 Strong; Boss available.")
-    print("- Extra enemies added by the admin are OPTIONAL once that")
-    print("  difficulty's 3-victory requirement has been met.")
-    print("- You may revisit previous rooms to fight remaining enemies.")
-    print("- A treasure chest requires clearing EVERY enemy in its room,")
-    print("  but collecting it is not required to unlock the next room.")
-    print(f"- Meeting a difficulty's requirement gives +{ATTACK_BONUS_PER_LEVEL} ATK "
-          f"and +{MAX_HP_BONUS_PER_LEVEL} Max HP once")
-    print("  and upgrades your free Standard-Issue Sword, Shield and Armor.")
+    section("Battle and Camp")
+    print("- Attack, Defend, use Items, or answer a Challenge question.")
+    print(f"- Rest for {REST_COST} Gold, or visit the Shop for supplies.")
+    print("- Clear a room to unlock its treasure chest and rewards.")
 
-    section("Encounter Queue (FIFO)")
-    print("- Start Battle fights the first queued enemy.")
-    print("  If the queue is empty, the first available enemy is chosen.")
-    print("- Add Enemy to Queue lets you choose the fighting order.")
-    print("  Enemies are fought in the order they were added (FIFO).")
-    print("- View Queue shows queued and available enemies.")
-    print("- View Next Enemy shows who you will fight next.")
-    print("- Victory removes the first queued enemy; retreat keeps it.")
-    print("- View Queue also lets you remove the front enemy without fighting.")
-    print("- Progress and battle actions are saved automatically.")
+    section("Undo Stack (LIFO)")
+    print("- Undo restores the latest action first, even after a victory.")
+    print("- It restores your stats, queue, rewards, and unlocked rooms.")
 
-    section("Battle (every action uses your turn)")
-    print("- Attack  : can miss or land a critical hit")
-    print(f"- Defend  : take {int(DEFEND_DAMAGE_TAKEN * 100)}% damage, "
-          f"next attack +{DEFEND_COUNTER_BONUS}%")
-    print("- Items   : using an item also lets the enemy strike back")
-    print("- Dice of Fate: roll 1-6 for one of six effects, good or bad.")
-    print("  A shield works on the next enemy hit; an attack bonus works on")
-    print("  your next sword attack. Undo can restore the roll and effects.")
-    print("- Challenge: a random question comes from the enemy's difficulty.")
-    print("             Admin can add more Weak, Intermediate, or Strong questions.")
-    print("             The Boss has one fixed challenge question.")
-    print("             Correct = guaranteed hit with bonus damage for this attack.")
-    print("             Wrong = you lose the turn. Challenges award no Gold.")
-    print("- Retreat : leave the battle for free; the enemy fully heals")
-    print("- The Boss becomes ENRAGED below half health.")
-
-    section("Player Undo Stack")
-    print("- The player menu shows only actions available to undo.")
-    print("- Admins can inspect the complete activity history separately.")
-    print("- An empty Undo Stack is shown clearly after permanent results.")
-    print("- Each reversible action (attack, defend, item, challenge,")
-    print("  purchase, equip, rest) pushes a snapshot on the Undo Stack.")
-    print("- Undo pops the newest snapshot first (LIFO) and restores HP, gold,")
-    print("  score, items, equipment, enemy HP and battle effects.")
-    print("- Travel can be undone until a new battle or permanent result.")
-    print("- Victories, defeats, retreats and final escape cannot be undone.")
-
-    section("Camp (between battles)")
-    print("- After a victory or retreat, HP stays as it was.")
-    print(f"- After defeat, you revive with {DEFEAT_REVIVE_PERCENT}% of Max HP.")
-    print(f"- Rest at Camp heals {REST_HEAL_PERCENT}% Max HP "
-          f"for {REST_COST} Gold.")
-    print("- Treasure chests (one per fighting room) pay Gold once the room")
-    print("  is cleared. Use Open Treasure Chest while standing in the room.")
-    print("- The Dungeon Shop sells potions and current-level upgrades.")
-    print("  Future equipment unlocks after three victories in the required difficulty.")
-
-    section("Defeat")
-    print(f"- Lose {DEFEAT_GOLD_LOSS_PERCENT}% of your Gold and respawn at "
-          f"{room_name(ENTRANCE_ROOM_ID)} with "
-          f"{DEFEAT_REVIVE_PERCENT}% of your Max HP.")
-    print("- Your Encounter Queue is cleared. Earlier victories, unlocked")
-    print("  rooms and collected rewards remain saved.")
-    print("- The enemy that defeated you returns to FULL HP, just like")
-    print("  retreat. Its previous wounds will NOT persist on reload.")
-    print("- Retreat keeps the enemy in the queue; defeat clears the queue.")
-
-    section("Items")
-    # We list every valid item with its Gold cost and carry limit.
-    for item in item_records.values():
-        print(f"- {item['name']} ({item['price']} Gold, carry "
-              f"{item['max_carry']}): {describe_item_effect(item)}")
-
-    section("Standard-Issue Equipment (free, automatic)")
-    print(f"- Everyone starts at {room_name(ENTRANCE_ROOM_ID)} with free Weak-tier gear.")
-    print("- Finishing Weak / Intermediate / Strong automatically equips")
-    print("  the next level's three free pieces. Old purchases stay owned.")
-    print("- Shop gear is optional; two choices per equipment type per tier.")
-    print("- Sword SPD raises critical hit chance and reduces missed attacks.")
-
-    print(f"- Your current gear level: {current_equipment_tier()}")
-    for slot in EQUIPMENT_SLOTS:
-        piece = equipped_piece(slot)
-        print(f"- {slot.title()}: {piece['name']} ({describe_piece(piece)})")
-    print("- Which weapons lie beyond the next gate? Keep exploring to find out.")
-
-    section("Optional Shop Equipment (costs Gold)")
-    print("- Shop reveals only the upgrades for your current level.")
-    print("- Old-tier purchases are archived in Inventory, not sold again.")
+    section("Final Escape")
+    print("- Choose Yes at The Last Gate to finish the adventure.")
+    print("- After escape, Undo and gameplay are permanently locked.")
+    print("- You can still view your stats, history, and records.")
 
     pause()
 
@@ -4134,10 +4092,10 @@ def show_instructions():
 # ENCOUNTER QUEUE (FIFO)
 # ---------------------------------------------------------------
 
-# We return undefeated enemies that can be selected in the current room.
+# Returns undefeated enemies that can be selected in the current room.
 def available_room_enemies():
-    # We find eligible enemies not in the queue, ordered by enemy ID.
-    # We find opponents in the current room who have not already been defeated.
+    # Finds eligible enemies not in the queue, ordered by enemy ID.
+    # Finds opponents in the current room who have not already been defeated.
     return sorted(
         (mob for mob in mob_list
          if mob["room"] == current_room_id()
@@ -4149,36 +4107,39 @@ def available_room_enemies():
     )
 
 
-# We show the FIFO encounter queue with its FRONT and REAR positions.
+# Shows the FIFO encounter queue with its FRONT and REAR positions.
 # The dequeue menu is available when no battle is active.
 def display_encounter_lineup(pause_after=False, show_header=True):
-    # We display the queue and eligible enemies in the current room.
-    # We show which enemy is at the FRONT and REAR of our FIFO queue.
+    # Displays the queue and eligible enemies in the current room.
+    # Shows which enemy is at the FRONT and REAR of the FIFO queue.
     # FRONT is the first enemy to be fought. REAR is the last enemy waiting.
     if show_header:
         header("Dungeon Encounter Queue")
     else:
         section("Dungeon Encounter Queue")
 
-    print(f"Room: {room_name(current_room_id())}  |  Waiting: {len(encounter_lineup)}")
-    # We handle an empty queue before trying to use its front item.
+    print(f"Current room: {room_name(current_room_id())}")
+    print(f"Queue: {len(encounter_lineup)} waiting | Stack: {len(undo_stack)} undo action(s)")
+    # An empty queue has no front enemy to select.
     if not encounter_lineup:
-        print("Queue is empty. Add an enemy or choose Start Battle.")
+        print("Queue is empty. Add an enemy before starting a battle.")
     else:
         queued = []
-        # We use the current list order to mark the front and rear, not fixed enemy IDs.
-        # We label Queue entries in their actual FRONT-to-REAR order.
+        # Uses the current list order to mark the front and rear, not fixed enemy IDs.
+        # Labels Queue entries in their actual FRONT-to-REAR order.
         for position, enemy_id in enumerate(encounter_lineup, 1):
             mob = get_enemy_by_id(enemy_id)
-            # We stop here if the enemy ID does not match an existing enemy.
+            # Stops if the chosen enemy ID is not found.
             if mob is None:
                 continue
             marker = "FRONT / REAR" if len(encounter_lineup) == 1 else (
                 "FRONT" if position == 1 else
                 "REAR" if position == len(encounter_lineup) else "Waiting")
+            room_text = ("Here" if mob["room"] == current_room_id()
+                         else room_name(mob["room"]))
             queued.append([mob["id"], mob["name"],
-                           f"{mob['hp']}/{mob['max_hp']}", marker])
-        print_table(["Enemy ID", "Enemy", "HP", "Position"], queued,
+                           f"{mob['hp']}/{mob['max_hp']}", marker, room_text])
+        print_table(["Enemy ID", "Enemy", "HP", "Position", "Room"], queued,
                     max_width=27, numbered=True)
 
     section("Available Room Enemies")
@@ -4191,46 +4152,50 @@ def display_encounter_lineup(pause_after=False, show_header=True):
                       m["type"]] for m in remaining], numbered=True)
 
     if pause_after:
-        # We check if a battle is already active before allowing this action.
-        if current_enemy_id is not None:
+        # Checks for an active battle before continuing.
+        if current_enemy_id is not None or player["status"] == "Victorious":
             pause()
         else:
             print("\n[1] Dequeue Front Enemy\n[0] Back")
-            choice = input("\nChoose [0-1]: ").strip()
+            choice = read_menu_choice("\nChoose [0-1]: ", 0, 1)
             if choice == "1":
                 dequeue_front_from_menu()
             elif choice != "0":
                 invalid_choice()
 
 
-# We remove only the front enemy after confirmation and records the change.
+# Removes only the front enemy after confirmation and records the change.
 # If saving fails, the enemy is put back so the queue stays correct.
 def dequeue_front_from_menu():
-    # We prevent Dequeue from removing the enemy that is currently being fought.
-    # We let the player remove the first waiting enemy when no battle is active.
-    # We check if a battle is already active before allowing this action.
+    # Dequeue is an undoable action except during combat or after escape.
+    if player["status"] == "Victorious":
+        print("Journey complete. The queue is locked.")
+        pause()
+        return
     if current_enemy_id is not None:
         print("You cannot remove an enemy during a battle.")
         pause()
         return
     # An empty queue should display a message instead of causing pop(0) to fail.
-    # We handle an empty queue before trying to use its front item.
+    # An empty queue has no front enemy to select.
     if not encounter_lineup:
         print("The Encounter Queue is empty.")
         pause()
         return
     mob = get_enemy_by_id(encounter_lineup[0])
-    # We leave the current values unchanged if the player does not confirm.
+    # Cancelling leaves the saved values unchanged.
     if not ask_yes_no(f"Remove {mob['name']} from the Queue? (Y/N): "):
         return
-    undo_stack.clear()
     before = lineup_line()
-    # We remove the FRONT enemy first because our encounter queue follows FIFO.
-    # We take only the FRONT enemy out, preserving the order behind it.
+    previous_undo = copy.deepcopy(undo_stack)
+    push_undo(f"Dequeue {mob['name']}")
+    # Removes the FRONT enemy first because the encounter queue follows FIFO.
+    # Takes only the FRONT enemy out, preserving the order behind it.
     removed = encounter_lineup.pop(0)
     if not push_battle_action("Dequeue", f"Removed {mob['name']} from the Encounter Queue."):
         encounter_lineup.insert(0, removed)
-        print("The Queue was not changed because saving failed.")
+        undo_stack[:] = previous_undo
+        print("Queue unchanged. Save failed.")
         pause()
         return
     section("Queue Updated (FIFO)")
@@ -4240,11 +4205,11 @@ def dequeue_front_from_menu():
     pause()
 
 
-# We build a short FRONT-to-REAR queue display for before/after messages.
+# Builds a short FRONT-to-REAR queue display for before/after messages.
 def lineup_line():
     # One-line view of the queue from front to rear
-    # We join queued enemy names in the same order they will be fought.
-    # We handle an empty queue before trying to use its front item.
+    # Joins queued enemy names in the same order they will be fought.
+    # An empty queue has no front enemy to select.
     if not encounter_lineup:
         return "(empty)"
 
@@ -4252,17 +4217,16 @@ def lineup_line():
     return f"FRONT [{names}] REAR"
 
 
-# We validate the selected enemy before adding it to the back of the queue.
+# Validates the selected enemy before adding it to the back of the queue.
 # Already defeated, duplicate, locked, or wrong-room enemies are rejected.
 def add_enemy_to_lineup():
-    # We let the player choose an available enemy and ENQUEUE it at the rear.
-    # We check an enemy's ID, room, defeat status, and difficulty before adding it to the queue rear.
+    # Allows the player to add an available enemy to the rear of the queue.
+    # Checks an enemy's ID, room, defeat status, and difficulty before adding it to the queue rear.
     header("Add Enemy to Encounter Queue")
 
-    # We check the player's current location before deciding what is allowed.
+    # Checks the player's current location before deciding what is allowed.
     if current_room_id() in (ENTRANCE_ROOM_ID, EXIT_ROOM_ID):
-        print(f"There are no enemies in {room_name(current_room_id())}.")
-        print("Use Travel to Connected Room to find the next enemy room.")
+        print("No enemies here. Travel to an enemy room.")
         pause()
         return
 
@@ -4285,23 +4249,22 @@ def add_enemy_to_lineup():
 
     mob = get_enemy_by_id(enemy_id)
 
-    # We stop here if the enemy ID does not match an existing enemy.
+    # Stops if the chosen enemy ID is not found.
     if mob is None:
         print("\nEnemy record not found.")
         pause()
         return
 
-    # We do not allow defeated enemies to be treated as available opponents.
+    # Defeated enemies are not available for another battle.
     if mob["defeated"]:
-        print("\nEnemy has already been defeated and cannot be added "
-              "to the Queue.")
+        print("\nEnemy already defeated.")
         pause()
         return
 
     # Block duplicate queue entries for the same enemy.
-    # We do not place the same enemy in the active queue more than once.
+    # Does not place the same enemy in the active queue more than once.
     if mob["id"] in encounter_lineup:
-        print("\nEnemy is already waiting in the Encounter Queue.")
+        print("\nEnemy already in queue.")
         pause()
         return
 
@@ -4309,19 +4272,14 @@ def add_enemy_to_lineup():
     if not can_player_select_enemy(mob):
         rank = get_player_rank_info()
 
-        print("\nThat enemy is still locked.")
-        print(f"Your Rank: {rank['rank']}")
-        print(f"Enemy Level: {mob['type']}")
-        print(f"Next Goal: {rank['next_unlock']}")
+        print(f"\n{mob['type']} enemy locked. {rank['next_unlock']}.")
         pause()
         return
 
-    # Only enemies in the current room may be queued.
-    # We check the player's current location before deciding what is allowed.
+    # Only undefeated enemies in the current room can be added to the queue.
+    # Checks the player's current location before deciding what is allowed.
     if mob["room"] != current_room_id():
-        print(f"\n{mob['name']} lurks in {room_name(mob['room'])}.")
-        print("You can only face enemies of the room you are standing in.")
-        print("Use Travel to Connected Room to get there.")
+        print(f"\nTravel to {room_name(mob['room'])} to queue this enemy.")
         pause()
         return
 
@@ -4330,15 +4288,17 @@ def add_enemy_to_lineup():
         pause()
         return
 
-    # We add the selected enemy to the rear of the queue
+    # Adds the selected enemy to the rear of the queue
     before = lineup_line()
-    undo_stack.clear()
-    # We add a valid enemy to the REAR of the queue.
-    # We place the selected enemy at the REAR after all checks pass.
+    previous_undo = copy.deepcopy(undo_stack)
+    push_undo(f"Enqueue {mob['name']}")
+    # Adds a valid enemy to the REAR of the queue.
+    # Places the selected enemy at the REAR after all checks pass.
     encounter_lineup.append(mob["id"])
     if not push_battle_action("Enqueue", f"Added {mob['name']} to the Encounter Queue."):
         encounter_lineup.pop()
-        print("The Queue was not changed because saving failed.")
+        undo_stack[:] = previous_undo
+        print("Queue unchanged. Save failed.")
         pause()
         return
 
@@ -4351,21 +4311,19 @@ def add_enemy_to_lineup():
 
 # Peeks at the next enemy without removing it from the queue.
 def view_next_enemy():
-    # We show the next opponent without changing the queue.
-    # We peek at the next opponent without removing anyone from the queue.
+    # Shows the next opponent without changing the queue.
     header("Next Enemy")
 
     if encounter_lineup:
         mob = get_enemy_by_id(encounter_lineup[0])
         selection = "Queued"
     else:
-        remaining = available_room_enemies()
-        mob = remaining[0] if remaining else None
-        selection = "Room order"
+        mob = None
+        selection = "Not queued"
 
-    # We stop here if the enemy ID does not match an existing enemy.
+    # Stops if the chosen enemy ID is not found.
     if mob is None:
-        print("No available enemy in this room.")
+        print("Queue is empty. Select [2] to add an enemy.")
         pause()
         return
 
@@ -4380,24 +4338,24 @@ def view_next_enemy():
     print(f"Room         : {room_name(mob['room'])}")
 
     if mob["type"] == "Boss":
-        print("Warning      : becomes ENRAGED below half health!")
+        print("Warning      : Enrages below half HP.")
 
     pause()
 
 
-# We remove the FRONT enemy when the current encounter is finalized.
+# Removes the FRONT enemy when the current encounter is finalized.
 # The enemy is restored if the account update cannot be saved.
 def remove_front_enemy():
     # DEQUEUE: removes the enemy at the front of the FIFO queue
-    # We pop the front enemy after an encounter and put it back if saving fails.
-    # We handle an empty queue before trying to use its front item.
+    # Removes the front enemy after a battle and restores it if saving fails.
+    # An empty queue has no front enemy to select.
     if not encounter_lineup:
         return None
 
-    # We remove the FRONT enemy first because our encounter queue follows FIFO.
+    # Removes the FRONT enemy first because the encounter queue follows FIFO.
     removed = encounter_lineup.pop(0)
     if not outcome_save_active:
-        # We cancel or reverse the change when the player record cannot be saved.
+        # Restores the earlier values when saving fails.
         if not save_current_player_account():
             encounter_lineup.insert(0, removed)
             return None
@@ -4405,20 +4363,20 @@ def remove_front_enemy():
 
 
 # ---------------------------------------------------------------
-# We record battle events in order and keep Undo snapshots in a separate stack.
+# Records battle events in order and keeps Undo snapshots in a separate stack.
 # ---------------------------------------------------------------
 
-# We take a checkpoint of the player, enemy, Queue, actions, and session.
-# If a battle-result save fails, we can restore this checkpoint.
+# Takes a checkpoint of the player, enemy, Queue, actions, and session.
+# If a battle-result save fails, the game can restore this checkpoint.
 def begin_outcome_save():
-    # We keep a full checkpoint before changing records for a win, defeat, or retreat.
+    # Keeps a full checkpoint before changing records for a win, defeat, or retreat.
     global outcome_save_active, outcome_checkpoint
     global outcome_actions_pending
     if outcome_save_active:
         return False
-    # We keep the old values until the final result is written successfully.
+    # Preserves the earlier values until the final result is written successfully.
     outcome_checkpoint = {
-        # We copy nested data so changing the new state will not also change our backup.
+        # Copies nested values so changes do not affect the rollback copy.
         "player": copy.deepcopy(player),
         "account": copy.deepcopy(account_records.get(player.get("name"))),
         "queue": list(encounter_lineup),
@@ -4434,10 +4392,10 @@ def begin_outcome_save():
     return True
 
 
-# We keep a completed battle only when its related records are saved.
+# Keeps a completed battle only when its related records are saved.
 # Without this, Gold, HP, and queue entries might disagree after a failed write.
 def finish_outcome_save(saved):
-    # We either keep a successful battle result or restore the checkpoint after a failed save.
+    # Saves the full result or restores the checkpoint if saving fails.
     global outcome_save_active, outcome_checkpoint, outcome_actions_pending
     global current_enemy_id, boost_turns_left, boost_percent, guard_bonus_ready
     global enemy_stunned_turns, challenge_used, boss_enrage_announced, battle_turns
@@ -4466,21 +4424,22 @@ def finish_outcome_save(saved):
     return saved
 
 
-# We give the action a persistent ID and records its player, enemy, HP, and time.
-# We save the action immediately unless the full battle outcome is being committed.
+# Gives the action a persistent ID and records its player, enemy, HP, and time.
+# Saves the action immediately unless the full battle outcome is being committed.
 # together.
 def push_battle_action(
     action_type, description, enemy=None, player_hp_before=None,
-    player_hp_after=None, enemy_hp_before=None, enemy_hp_after=None
+    player_hp_after=None, enemy_hp_before=None, enemy_hp_after=None,
+    additional_updates=None
 ):
-    # We give each action a saved ID and write its HP changes to the battle history.
+    # Assigns each action an ID and saves its HP changes to battle history.
     # An activity record keeps both the player and enemy HP before and after the action.
     # The history log is separate from the undo stack, which stores reversible game states.
     global action_counter
-    # We use a saved counter so ACT IDs do not start at 1 after each login.
-    # We read the persistent counter instead of restarting action numbers on login.
+    # Uses a saved counter so ACT IDs do not start at 1 after each login.
+    # Reads the persistent counter instead of restarting action numbers on login.
     action_counter = session_archive["next_action_number"]
-    # We move the saved action counter forward so a later action gets a different ID.
+    # Moves the saved action counter forward so a later action gets a different ID.
     session_archive["next_action_number"] += 1
     if enemy is None:
         enemy = get_current_enemy()
@@ -4499,14 +4458,15 @@ def push_battle_action(
         "date_time": now_text()
     }
     # Each valid action goes to the history in the order it happened.
-    # We add the newest activity to the end of our history list.
+    # Adds the newest activity to the end of the history list.
     battle_history.append(action)
     if outcome_save_active:
-        # We hold outcome actions together until the final result is ready to save.
+        # Holds outcome actions together until the final result is ready to save.
         outcome_actions_pending.append(action)
         return True
-    # We cancel or reverse the change when the player record cannot be saved.
-    if not save_current_player_account(new_action=action):
+    # Restores the earlier values when saving fails.
+    if not save_current_player_account(new_action=action,
+                                       additional_updates=additional_updates):
         battle_history.pop()
         session_archive["next_action_number"] = action_counter
         print("Action was not saved. Check file access before continuing.")
@@ -4514,10 +4474,10 @@ def push_battle_action(
     return True
 
 
-# We show undoable snapshots from newest to oldest; TOP is the latest snapshot.
+# Shows undoable snapshots from newest to oldest; TOP is the latest snapshot.
 # These are reversible states, not the full permanent activity log.
 def display_player_undo_actions(offset=0, limit=10):
-    # We display the most recent reversible snapshot at the TOP of our undo stack.
+    # Displays the most recent reversible snapshot at the TOP of the undo stack.
     header("Player Action Stack")
     total = len(undo_stack)
     if not total:
@@ -4529,18 +4489,19 @@ def display_player_undo_actions(offset=0, limit=10):
     shown = list(reversed(undo_stack))[offset:offset + limit]
     print(f"Available: {total}  |  TOP: {undo_stack[-1]['label']}")
     print(f"Showing {offset + 1}-{offset + len(shown)} of {total}")
-    rows = [[state['label'], f"{state['hp']}/{player['max_hp']}",
+    rows = [[state['label'],
+             f"{state['hp']}/{state.get('full_player', {}).get('max_hp', player['max_hp'])}",
              state['gold'], room_name(state.get('location', current_room_id()))]
             for state in shown]
     print_table(["Action Available to Undo", "Saved HP", "Saved Gold", "Saved Room"],
                 rows, max_width=34, numbered=True)
 
 
-# We list only the actions that still have a valid Undo snapshot.
+# Lists only the actions that still have a valid Undo snapshot.
 def view_player_undo_actions():
-    # We allow paging through undoable actions without changing the stack.
+    # Allows paging through undoable actions without changing the stack.
     offset = 0
-    # We repeat this menu or action until the player gives a valid choice or leaves.
+
     while True:
         clear_screen()
         display_player_undo_actions(offset)
@@ -4555,7 +4516,8 @@ def view_player_undo_actions():
         if newer:
             print("[2] Newer Undo Actions")
         print("[0] Back")
-        choice = input("\nEnter choice: ").strip()
+        choice = read_menu_choice("\nEnter choice: ", allowed=(
+            {"0"} | ({"1"} if older else set()) | ({"2"} if newer else set())))
         if choice == "1" and older:
             offset += 10
         elif choice == "2" and newer:
@@ -4566,11 +4528,10 @@ def view_player_undo_actions():
             invalid_choice()
 
 
-# We PEEK at the most recent Undo snapshot without removing it.
+# Peeks at the most recent Undo snapshot without removing it.
 def view_latest_undo_action():
-    # We peek at the newest saved undo snapshot without removing it.
     header("Latest Undo Action")
-    # We handle an empty undo stack so there is nothing invalid to pop.
+    # Handles an empty undo stack so there is nothing invalid to pop.
     if not undo_stack:
         print("Stack is EMPTY. No saved action can be undone.")
     else:
@@ -4584,13 +4545,13 @@ def view_latest_undo_action():
     pause()
 
 
-# We read the latest recorded battle event without changing history.
+# Reads the latest recorded battle event without changing history.
 def view_latest_battle_action():
     # PEEK: shows the latest action without removing it
-    # We show the last recorded battle event without changing the permanent log.
+    # Shows the last recorded battle event without changing the permanent log.
     header("Latest Activity")
 
-    # We show a clear empty-history message instead of reading a missing action.
+    # Shows a clear empty-history message instead of reading a missing action.
     if not battle_history:
         print("No activities have been recorded.")
         pause()
@@ -4618,22 +4579,19 @@ def view_latest_battle_action():
 
 # ---------------------------------------------------------------
 # UNDO SYSTEM (STACK, LIFO)
-# We PUSH before an eligible action and POP the latest snapshot on Undo.
+# Pushes before an eligible action and POP the latest snapshot on Undo.
 # ---------------------------------------------------------------
 
 # Copies the current values needed to restore the game before an undoable action.
 def snapshot_state(label):
-    # We capture the information needed to restore an eligible action.
-    # We copy the HP, inventory, enemy, queue, and effects needed to reverse an action.
-    # We save the old values before the action so an Undo can restore them exactly.
+    """Saves a full copy of the game state before a reversible action."""
     mob = get_current_enemy()
-
     return {
         "label": label,
         "hp": player["hp"],
         "gold": player["gold"],
         "score": player["score"],
-        "inventory": dict(player["inventory"]),
+        "inventory": copy.deepcopy(player["inventory"]),
         "owned_equipment": list(player["owned_equipment"]),
         "equipped": dict(player["equipped"]),
         "location": current_room_id(),
@@ -4642,206 +4600,237 @@ def snapshot_state(label):
         "enemy_id": mob["id"] if mob else None,
         "enemy_hp": mob["hp"] if mob else None,
         "effects": battle_effect_values(),
-        "log_size": len(battle_history)
+        "log_size": len(battle_history),
+        # Full player includes wins, losses, level unlocks, stats, chest rewards,
+        # HP, wounds, owned gear, position, queue-independent progression, etc.
+        "full_player": copy.deepcopy(player),
+        # Preserve ALL enemies, including defeated flags and battle engagement.
+        "mobs": {m["id"]: {"hp": m["hp"],
+                           "defeated": m["defeated"],
+                           "engaged": m.get("engaged", False)} for m in mob_list},
+        "current_enemy_id": current_enemy_id,
+        # Counts of saved results for this player let Undo remove a reversed
+        # victory, defeat, retreat, or escape from reports without touching others.
+        "battle_result_count": sum(
+            1 for result in load_battle_results()
+            if result["player_id"] == player["id"]),
     }
 
 
-# We save a copy before making a reversible change to player or battle state.
+# Saves a copy before making a reversible change to player or battle state.
 # values.
 def push_undo(label):
     # PUSH: remember the state from before the action
-    # We put the state snapshot on TOP of our LIFO Stack.
-    # We save the current state before a reversible action so we can undo it later.
-    # We push a copy of the previous state on TOP of the undo stack.
-    undo_stack.append(snapshot_state(label))
+    # Puts the state snapshot on TOP of the LIFO Stack.
+    # Saves the current state before a reversible action so the game can undo it later.
+    # Pushes a copy of the previous state on TOP of the undo stack.
+    if player.get("status") != "Victorious":
+        undo_stack.append(snapshot_state(label))
 
 
 # Copies a saved snapshot back into the player, enemy, and battle state.
 def restore_snapshot(snap):
-    # We put all saved values from a snapshot back into the live game state.
-    global boost_turns_left, boost_percent, guard_bonus_ready
-    global enemy_stunned_turns, challenge_used, boss_enrage_announced
-    global battle_turns
-
-    player["hp"] = snap["hp"]
-    player["gold"] = snap["gold"]
-    player["score"] = snap["score"]
-    player["inventory"] = dict(snap["inventory"])
-    player["owned_equipment"] = list(snap["owned_equipment"])
-    player["equipped"] = dict(snap["equipped"])
-    if "location" in snap:
-        player["location"] = snap["location"]
-    if "lineup" in snap:
+    """Restores a saved game state, including victories, rewards, and room unlocks."""
+    global current_enemy_id
+    if "full_player" in snap:
+        player.clear()
+        player.update(copy.deepcopy(snap["full_player"]))
         encounter_lineup[:] = list(snap["lineup"])
-    if "status" in snap:
-        player["status"] = snap["status"]
+        for mob_id, old in snap.get("mobs", {}).items():
+            mob = get_enemy_by_id(mob_id)
+            if mob is not None:
+                mob["hp"] = old["hp"]
+                mob["defeated"] = old["defeated"]
+                mob["engaged"] = old["engaged"]
+        current_enemy_id = snap.get("current_enemy_id")
+    else:
+        # Loads older Undo records that have fewer saved fields.
+        for field in ("hp", "gold", "score", "status", "location"):
+            if field in snap:
+                player[field] = snap[field]
+        for field in ("inventory", "owned_equipment", "equipped"):
+            if field in snap:
+                player[field] = copy.deepcopy(snap[field])
+        encounter_lineup[:] = list(snap.get("lineup", encounter_lineup))
+        mob = get_enemy_by_id(snap.get("enemy_id"))
+        if mob is not None and snap.get("enemy_hp") is not None:
+            mob["hp"] = snap["enemy_hp"]
+        current_enemy_id = (snap.get("enemy_id")
+                            if player.get("status") == "In Battle" else None)
+        for m in mob_list:
+            m["engaged"] = m["id"] == current_enemy_id
+    restore_battle_effect_values(snap.get("effects", []))
+    del battle_history[snap.get("log_size", len(battle_history)):]
 
-    mob = get_enemy_by_id(snap["enemy_id"]) if snap["enemy_id"] else None
 
-    if mob is not None and snap["enemy_hp"] is not None:
-        mob["hp"] = snap["enemy_hp"]
-
-    restore_battle_effect_values(snap["effects"])
-
-    # The log entries made after the snapshot are popped off (LIFO)
-    # We remove log entries made after the saved Undo snapshot.
-    while len(battle_history) > snap["log_size"]:
-        battle_history.pop()
-
-
-# We show the current undo stack with the newest entry at the top.
+# Shows the current undo stack with the newest entry at the top.
 def display_undo_stack():
-    # We show the undo stack's TOP and available saved states.
+    # Shows the undo stack's TOP and available saved states.
     header("Undo Stack")
-    # We handle an empty undo stack so there is nothing invalid to pop.
+    # Handles an empty undo stack so there is nothing invalid to pop.
     if not undo_stack:
         print("Stack Status: EMPTY")
         print("No saved actions to undo.")
         return
 
     print(f"Available: {len(undo_stack)}  |  TOP is next to undo")
-    rows = [[s["label"], f"{s['hp']}/{player['max_hp']}",
+    rows = [[s["label"],
+             f"{s['hp']}/{s.get('full_player', {}).get('max_hp', player['max_hp'])}",
              s["gold"], room_name(s.get("location", current_room_id()))]
             for s in reversed(undo_stack)]
     print_table(["Action", "Saved HP", "Saved Gold", "Saved Room"],
                 rows, max_width=32, numbered=True)
 
 
-# We compare the current values with the ones the next Undo will restore.
+# Compares the current values with the ones the next Undo will restore.
 def undo_preview_rows(snap):
-    # We compare current values with the values that an Undo would restore.
+    """Preview the most important effects of a full-state Undo."""
+    old = snap.get("full_player", snap)
     rows = []
-    old_lineup = list(snap.get("lineup", encounter_lineup))
-    comparisons = [
-        ("HP", player["hp"], snap["hp"]),
-        ("Gold", player["gold"], snap["gold"]),
-        ("Score", player["score"], snap["score"]),
+    values = [
+        ("HP", f"{player['hp']}/{player['max_hp']}",
+         f"{old['hp']}/{old.get('max_hp', player['max_hp'])}"),
+        ("ATK", player["atk"], old.get("atk", player["atk"])),
+        ("Gold", player["gold"], old["gold"]),
+        ("Score", player["score"], old["score"]),
+        ("Wins", player["wins"], old.get("wins", player["wins"])),
+        ("Losses", player["losses"], old.get("losses", player["losses"])),
+        ("Status", player["status"], old.get("status", player["status"])),
         ("Room", room_name(current_room_id()),
-         room_name(snap.get("location", current_room_id())))
+         room_name(old.get("location", current_room_id()))),
+        ("Queue", " -> ".join(encounter_lineup) or "(empty)",
+         " -> ".join(snap.get("lineup", encounter_lineup)) or "(empty)"),
     ]
-    if old_lineup != encounter_lineup:
-        comparisons.append(("Queue", " -> ".join(encounter_lineup) or "(empty)",
-                            " -> ".join(old_lineup) or "(empty)"))
-    for label, before, after in comparisons:
-        if str(before) != str(after):
-            rows.append([label, before, after])
-    if player["inventory"] != snap["inventory"]:
-        rows.append(["Inventory", str(player["inventory"]),
-                     str(snap["inventory"])])
-    if (player["equipped"] != snap["equipped"] or
-            player["owned_equipment"] != snap["owned_equipment"]):
+    for label, current, restored in values:
+        if str(current) != str(restored):
+            rows.append([label, current, restored])
+    if player["inventory"] != old["inventory"]:
+        rows.append(["Inventory", "Current", "Previous"])
+    if (player["equipped"] != old["equipped"] or
+            player["owned_equipment"] != old["owned_equipment"]):
         rows.append(["Equipment", "Current gear", "Previous gear"])
+    if ("completed_levels" in old and
+            old["completed_levels"] != player["completed_levels"]):
+        rows.append(["Level unlocks",
+                     ", ".join(player["completed_levels"]) or "None",
+                     ", ".join(old["completed_levels"]) or "None"])
     if snap.get("enemy_id"):
         mob = get_enemy_by_id(snap["enemy_id"])
-        if mob is not None and mob["hp"] != snap["enemy_hp"]:
+        if mob and mob["hp"] != snap.get("enemy_hp"):
             rows.append([f"{mob['name']} HP", mob["hp"], snap["enemy_hp"]])
     return rows
 
 
-# We POP the latest eligible action to restore its earlier state.
-# We do not undo finished battles because their outcomes are permanent records.
+# Undo pops the newest saved state from the stack (LIFO).
+# Undo can also restore rewards, room unlocks, and completed battles.
 def undo_latest_action(pause_after=True):
-    # We pop the newest snapshot and restore it, but reverse the change if saving fails.
-    # We copy the current values before popping, so a failed save can cancel the Undo safely.
-    # Undo works in reverse order: the last reversible action is restored first.
-    global boost_turns_left, boost_percent, guard_bonus_ready
-    global enemy_stunned_turns, challenge_used, boss_enrage_announced, battle_turns
-    # POP: restores the state from before the most recent reversible action
+    """Removes the top Undo snapshot and restores the saved game state."""
+    global current_enemy_id
     header("Undo Latest Action")
-
-    # We stop here if the Undo Stack is EMPTY to avoid removing nonexistent data.
-    # We handle an empty undo stack so there is nothing invalid to pop.
+    if player["status"] == "Victorious":
+        print("Journey complete. Final escape cannot be undone.")
+        if pause_after:
+            pause()
+        return False
     if not undo_stack:
-        print("Stack is EMPTY. No action is available to undo.")
-
+        print("Nothing to undo. The stack is empty.")
         if pause_after:
             pause()
-
         return False
 
-    top = undo_stack[-1]  # peek
-
-    # We reject snapshots belonging to a different active battle.
-    if top["enemy_id"] != current_enemy_id:
-        undo_stack.clear()
-        save_battle_state()
-        print("The saved state belongs to a different situation and was "
-              "discarded.")
-
-        if pause_after:
-            pause()
-
-        return False
-
-    print(f"Next Undo: {top['label']}")
+    top = undo_stack[-1]
+    print(f"Undo: {top['label']}")
     rows = undo_preview_rows(top)
     if rows:
-        print_table(["Value", "Current", "After Undo"], rows, max_width=35)
+        print_table(["Value", "Now", "After Undo"], rows, max_width=35)
     else:
-        print("This will restore the saved action state.")
-    # We leave the current values unchanged if the player does not confirm.
-    if not ask_yes_no("\nConfirm Undo? (Y/N): "):
-        print("Undo cancelled. No changes were made.")
+        print("This will restore the previous game state.")
+    if not ask_yes_no("\nUndo this action? (Y/N): "):
+        print("Undo cancelled.")
         if pause_after:
             pause()
         return False
 
-    # We copy nested data so changing the new state will not also change our backup.
     before_player = copy.deepcopy(player)
+    before_queue = list(encounter_lineup)
     before_actions = copy.deepcopy(battle_history)
     before_undo = copy.deepcopy(undo_stack)
     before_session = copy.deepcopy(session_archive)
-    before_mob_hp = {mob["id"]: mob["hp"] for mob in mob_list}
+    before_mobs = {m["id"]: (m["hp"], m["defeated"], m.get("engaged", False))
+                   for m in mob_list}
+    before_enemy = current_enemy_id
     before_effects = battle_effect_values()
-    # We remove the latest saved state first because our stack follows LIFO.
+
     snap = undo_stack.pop()
     restore_snapshot(snap)
+    extra = {}
+    if "battle_result_count" in snap:
+        results = load_battle_results()
+        target = snap["battle_result_count"]
+        own_total = sum(r["player_id"] == player["id"] for r in results)
+        if own_total > target:
+            to_remove = own_total - target
+            kept = []
+            for result in reversed(results):
+                if result["player_id"] == player["id"] and to_remove:
+                    to_remove -= 1
+                else:
+                    kept.append(result)
+            kept.reverse()
+            extra[BATTLE_HISTORY_FILE] = render_record_rows(
+                "DREADVEIL: THE LAST GATE BATTLE HISTORY",
+                "date_time|player_id|username|enemy_id|enemy_name|result|turns|gold|score",
+                [[r["date_time"], r["player_id"], r["username"], r["enemy_id"],
+                  r["enemy_name"], r["result"], r["turns"], r["gold"], r["score"]]
+                 for r in kept])
 
-    if not push_battle_action("Undo", f"Undid: {snap['label']}."):
+    saved = push_battle_action("Undo", f"Restored state before: {snap['label']}.",
+                               additional_updates=extra)
+    if not saved:
         player.clear()
         player.update(before_player)
+        encounter_lineup[:] = before_queue
         battle_history[:] = before_actions
         undo_stack[:] = before_undo
         session_archive.clear()
         session_archive.update(before_session)
-        # We restore each enemy HP value if saving an Undo fails.
         for mob in mob_list:
-            mob["hp"] = before_mob_hp[mob["id"]]
+            mob["hp"], mob["defeated"], mob["engaged"] = before_mobs[mob["id"]]
+        current_enemy_id = before_enemy
         restore_battle_effect_values(before_effects)
-        print("Undo was cancelled because the required records could not be saved.")
+        print("Undo failed. No changes were saved.")
         if pause_after:
             pause()
         return False
 
-    print("Previous game state restored successfully.")
-    print(f"State restored -> HP: {player['hp']}/{player['max_hp']} | "
-          f"Gold: {player['gold']} | Score: {player['score']}")
-
-    mob = get_current_enemy()
-
-    if mob is not None:
-        print(f"{mob['name']} HP restored to {mob['hp']}/{mob['max_hp']}.")
-
-    print(f"Undo Stack now holds {len(undo_stack)} saved state(s).")
+    print("Undo complete. Full game state restored.")
+    print(f"Room: {room_name(current_room_id())} | "
+          f"HP: {player['hp']}/{player['max_hp']} | Gold: {player['gold']}")
+    print(f"Queue: {lineup_line()}")
+    print(f"Stack: {len(undo_stack)} action(s) left.")
     if pause_after:
         pause()
-
     return True
 
 
-# We let players inspect Undo actions without changing the permanent activity log.
+# Allows players inspect Undo actions without changing the permanent activity log.
 def battle_log_menu():
-    # We keep viewing the undo stack separate from actually undoing an action.
+    # Keeps viewing the undo stack separate from actually undoing an action.
     # This screen shows actions that can still be undone; the separate activity history is permanent.
-    # We repeat this menu or action until the player gives a valid choice or leaves.
+
+    if player["status"] == "Victorious":
+        print("Journey complete. Undo is locked.")
+        pause()
+        return
     while True:
+        clear_screen()
         header("Player Action Stack")
         print(f"Available Undo Actions: {len(undo_stack)}")
-        print("[1] View Player Actions (Undoable)")
-        print("[2] View Latest Undoable Action")
+        print("[1] View Player Actions")
+        print("[2] View Latest Action")
         print("[3] Undo Latest Action")
         print("\n[0] Back")
-        choice = input("\nEnter choice [0-3]: ").strip()
+        choice = read_menu_choice("\nEnter choice [0-3]: ", 0, 3)
         if choice == "1":
             view_player_undo_actions()
         elif choice == "2":
@@ -4858,18 +4847,22 @@ def battle_log_menu():
 # BATTLE
 # ---------------------------------------------------------------
 
-# We start combat from the Queue front after checking the enemy and room.
+# Starts combat from the Queue front after checking the enemy and room.
 # The opponent stays at the front until the encounter is resolved.
 def start_battle_with_next_enemy():
-    # We use the queue front or enqueues the first eligible room enemy.
-    # We pick the queue's front enemy and check that the fight can legally begin.
+    # No automatic enqueue: the player must select an enemy first.
+    # Only the queue FRONT can be fought, in that enemy's room.
     # The enemy must be in the proper room and unlocked difficulty before combat begins.
-    # We keep the encounter at the queue front until the result is resolved.
+    # Keeps the encounter at the queue front until the result is resolved.
     global current_enemy_id
 
     header("Start Battle with Next Enemy")
 
-    # We check if a battle is already active before allowing this action.
+    # Checks for an active battle before continuing.
+    if player["status"] == "Victorious":
+        print("Journey complete. Gameplay is locked.")
+        pause()
+        return
     if current_enemy_id is not None:
         print(f"You are already fighting {get_current_enemy()['name']}.")
         pause()
@@ -4881,57 +4874,38 @@ def start_battle_with_next_enemy():
         pause()
         return
 
-    # If the queue is empty, this game selects the first eligible room enemy.
     if not encounter_lineup:
-        remaining = available_room_enemies()
-        next_enemy = remaining[0] if remaining else None
-
-        if next_enemy is None:
-            print("No available enemies remain in this room.")
-            print("Travel to a room with undefeated enemies to continue.")
-            pause()
-            return
-
-        # We add a valid enemy to the REAR of the queue.
-        encounter_lineup.append(next_enemy["id"])
-        # We cancel or reverse the change when the player record cannot be saved.
-        if not save_current_player_account():
-            encounter_lineup.pop()
-            print("The opponent could not be saved to the Queue.")
-            pause()
-            return
-        print(f"\nOpponent: {next_enemy['id']} | {next_enemy['name']}")
-
-    mob = get_enemy_by_id(encounter_lineup[0])
-
-    # We stop here if the enemy ID does not match an existing enemy.
-    if mob is None or mob["defeated"]:
-        remove_front_enemy()
-        save_current_player_account()
-        print("\nThe front enemy is no longer available and was removed.")
+        print("Your queue is empty. Select [2] to add an enemy and prepare for battle.")
         pause()
         return
 
-    # Clear an outdated queue instead of fighting an enemy from another room.
-    # We check the player's current location before deciding what is allowed.
+    mob = get_enemy_by_id(encounter_lineup[0])
+    if mob is None or mob["defeated"]:
+        print("Front enemy is unavailable. Use View Queue to dequeue it.")
+        pause()
+        return
+
     if mob["room"] != current_room_id():
-        # We empty the old lineup because the player is starting again after defeat.
-        encounter_lineup.clear()
-        save_current_player_account()
-        print("\nThe queued enemy is not in this room. The queue was cleared.")
+        print(f"Travel to {room_name(mob['room'])} to fight {mob['name']}.")
+        pause()
+        return
+
+    # If an admin adds an enemy, the room may lock again. Queued
+    # saved Queue intact, but never start a new battle past a closed gate.
+    if not can_player_select_enemy(mob) or not is_enemy_reachable(mob):
+        print(f"This room is locked. {current_objective_text()}")
         pause()
         return
 
     if not confirm_risky_battle(mob):
-        print("\nYou stay back. Rest at camp, buy potions or use the Shop "
-              "first.")
+        print("Battle cancelled.")
         pause()
         return
 
+    push_undo(f"Start battle with {mob['name']}")
     current_enemy_id = mob["id"]
     mob["engaged"] = True
     reset_battle_effects()
-    undo_stack.clear()  # We keep camp snapshots out of an active battle Undo sequence.
     set_player_status("In Battle")
 
     if mob["type"] == "Boss":
@@ -4950,21 +4924,23 @@ def start_battle_with_next_enemy():
     print(f"\nYour HP      : {player['hp']}/{player['max_hp']}")
     print(f"Your Attack  : {total_atk()}")
 
-    push_battle_action(
-        "Battle Start",
-        f"Battle started with {mob['name']}.",
-        enemy=mob
-    )
+    if not push_battle_action(
+            "Battle Start", f"Battle started with {mob['name']}.", enemy=mob):
+        # A failed save must not leave an unsaved active battle or Undo entry.
+        restore_snapshot(undo_stack.pop())
+        print("Battle not started. Save failed.")
+        pause()
+        return
 
     print("\nBattle started successfully.")
     pause()
 
 
-# We estimate the fight based on current player and enemy stats for a warning.
+# Estimates the fight based on current player and enemy stats for a warning.
 def estimate_battle(mob):
     # Rough forecast if the player only attacks: how many attacks it
     # takes to win and how much damage the enemy deals meanwhile
-    # We estimate how difficult the battle may be from the current combat stats.
+    # Estimates how difficult the battle may be from the current combat stats.
     average_hit = (
         total_atk()
         * (100 - player_miss_chance()) / 100
@@ -4973,14 +4949,14 @@ def estimate_battle(mob):
     attacks = max(1, math.ceil(mob["hp"] / max(1, average_hit)))
     enemy_hit = mitigate_damage(get_enemy_attack_power(mob))
 
-    # The enemy does not strike back after the killing blow
+    # The enemy cannot counterattack after being defeated.
     return attacks, enemy_hit, (attacks - 1) * enemy_hit
 
 
-# We warn the player before starting a fight with a high chance of defeat.
+# Warns the player before starting a fight with a high chance of defeat.
 def confirm_risky_battle(mob):
-    # We return False if the player decides not to start a likely loss
-    # We warn the player if the opponent looks especially dangerous.
+    # Returns False if the player decides not to start a likely loss
+    # Warns the player if the opponent looks especially dangerous.
     attacks, enemy_hit, damage = estimate_battle(mob)
 
     if damage < player["hp"]:
@@ -4997,13 +4973,13 @@ def confirm_risky_battle(mob):
     return ask_yes_no("\nFight anyway? (Y/N): ")
 
 
-# We reject a combat command when there is no valid active battle.
+# Rejects a combat command when there is no valid active battle.
 def validate_battle_action():
-    # We return the current enemy if the player can act, otherwise None
-    # We stop attacks and items when there is no valid active enemy or usable player HP.
+    # Returns the current enemy if the player can act, otherwise None
+    # Stops attacks and items when there is no valid active enemy or usable player HP.
     mob = get_current_enemy()
 
-    # We stop here if the enemy ID does not match an existing enemy.
+    # Stops if the chosen enemy ID is not found.
     if mob is None:
         print("\nNo active battle is available.")
         pause()
@@ -5017,10 +4993,10 @@ def validate_battle_action():
     return mob
 
 
-# We calculate sword damage with bonuses, miss chance, and critical hits.
+# Calculates sword damage with bonuses, miss chance, and critical hits.
 def calculate_player_attack(sure_hit=False):
-    # We use the player's current attack total when computing a strike.
-    # We calculate randomized damage, misses, critical hits, buffs, and challenge bonuses.
+    # Uses the player's current attack total when computing a strike.
+    # Calculates randomized damage, misses, critical hits, buffs, and challenge bonuses.
     global boost_turns_left, guard_bonus_ready, fate_next_attack_bonus
 
     multiplier = 1.0
@@ -5052,7 +5028,7 @@ def calculate_player_attack(sure_hit=False):
     )
     strike = int(strike * multiplier)
 
-    # We apply a critical multiplier only when this attack rolls a critical hit.
+    # Applies a critical multiplier only when this attack rolls a critical hit.
     critical = random.randint(1, 100) <= player_crit_chance()
 
     if critical:
@@ -5061,19 +5037,19 @@ def calculate_player_attack(sure_hit=False):
     return strike, critical, False, notes
 
 
-# We calculate the enemy attack value, including its special boss state.
+# Calculates the enemy attack value, including its special boss state.
 def get_enemy_attack_power(mob):
     # The Boss hits harder once it drops below half health
-    # We calculate the enemy's attack strength, including boss enrage when active.
+    # Calculates the enemy's attack strength, including boss enrage when active.
     if mob["type"] == "Boss" and mob["hp"] <= mob["max_hp"] // 2:
         return int(mob["atk"] * BOSS_ENRAGE_MULTIPLIER)
     return mob["atk"]
 
 
-# We calculate the enemy's hit using its stats and critical chance.
+# Calculates the enemy's hit using its stats and critical chance.
 def calculate_enemy_attack(mob, guarding=False):
-    # We calculate enemy damage, then apply armor, shield, and guarding effects.
-    # We calculate enemy damage and critical hits before protection is applied.
+    # Calculates enemy damage, then apply armor, shield, and guarding effects.
+    # Calculates enemy damage and critical hits before protection is applied.
     atk = get_enemy_attack_power(mob)
 
     damage = random.randint(
@@ -5096,11 +5072,11 @@ def calculate_enemy_attack(mob, guarding=False):
     return damage, critical
 
 
-# We run the enemy's turn and applies defending, armor, and stun effects.
-# We subtract the final damage from HP and record the result in activity history.
+# Runs the enemy's turn and applies defending, armor, and stun effects.
+# Subtracts damage from HP and records the result in activity history.
 def process_enemy_counterattack(mob, guarding=False):
-    # We skip the enemy reply when the enemy is stunned.
-    # We apply the enemy's reply attack and update player HP and temporary effects.
+    # Skips the enemy reply when the enemy is stunned.
+    # Applies the enemy attack and updates the player HP and battle effects.
     global enemy_stunned_turns, boss_enrage_announced, fate_barrier
 
     if enemy_stunned_turns > 0:
@@ -5181,10 +5157,10 @@ def process_enemy_counterattack(mob, guarding=False):
         resolve_player_defeat(mob)
 
 
-# We finish one player turn by checking victory or running the enemy reply.
+# Finishes one player turn by checking victory or running the enemy reply.
 def finish_player_turn(mob, guarding=False):
-    # We resolve the enemy result before applying the normal counterattack.
-    # We end the player's turn and handle the counterattack when needed.
+    # Resolves the enemy result before applying the normal counterattack.
+    # Ends the player turn and handles the enemy counterattack if needed.
     if mob["hp"] <= 0:
         resolve_enemy_victory(mob)
     else:
@@ -5194,16 +5170,16 @@ def finish_player_turn(mob, guarding=False):
     pause()
 
 
-# We record the player's attack and check whether it defeated the enemy.
+# Records the player attack and checks if the enemy was defeated.
 # If the enemy survives, the enemy takes its turn afterward.
 def attack_current_enemy():
-    # We handle one complete attack turn
-    # We apply player attack damage, log the action, and check for victory.
+    # Handles one complete attack turn
+    # Applies attack damage, logs the action, and checks for victory.
     global battle_turns
 
     mob = validate_battle_action()
 
-    # We stop here if the enemy ID does not match an existing enemy.
+    # Stops if the chosen enemy ID is not found.
     if mob is None:
         return
 
@@ -5243,7 +5219,7 @@ def attack_current_enemy():
         enemy_hp_after=mob["hp"]
     )
 
-    print("Player attack recorded in Activity History.")
+    print("Attack saved.")
 
     finish_player_turn(mob)
 
@@ -5251,12 +5227,12 @@ def attack_current_enemy():
 # Reduces incoming damage for a turn and prepares the defensive counter effect.
 def defend_against_enemy():
     # Raises the guard: less damage now, stronger counterattack next
-    # We lower the damage taken this turn and prepare the defense counter bonus.
+    # Lowers the damage taken this turn and prepare the defense counter bonus.
     global battle_turns, guard_bonus_ready
 
     mob = validate_battle_action()
 
-    # We stop here if the enemy ID does not match an existing enemy.
+    # Stops if the chosen enemy ID is not found.
     if mob is None:
         return
 
@@ -5278,17 +5254,17 @@ def defend_against_enemy():
     finish_player_turn(mob, guarding=True)
 
 
-# We validate potion stock, heals without going over Max HP, and saves the new quantity.
+# Validates potion stock, heals without going over Max HP, and saves the new quantity.
 def use_health_potion():
-    # We use the first available healing item in our inventory.
-    # We spend one potion only when it can actually restore health.
+    # Uses the first available healing item in the inventory.
+    # Spends one potion only when it can actually restore health.
     mob = validate_battle_action()
 
-    # We stop here if the enemy ID does not match an existing enemy.
+    # Stops if the chosen enemy ID is not found.
     if mob is None:
         return
 
-    # We choose the first healing item with a positive quantity.
+    # Chooses the first healing item with a positive quantity.
     for item_id, item in item_records.items():
         if item["effect"] == "heal" and item_quantity(item_id) > 0:
             apply_item_effect(item, mob)
@@ -5299,18 +5275,19 @@ def use_health_potion():
     pause()
 
 
-# We list usable items and let the player select one during battle.
+# Lists usable items and let the player select one during battle.
 def use_item():
-    # We let the player choose any item from the inventory
-    # We verify the selected item is owned and usable before applying its effect.
+    # Allows the player to choose an item from the inventory.
+    # Verifies the selected item is owned and usable before applying its effect.
     mob = validate_battle_action()
 
-    # We stop here if the enemy ID does not match an existing enemy.
+    # Stops if the chosen enemy ID is not found.
     if mob is None:
         return
 
-    # We repeat this menu or action until the player gives a valid choice or leaves.
+
     while True:
+        clear_screen()
         header("Use Item")
 
         owned = [
@@ -5332,7 +5309,7 @@ def use_item():
 
         print("\n[0] Back")
 
-        choice = input(f"\nChoose an item [0-{len(owned)}]: ").strip()
+        choice = read_menu_choice(f"\nChoose an item [0-{len(owned)}]: ", 0, len(owned))
 
         if choice == "0":
             return
@@ -5346,11 +5323,11 @@ def use_item():
             return
 
 
-# We apply the selected item's heal, boost, stun, or damage effect.
-# We consume one item and record the outcome after a valid use.
+# Applies the selected item's heal, boost, stun, or damage effect.
+# Consumes one item and records its effect after valid use.
 def apply_item_effect(item, mob):
-    # We return True only when the item consumes the player's turn.
-    # We handle healing, boost, stun, damage, and the six Dice of Fate effects.
+    # Returns True only when the item consumes the player's turn.
+    # Handles healing, boost, stun, damage, and the six Dice of Fate effects.
     global battle_turns, boost_turns_left, boost_percent
     global enemy_stunned_turns, fate_barrier, fate_next_attack_bonus
 
@@ -5393,7 +5370,7 @@ def apply_item_effect(item, mob):
         animate_effect("glug glug... healing light", "green", "+")
         animate_hp_change("PLAYER", hp_before, player["hp"], player["max_hp"])
 
-        print("Potion used successfully. Player health has been restored.")
+        print("HP restored.")
         print(f"HP: {hp_before} -> {player['hp']} | "
               f"{item['name']} left: {remaining}")
 
@@ -5464,7 +5441,7 @@ def apply_item_effect(item, mob):
         hp_before = player["hp"]
         outcome_text = ""
         if roll == 1:
-            # We cap cursed-roll HP loss so Dice of Fate cannot directly reduce HP below 1.
+            # Caps cursed-roll HP loss so Dice of Fate cannot directly reduce HP below 1.
             player["hp"] = max(1, player["hp"] - 15)
             outcome_text = f"Cursed Roll: lost {hp_before - player['hp']} HP."
         elif roll == 2:
@@ -5496,15 +5473,14 @@ def apply_item_effect(item, mob):
     return True
 
 
-# We check the selected answer and applies extra damage when the answer is correct.
+# Checks the selected answer and applies extra damage when the answer is correct.
 def answer_challenge_question():
-    # We allow one challenge per battle, and a correct answer gives a sure-hit bonus.
-    # We check the selected quiz answer and apply the attack bonus only when correct.
+    # Allows one challenge per battle, and a correct answer gives a sure-hit bonus.
     global battle_turns, challenge_used
 
     mob = validate_battle_action()
 
-    # We stop here if the enemy ID does not match an existing enemy.
+    # Stops if the chosen enemy ID is not found.
     if mob is None:
         return
 
@@ -5520,7 +5496,7 @@ def answer_challenge_question():
         return
     correct_text = question["choices"][question["answer"] - 1]
 
-    # The choices are shuffled so players cannot memorise the numbers
+    # Shuffles answer choices so their positions change between questions.
     choices = list(question["choices"])
     random.shuffle(choices)
 
@@ -5583,13 +5559,13 @@ def answer_challenge_question():
     finish_player_turn(mob)
 
 
-# We confirm that the player wants to retreat instead of finishing the fight.
+# Confirms that the player wants to retreat instead of finishing the fight.
 def retreat_from_battle():
     # Free retreat: the battle is interrupted, never "won"
-    # We ask for confirmation before the player leaves the active fight.
+    # Asks for confirmation before the player leaves the active fight.
     mob = get_current_enemy()
 
-    # We stop here if the enemy ID does not match an existing enemy.
+    # Stops if the chosen enemy ID is not found.
     if mob is None:
         print("\nNo active battle is available.")
         pause()
@@ -5598,21 +5574,20 @@ def retreat_from_battle():
     print(f"\nRetreating leaves {mob['name']} in the Encounter Queue and it "
           "heals fully.")
 
-    # We leave the current values unchanged if the player does not confirm.
+    # Cancelling leaves the saved values unchanged.
     if not ask_yes_no("Retreat? (Y/N): "):
         print("\nYou stand your ground.")
         pause()
         return
 
+    push_undo(f"Retreat from {mob['name']}")
     resolve_retreat(mob)
     pause()
 
 
-# We clear temporary fight state so it cannot leak into the next encounter.
+# Clears temporary fight state so it cannot leak into the next encounter.
 def end_current_battle():
-    # We clear the Undo Stack after a completed result so rewards cannot be undone.
-    # We keep victory, defeat, and retreat results in permanent history instead.
-    # We clear temporary battle state and pending undo snapshots after a final result.
+    # Resets battle effects but keeps Undo snapshots after the encounter.
     global current_enemy_id
 
     mob = get_current_enemy()
@@ -5621,19 +5596,18 @@ def end_current_battle():
         mob["engaged"] = False
 
     current_enemy_id = None
-    undo_stack.clear()
     reset_battle_effects()
     if not outcome_save_active:
         save_battle_state()
 
 
-# We reset the enemy according to the retreat rule and ends the current fight.
+# Resets the enemy according to the retreat rule and ends the current fight.
 # The retreat is recorded without giving a victory or level reward.
 def resolve_retreat(mob):
     # Interrupts the battle. The enemy is NOT defeated and is NOT
     # dequeued: it keeps its place in the queue with full HP.
-    # We leave the enemy in the queue with full HP but do not award a victory.
-    # Retreat is not a victory: we do not award enemy Gold or count the enemy as defeated.
+    # Leaves the enemy in the queue with full HP but do not award a victory.
+    # Retreat is not a victory, so it gives no enemy Gold or defeated-enemy credit.
     # The enemy returns to full HP and remains at the front of the queue.
     begin_outcome_save()
     turns = battle_turns
@@ -5644,32 +5618,30 @@ def resolve_retreat(mob):
         enemy=mob
     )
 
-    # We restore this enemy to its full HP so a future attempt starts fairly.
+    # The enemy returns with full HP for the next attempt.
     mob["hp"] = mob["max_hp"]
     mob["defeated"] = False
     player["wounds"].pop(mob["id"], None)
     set_player_status("Retreated")
 
-    # We clear active combat flags and temporary effects after resolving the result.
+    # Clears temporary battle effects after the result is recorded.
     end_current_battle()
-    # We cancel the finished result if the related records cannot be saved.
+    # Cancels the finished result if the related records cannot be saved.
     if not finish_outcome_save(record_battle_result(mob, "Retreated", 0, 0, turns)):
         return False
 
-    print(f"You retreat from {mob['name']}. It was not defeated.")
-    print(f"{mob['name']} recovers its health "
-          f"({mob['hp']}/{mob['max_hp']}) and waits in the queue.")
+    print(f"Retreated from {mob['name']}. Enemy healed; queue unchanged.")
     print(f"Queue: {lineup_line()}")
     return True
 
 
 # Marks the enemy defeated, adds gold and score, and dequeues that enemy.
-# It also checks whether this is the third required victory for the difficulty.
+# Checks whether every enemy currently assigned to the room has been defeated.
 def resolve_enemy_victory(mob):
-    # We give rewards and removes the defeated enemy from the queue
-    # We award the enemy's Gold and score, update progress, then dequeue the defeated enemy.
-    # We apply regular enemy rewards before checking for a separate one-time level bonus.
-    # The defeated enemy is removed from the FRONT, then we save the completed encounter.
+    # Gives rewards and removes the defeated enemy from the queue
+    # After victory, rewards are added and the defeated enemy leaves the queue.
+    # Applies regular enemy rewards before checking for a separate one-time level bonus.
+    # The defeated enemy leaves the FRONT of the queue before the encounter is saved.
     begin_outcome_save()
     old_rank = get_player_rank_info()
     turns = battle_turns
@@ -5682,13 +5654,13 @@ def resolve_enemy_victory(mob):
 
     player["wounds"].pop(mob["id"], None)
     # The win, Gold, and score updates happen together with the enemy defeat.
-    # We increase the win total after the enemy is actually defeated.
+    # Increases the win total after the enemy is actually defeated.
     player["wins"] += 1
-    # We add the enemy reward separately from any one-time level-completion bonus.
+    # Adds the enemy reward separately from any one-time level-completion bonus.
     player["gold"] += mob["gold_reward"]
-    # We add the enemy score only after the victory is confirmed.
+    # Adds the enemy score only after the victory is confirmed.
     player["score"] += mob["score_reward"]
-    # We make the player active again after the encounter ends.
+    # Makes the player active again after the encounter ends.
     set_player_status("Active")
 
     push_battle_action("Victory", f"Player defeated {mob['name']}.",
@@ -5700,8 +5672,7 @@ def resolve_enemy_victory(mob):
                        f"Player earned {mob['score_reward']} score points.",
                        enemy=mob)
 
-    # The third required victory may give an extra one-time level reward.
-    # We check for the third required victory after awarding the normal enemy reward.
+    # The last remaining enemy in the room may trigger its one-time clear reward.
     level_reward = process_level_completion(mob["type"], mob)
     new_rank = get_player_rank_info()
 
@@ -5723,7 +5694,7 @@ def resolve_enemy_victory(mob):
     if level_reward is not None:
         show_level_completion_rewards(level_reward, old_rank, new_rank)
 
-    # We show the queue before and after the defeated enemy is dequeued
+    # Shows the queue before and after the defeated enemy is dequeued
     print(f"Queue before dequeue: {lineup_line()}")
 
     # After victory, take the defeated enemy off the FRONT of the queue.
@@ -5732,9 +5703,9 @@ def resolve_enemy_victory(mob):
     if removed_id != mob["id"]:
         print("\nThe lineup could not be updated correctly.")
 
-    # We clear active combat flags and temporary effects after resolving the result.
+    # Clears temporary battle effects after the result is recorded.
     end_current_battle()
-    # We stop if the whole battle result could not be saved consistently.
+    # Stops if the whole battle result could not be saved consistently.
     if not finish_outcome_save(record_battle_result(
         mob, "Victory",
         mob["gold_reward"]
@@ -5764,26 +5735,26 @@ def resolve_enemy_victory(mob):
     return True
 
 
-# We record the loss, restores the enemy to FULL HP, and clears the queue.
+# Records the loss, restores the enemy to FULL HP, and clears the queue.
 # The player returns to the saved entrance name with half their Max HP.
 # Earlier victories and unlocked rooms remain saved.
 def resolve_player_defeat(mob):
-    # We resolve defeat at zero HP and then restore the revival state.
-    # We record the loss, reset the enemy to full HP, and respawn at the entrance.
-    # We keep earlier victories and unlocked rooms, but clear the current encounter queue.
-    # We reset the enemy to full HP and remove its saved wounds so it stays healed after reload.
-    # The entrance message reads its real name from the room record, not a hard-coded phrase.
+    # Resolves defeat at zero HP and then restore the revival state.
+    # Records the loss, reset the enemy to full HP, and respawn at the entrance.
+    # Keeps earlier victories, room progress, and the encounter queue.
+    # Restores full enemy HP and removes saved wounds for the next battle.
+    # Reads the entrance name from its saved room record.
     begin_outcome_save()
     turns = battle_turns
     # Losing a battle takes the configured percentage of current Gold.
-    # We calculate the Gold penalty using the player's balance at the time of defeat.
+    # Calculates the Gold penalty using the player's balance at the time of defeat.
     gold_lost = player["gold"] * DEFEAT_GOLD_LOSS_PERCENT // 100
 
-    # We count this encounter as a loss for the player.
+    # Counts this encounter as a loss for the player.
     player["losses"] += 1
-    # We deduct the configured percentage of Gold after a defeat.
+    # Deducts the configured percentage of Gold after a defeat.
     player["gold"] -= gold_lost
-    # We record the defeat before the respawn values are applied.
+    # Records the defeat before the respawn values are applied.
     set_player_status("Defeated")
 
     push_battle_action(
@@ -5800,20 +5771,17 @@ def resolve_player_defeat(mob):
                 [[mob["name"], "Defeat", gold_lost, player["losses"]]],
                 max_width=30)
 
-    # We clear the encounter Queue after defeat before reviving at the entrance.
-    # We discard waiting enemies when a lost battle ends.
-    # We empty the old lineup because the player is starting again after defeat.
-    encounter_lineup.clear()
-    print(f"Defeated! You are returned to {room_name(ENTRANCE_ROOM_ID)}. "
-          "Your Encounter Queue was cleared.")
+    # Defeat moves the player, but queued enemies stay in their original order.
+    print(f"Defeated. Returned to {room_name(ENTRANCE_ROOM_ID)}. "
+          "Queue saved.")
 
     # As with Retreat, the surviving enemy fully recovers after winning.
     # Clear this player's saved wounds so revisiting the room or reloading
     # cannot restore the enemy's pre-defeat damaged HP.
-    # We restore this enemy to its full HP so a future attempt starts fairly.
+    # The enemy returns with full HP for the next attempt.
     mob["hp"] = mob["max_hp"]
     mob["defeated"] = False
-    # We remove any saved partial HP for this enemy, so it reloads at full health.
+    # Removes any saved partial HP for this enemy, so it reloads at full health.
     player["wounds"].pop(mob["id"], None)
     push_battle_action(
         "Enemy Recovery",
@@ -5821,26 +5789,24 @@ def resolve_player_defeat(mob):
         f"({mob['hp']}/{mob['max_hp']} HP).",
         enemy=mob, enemy_hp_after=mob["hp"]
     )
-    print(f"{mob['name']} returns to FULL HP "
-          f"({mob['hp']}/{mob['max_hp']}). You can challenge it again later.")
+    print(f"{mob['name']} healed to {mob['hp']}/{mob['max_hp']} HP.")
 
     # The player returns to Dreadveil Entrance with the established
     # 50%-Max-HP revive rule; existing cleared enemies remain cleared.
-    # Revive the player with the configured share of Max HP, never below 1.
-    # We revive the player at the configured share of Max HP, with at least one HP.
+    # Revives the player with the configured percentage of Max HP (at least 1 HP).
+    # Revives the player at the configured share of Max HP, with at least one HP.
     player["hp"] = max(1, player["max_hp"] * DEFEAT_REVIVE_PERCENT // 100)
-    # We return the player to the entrance room after losing the fight.
+    # Returns the player to the entrance room after losing the fight.
     player["location"] = ENTRANCE_ROOM_ID
-    # We make the player active again after the encounter ends.
+    # Makes the player active again after the encounter ends.
     set_player_status("Active")
-    print(f"You awaken at {room_name(ENTRANCE_ROOM_ID)} "
-          f"with {player['hp']}/{player['max_hp']} HP.")
-    print("Your unlocked rooms and earlier victories are preserved. "
-          "Travel through the connected rooms to challenge the enemy again.")
+    print(f"Revived in {room_name(ENTRANCE_ROOM_ID)}: "
+          f"{player['hp']}/{player['max_hp']} HP.")
+    print("Previous wins and unlocked rooms are saved.")
 
-    # We clear active combat flags and temporary effects after resolving the result.
+    # Clears temporary battle effects after the result is recorded.
     end_current_battle()
-    # We stop if the whole battle result could not be saved consistently.
+    # Stops if the whole battle result could not be saved consistently.
     if not finish_outcome_save(record_battle_result(mob, "Defeat", -gold_lost, 0, turns)):
         return False
     return True
@@ -5850,28 +5816,27 @@ def resolve_player_defeat(mob):
 # CAMP ACTIONS (shop, equipment, rest, travel, dungeon exit)
 # ---------------------------------------------------------------
 
-# We calculate how much more Gold the player needs for a purchase.
+# Calculates how much more Gold the player needs for a purchase.
 def shortfall_message(price, what="item"):
     # Exact amount of Gold still missing for a purchase
-    # We calculate the missing Gold when the player cannot afford a purchase.
     missing = price - player["gold"]
     return f"You need {missing} more Gold to purchase this {what}."
 
 
-# We display the item price, current Gold, and missing amount after a failed purchase.
+# Displays the item price, current Gold, and missing amount after a failed purchase.
 def show_shortfall(price, what="item"):
     # Same "not enough Gold" notice for every shop. Nothing is deducted.
-    # We show the price and the amount of additional Gold required.
+    # Shows the price and the amount of additional Gold required.
     print(f"\n{color(shortfall_message(price, what), 'red')}")
     print(f"  Current Gold : {player['gold']}")
     print(f"  Price        : {price}")
     print(f"  Missing Gold : {price - player['gold']}")
 
 
-# We print a simple confirmation after a purchase changes the player inventory.
+# Prints a simple confirmation after a purchase changes the player inventory.
 def show_purchase_receipt(title, lines):
     # Same "purchase successful" notice for every shop
-    # We print what was purchased and the updated account balance.
+    # Prints what was purchased and the updated account balance.
     print(f"\n{color('Purchase successful!', 'green')}")
     print(f"  Item         : {title}")
 
@@ -5881,26 +5846,26 @@ def show_purchase_receipt(title, lines):
     print(f"  Gold left    : {player['gold']}")
 
 
-# We prepare the displayed name and price for a shop item.
+# Prepares the displayed name and price for a shop item.
 def shop_entry(number, name, price, tag, detail):
     # One shop listing: used by both the Supplies and Equipment shops
-    # We format one item or equipment option for the shop menu.
+    # Formats one item or equipment option for the shop menu.
     print(f"[{number}] {name} - {price} Gold ({tag})")
     print(f"    {detail}")
 
 
-# We let the player choose between consumable supplies and equipment upgrades.
+# Allows the player to choose supplies or equipment upgrades.
 def dungeon_shop():
     # The player can buy items and equipment here between battles
-    # We let the player choose between supplies and equipment.
-    # We check if a battle is already active before allowing this action.
+    # Checks for an active battle before continuing.
     if current_enemy_id is not None:
         print("\nYou cannot shop during a battle.")
         pause()
         return
 
-    # We repeat this menu or action until the player gives a valid choice or leaves.
+
     while True:
+        clear_screen()
         header("Dungeon Shop")
 
         print(f"Gold: {player['gold']}")
@@ -5910,7 +5875,7 @@ def dungeon_shop():
         print("[2] Equipment (two upgrades per slot at current level)")
         print("\n[0] Back")
 
-        choice = input("\nEnter choice [0-2]: ").strip()
+        choice = read_menu_choice("\nEnter choice [0-2]: ", 0, 2)
 
         if choice == "1":
             supplies_shop()
@@ -5923,12 +5888,13 @@ def dungeon_shop():
             invalid_choice()
 
 
-# We check item availability, carry limit, and Gold before buying supplies.
+# Checks item availability, carry limit, and Gold before buying supplies.
 # The player is charged only when the purchase is valid.
 def supplies_shop():
-    # We validate item prices, carrying limits, and Gold before taking payment.
-    # We repeat this menu or action until the player gives a valid choice or leaves.
+    # Validates item prices, carrying limits, and Gold before taking payment.
+
     while True:
+        clear_screen()
         header("Dungeon Shop - Supplies")
 
         print(f"Gold: {player['gold']}")
@@ -5945,7 +5911,7 @@ def supplies_shop():
 
         print("\n[0] Back")
 
-        choice = input(f"\nChoose an item [0-{len(items)}]: ").strip()
+        choice = read_menu_choice(f"\nChoose an item [0-{len(items)}]: ", 0, len(items))
 
         if choice == "0":
             break
@@ -5967,13 +5933,13 @@ def supplies_shop():
         total = item["price"] * qty
 
         # Not enough Gold: nothing is deducted and nothing is added
-        # We compare the price with the player's Gold before charging anything.
+        # Checks that the player has enough Gold before buying.
         if player["gold"] < total:
             show_shortfall(total, "item")
             pause()
             continue
 
-        # We leave the current values unchanged if the player does not confirm.
+        # Cancelling leaves the saved values unchanged.
         if not ask_yes_no(f"Buy {qty} {item['name']} for {total} Gold? (Y/N): "):
             print("\nPurchase cancelled.")
             pause()
@@ -5997,10 +5963,10 @@ def supplies_shop():
         pause()
 
 
-# We check the unlocked tier, owned equipment, and Gold before buying gear.
+# Checks the unlocked tier, owned equipment, and Gold before buying gear.
 def equipment_shop():
-    # We offer gear from the currently unlocked tier and avoid invalid purchases.
-    # We repeat this menu or action until the player gives a valid choice or leaves.
+    # Offers gear from the unlocked tier and rejects invalid purchases.
+
     while True:
         tier = current_equipment_tier()
         header(f"Dungeon Shop - {tier} Equipment")
@@ -6060,7 +6026,7 @@ def equipment_shop():
             print("\nYou own every upgrade available at this level.")
         print("\n[0] Back to Dungeon Shop")
 
-        choice = input(f"\nBuy which upgrade? [0-{len(choices)}]: ").strip()
+        choice = read_menu_choice(f"\nBuy which upgrade? [0-{len(choices)}]: ", 0, len(choices))
         if choice == "0":
             break
         if not choice.isdigit() or not 1 <= int(choice) <= len(choices):
@@ -6076,7 +6042,7 @@ def equipment_shop():
             print("\nOnly current-level upgrades can be purchased.")
             pause()
             continue
-        # We compare the price with the player's Gold before charging anything.
+        # Checks that the player has enough Gold before buying.
         if player["gold"] < eq["price"]:
             show_shortfall(eq["price"], "equipment")
             pause()
@@ -6084,7 +6050,7 @@ def equipment_shop():
 
         print(f"\n{eq['name']} | {describe_equipment(eq)}")
         print(f"Compared with your current gear: {compare_text(eq)}")
-        # We leave the current values unchanged if the player does not confirm.
+        # Cancelling leaves the saved values unchanged.
         if not ask_yes_no(f"Buy for {eq['price']} Gold? (Y/N): "):
             print("\nPurchase cancelled.")
             pause()
@@ -6115,18 +6081,19 @@ def equipment_shop():
         pause()
 
 
-# We show standard gear and owned upgrades; players always wear all three slots.
+# Shows standard gear and owned upgrades; players always wear all three slots.
 def equipment_menu():
     # Players may equip only their current-level purchases or the free default.
-    # We let players switch Sword, Shield, and Armor instead of leaving a slot empty.
-    # We check if a battle is already active before allowing this action.
+    # Allows players switch Sword, Shield, and Armor instead of leaving a slot empty.
+    # Checks for an active battle before continuing.
     if current_enemy_id is not None:
         print("\nYou cannot change equipment during a battle.")
         pause()
         return
 
-    # We repeat this menu or action until the player gives a valid choice or leaves.
+
     while True:
+        clear_screen()
         header(f"Equipment - {current_equipment_tier()} Level")
         print(f"ATK: {total_atk()} | SPD: +{sword_speed()}% | "
               f"DEF: -{armor_defense()} | BLOCK: {shield_block()}%")
@@ -6155,7 +6122,7 @@ def equipment_menu():
                         max_width=30)
 
         print("\n[0] Back")
-        choice = input(f"\nWear which piece? [0-{len(options)}]: ").strip()
+        choice = read_menu_choice(f"\nWear which piece? [0-{len(options)}]: ", 0, len(options))
         if choice == "0":
             break
         if not choice.isdigit() or not 1 <= int(choice) <= len(options):
@@ -6194,17 +6161,16 @@ def equipment_menu():
         pause()
 
 
-# We allow one treasure reward per room after every enemy there is defeated.
-# Treasure completion is optional and separate from the three-victory gate quota.
+# Allows one treasure reward per room after every enemy there is defeated.
+# Treasure and room progression both require clearing the entire room.
 def open_treasure_chest():
-    # Optional full-clear bonus: chests still require every enemy in
-    # the room to be defeated. Room progression needs only 3 tier victories.
-    # We give the one-time chest reward only after every enemy in that room is defeated.
+    # Both a treasure chest and the next gate require clearing all room enemies.
+    # Gives the one-time chest reward only after every enemy in that room is defeated.
     # A chest has a different rule from level unlocking: all enemies in the room must be defeated.
-    # We also save which chest was opened so the player cannot collect it twice.
+    # Also saves the opened chest so its reward cannot be collected twice.
     header("Treasure Chest")
 
-    # We check if a battle is already active before allowing this action.
+    # Checks for an active battle before continuing.
     if current_enemy_id is not None:
         print("You cannot open a chest during a battle.")
         pause()
@@ -6236,8 +6202,7 @@ def open_treasure_chest():
         pause()
         return
 
-    # Opening a chest clears reversible states from other actions
-    undo_stack.clear()
+    push_undo(f"Open {name}")
     player["treasures"].append(here)
     player["gold"] += gold
     player["score"] += TREASURE_SCORE
@@ -6258,10 +6223,10 @@ def open_treasure_chest():
 # Charges the stated Gold amount and restores HP using the camp rest rule.
 def rest_at_camp():
     # Pays gold to recover part of the player's health
-    # We charge the rest fee and restore a portion of missing HP when resting is allowed.
+    # Charges the rest fee and restores HP when the player can rest.
     header("Rest at Camp")
 
-    # We check if a battle is already active before allowing this action.
+    # Checks for an active battle before continuing.
     if current_enemy_id is not None:
         print("You cannot rest during a battle.")
         pause()
@@ -6272,7 +6237,7 @@ def rest_at_camp():
         pause()
         return
 
-    # We compare the price with the player's Gold before charging anything.
+    # Checks that the player has enough Gold before buying.
     if player["gold"] < REST_COST:
         print(f"Resting costs {REST_COST} Gold.")
         show_shortfall(REST_COST, "rest")
@@ -6284,7 +6249,7 @@ def rest_at_camp():
 
     print(f"Resting restores up to {heal} HP for {REST_COST} Gold.")
 
-    # We leave the current values unchanged if the player does not confirm.
+    # Cancelling leaves the saved values unchanged.
     if not ask_yes_no("Rest now? (Y/N): "):
         print("\nYou keep moving.")
         pause()
@@ -6307,61 +6272,52 @@ def rest_at_camp():
     pause()
 
 
-# We check whether the final boss requirement has been completed.
+# Checks whether the final boss requirement has been completed.
 def all_bosses_defeated(defeated_ids):
-    # We check whether the boss has been defeated before unlocking the exit.
+    # Checks whether the boss has been defeated before unlocking the exit.
     bosses = [mob for mob in mob_list if mob["type"] == "Boss"]
     return bool(bosses) and all(m["id"] in defeated_ids for m in bosses)
 
 
-# We return the reason a destination is blocked, including required enemy victories.
+# Returns the reason a destination is blocked, including required enemy victories.
 def travel_block_reason(destination):
-    # Explains why a connected room cannot be entered yet (or None)
-    # We explain which saved graph rule or missing victory prevents a move.
+    """Explain the first incomplete room that prevents forward travel."""
     if destination in get_accessible_rooms():
         return None
+    if destination == EXIT_ROOM_ID and all_bosses_defeated(player.get("defeated_ids", [])):
+        return None
 
-    # We explain the boss-lock requirement when the player reaches a gated passage.
-    if destination == EXIT_ROOM_ID:
-        return (f"{room_name(EXIT_ROOM_ID)} is sealed by Vharok's power. "
-                f"Defeat Vharok in {room_name(ROOM_FOR_DIFFICULTY['Boss'])} first.")
-
-    # We check the previous room's required victory quota before opening the next gate.
     index = ROOM_ORDER.index(destination) if destination in ROOM_ORDER else 0
-    previous = ROOM_ORDER[index - 1] if index > 0 else None
-
-    if previous:
-        previous_difficulty = next(
-            (tier for tier, rid in ROOM_FOR_DIFFICULTY.items() if rid == previous), None)
-        required = 1 if previous_difficulty == "Boss" else 3
-        # We count wins for this specific tier; extra weaker enemies cannot skip the next tier.
-        current = (defeated_count_for_difficulty(previous_difficulty)
-                   if previous_difficulty != "Boss" else
-                   int(all_bosses_defeated(player.get("defeated_ids", []))))
-        return (f"{room_name(destination)} is sealed. Defeat {required} "
-                f"{previous_difficulty} guardian(s) in {room_name(previous)} "
-                f"to open this passage ({min(current, required)}/{required}).")
-
+    for room_id in ROOM_ORDER[1:index]:
+        if not room_gate_satisfied(room_id, player_cleared_ids()):
+            enemies = get_room_enemies(room_id)
+            defeated = sum(m["id"] in player_cleared_ids() for m in enemies)
+            remaining = len(enemies) - defeated
+            noun = "enemy" if remaining == 1 else "enemies"
+            return (f"{room_name(destination)} is locked. Defeat {remaining} more "
+                    f"{noun} in {room_name(room_id)} "
+                    f"({defeated}/{len(enemies)}).")
+    if destination == EXIT_ROOM_ID:
+        return (f"{room_name(EXIT_ROOM_ID)} is locked. "
+                f"Defeat all bosses in {room_name(ROOM_FOR_DIFFICULTY['Boss'])}.")
     return f"{room_name(destination)} cannot be reached."
 
 
-# We allow travel only through an existing passage to an unlocked room.
-# Previously visited rooms can still be entered to fight optional enemies.
 def travel_to_room():
-    # We move the player along a graph edge (passage) to a connected room
-    # We check an actual passage and the room gate before changing the player's location.
-    # We only follow a connection that exists in the stored graph, and we reject locked destinations.
+    # Moves the player along a graph edge (passage) to a connected room
+    # Checks an actual passage and the room gate before changing the player's location.
+    # Travel follows saved connections and does not allow entry into locked rooms.
     header("Travel to Connected Room")
 
     # Travel is blocked in the middle of a battle.
-    # We check if a battle is already active before allowing this action.
+    # Checks for an active battle before continuing.
     if current_enemy_id is not None:
-        print("You cannot travel during a battle.")
+        print("Finish or retreat before traveling.")
         pause()
         return
 
     here = current_room_id()
-    # We read neighbors from stored passages rather than assuming every room is connected.
+    # Uses saved passage connections to find adjacent rooms.
     neighbors = get_neighbors(here)
 
     print(f"You are in: {room_name(here)}\n")
@@ -6373,14 +6329,19 @@ def travel_to_room():
 
     accessible = get_accessible_rooms()
 
+    def backtrack_allowed(room_id):
+        return (here in ROOM_ORDER and room_id in ROOM_ORDER
+                and ROOM_ORDER.index(room_id) < ROOM_ORDER.index(here))
+
     print_table(["Room", "Passage", "Access"],
                 [[room_name(room_id), label,
-                  "Open" if room_id in accessible else "SEALED"]
+                  "Open" if room_id in accessible else
+                  "Return" if backtrack_allowed(room_id) else "SEALED"]
                  for room_id, label in neighbors], numbered=True)
 
     print("\n[0] Back")
 
-    choice = input(f"\nWhere to? [0-{len(neighbors)}]: ").strip()
+    choice = read_menu_choice(f"\nWhere to? [0-{len(neighbors)}]: ", 0, len(neighbors))
 
     if choice == "0":
         return
@@ -6393,7 +6354,7 @@ def travel_to_room():
     destination, label = neighbors[int(choice) - 1]
 
     # Locked or invalid movement is rejected
-    reason = travel_block_reason(destination)
+    reason = None if backtrack_allowed(destination) else travel_block_reason(destination)
 
     # Display the actual reason for a locked destination.
     if reason:
@@ -6401,16 +6362,12 @@ def travel_to_room():
         pause()
         return
 
-    if encounter_lineup:
-        print("\nThe enemies waiting in your queue stay behind.")
-
     prior_queue = list(encounter_lineup)
-    # We copy nested data so changing the new state will not also change our backup.
+    # Copies nested values so changes do not affect the rollback copy.
     prior_undo = copy.deepcopy(undo_stack)
     push_undo(f"Travel to {room_name(destination)}")
-    # We empty the old lineup because the player is starting again after defeat.
-    encounter_lineup.clear()
-    # We update the current room only after all travel checks have passed.
+    # Travel does not remove queued enemies or earlier Undo snapshots.
+    # Updates the current room only after all travel checks have passed.
     player["location"] = destination
 
     if not push_battle_action("Travel", f"Player traveled to {room_name(destination)}"
@@ -6418,7 +6375,7 @@ def travel_to_room():
         player["location"] = here
         encounter_lineup[:] = prior_queue
         undo_stack[:] = prior_undo
-        print("Travel was cancelled because progress could not be saved.")
+        print("Travel cancelled. Save failed.")
         pause()
         return
 
@@ -6430,19 +6387,19 @@ def travel_to_room():
         pause()
 
 
-# We find the saved passage label between two connected rooms.
+# Finds the saved passage label between two connected rooms.
 def passage_name(a, b):
     # Resolve a live passage label rather than assuming a static default.
-    # We look up the current admin-editable passage label between two rooms.
-    # We read neighbors from stored passages rather than assuming every room is connected.
+    # Looks up the current admin-editable passage label between two rooms.
+    # Uses saved passage connections to find adjacent rooms.
     return next((label for neighbor, label in get_neighbors(a)
                  if neighbor == b), "an unnamed passage")
 
 
-# We build room story text using actual room names to avoid mismatched notifications.
+# Builds room story text using actual room names to avoid mismatched notifications.
 def contextual_story(lines):
     # If an admin customizes a room or passage, story references match it.
-    # We make story text use the saved room and passage names whenever possible.
+    # Makes story text use the saved room and passage names whenever possible.
     substitutions = {
         "Rusted Grate": passage_name("ROOM-000", "ROOM-001"),
         "Rotting Sewers": room_name("ROOM-001"),
@@ -6462,10 +6419,10 @@ def contextual_story(lines):
     return result
 
 
-# We show the room story and current objective after arriving at a room.
+# Shows the room story and current objective after arriving at a room.
 def announce_room(room_id):
     # Story panel shown when a room is entered
-    # We display the room's actual saved name and its story when the player arrives.
+    # Displays the room's actual saved name and its story when the player arrives.
     tone = "red" if room_id == ROOM_FOR_DIFFICULTY["Boss"] else "cyan"
     story_panel(room_name(room_id), contextual_story(ROOM_STORY.get(room_id, [])), tone)
 
@@ -6480,69 +6437,70 @@ def announce_room(room_id):
 
 # Explains how to finish the game when the Last Gate becomes available.
 def offer_exit():
-    # Reaching the Last Room offers the final step
-    # We offer the final escape choice after the boss has been defeated.
-    print()
-
-    if ask_yes_no("Step through the exit now? (Y/N): "):
-        return escape_dungeon()
-    else:
-        print("\nThe Last Gate awaits. Choose 'Escape Dungeon' when ready.")
-        pause()
-    return False
+    # Choosing No keeps the adventure active; choosing Yes ends it permanently.
+    return escape_dungeon()
 
 
-# Completes the adventure only after the final boss and exit conditions are met.
 def escape_dungeon():
-    # Wins the game. Only possible in the Last Room after the Boss falls.
-    # We verify the player reached the Last Gate and update the winning status.
+    # Confirming final escape ends gameplay and disables Undo permanently.
     header("The Last Gate")
 
-    # We check if a battle is already active before allowing this action.
+    if player["status"] == "Victorious":
+        print("Journey complete. View your records from the main menu.")
+        pause()
+        return False
     if current_enemy_id is not None:
         print("Finish the current battle first.")
         pause()
         return False
-
-    if player["status"] == "Victorious":
-        print("You have already crossed the Last Gate. You are free!")
-        pause()
-        return False
-
     if not all_bosses_defeated(player["defeated_ids"]):
-        print("The Last Gate remains sealed by Vharok's power.")
-        print(f"Defeat Vharok in {room_name(ROOM_FOR_DIFFICULTY['Boss'])} "
-              "to open it.")
+        print(f"Defeat Vharok in {room_name(ROOM_FOR_DIFFICULTY['Boss'])} first.")
         pause()
         return False
-
-    # We check the player's current location before deciding what is allowed.
     if current_room_id() != EXIT_ROOM_ID:
-        print("The Last Gate is open, but you have not reached it yet.")
-        print(f"Travel to {room_name(EXIT_ROOM_ID)} to leave the dungeon.")
+        print(f"Travel to {room_name(EXIT_ROOM_ID)} to escape.")
+        pause()
+        return False
+    # An enemy added by the admin can lock a cleared room again, even if
+    # the player reached the exit. All rooms must still be cleared.
+    if any(not room_gate_satisfied(room_id, player_cleared_ids())
+           for room_id in ROOM_ORDER[1:-1]):
+        print(f"Dungeon not fully cleared. {current_objective_text()}")
         pause()
         return False
 
-    begin_outcome_save()
+    print("Escaping will end the story and permanently lock gameplay and Undo.")
+    if not ask_yes_no("Escape Dungeon now? (Y/N): "):
+        print("Escape cancelled. Your adventure is still active.")
+        pause()
+        return False
+
+    # Checkpoint first: failed saves must not lock an unsaved victory.
+    if not begin_outcome_save():
+        print("Cannot finish escape while another result is being saved.")
+        pause()
+        return False
+
     player["score"] += ESCAPE_SCORE_BONUS
     player["status"] = "Victorious"
+    # Final escape is permanent. Undo snapshots are
+    # cleared, but battle and activity history are kept.
     undo_stack.clear()
-
+    encounter_lineup.clear()
     push_battle_action(
-        "Dungeon Escape",
-        f"Player escaped the dungeon and earned {ESCAPE_SCORE_BONUS} score."
+        "Dungeon Escape", f"Escaped Dreadveil. +{ESCAPE_SCORE_BONUS} score."
     )
-    # We stop if the whole battle result could not be saved consistently.
-    if not finish_outcome_save(record_battle_result(None, "Escaped Dungeon", 0, ESCAPE_SCORE_BONUS)):
+    saved = record_battle_result(None, "Escaped Dungeon", 0, ESCAPE_SCORE_BONUS)
+    if not finish_outcome_save(saved):
         pause()
         return False
 
     story_panel("Beyond the Last Gate", contextual_story(ENDING_TEXT), "green")
     animate_banner("DREADVEIL CONQUERED - YOU ESCAPED!", "green")
-    print(f"Escape bonus: +{ESCAPE_SCORE_BONUS} Score")
-    print(f"Final Score: {player['score']}")
+    print(f"Final score: {player['score']}")
     print(f"Wins / Losses: {player['wins']} / {player['losses']}")
-    print("Your victory has been saved. Press Enter to return to the main menu.")
+    print("Story complete. Gameplay and Undo are now locked.")
+    print("Your stats, battle history, and activity records are saved.")
     pause()
     return True
 
@@ -6551,15 +6509,15 @@ def escape_dungeon():
 # SAVE GAME TRANSACTION
 # ---------------------------------------------------------------
 
-# We write a readable snapshot of the current player, dungeon, and map.
-# The report is generated from live records, not a fixed example.
+# Writes a readable snapshot of the current player, dungeon, and map.
+# The report uses the records currently stored in the game.
 def write_game_snapshot(content_only=False):
-    # We record the current player run, location, and results for later reports.
-    # We prepare the readable game snapshot using the current date and time.
+    # Records the current player run, location, and results for later reports.
+    # Prepares the readable game snapshot using the current date and time.
     try:
         now = now_text()
 
-        # We build the game snapshot in memory before writing it to disk.
+        # Builds the game snapshot in memory before writing it to disk.
         with io.StringIO() as game_file:
             game_file.write("DREADVEIL: THE LAST GATE - SAVED GAME\n")
             game_file.write(f"Saved At: {now}\n\n")
@@ -6578,11 +6536,12 @@ def write_game_snapshot(content_only=False):
             game_file.write(
                 f"Unlocked Difficulties: {get_unlocked_difficulties()}\n"
             )
-            game_file.write(f"Next Goal: {rank['next_unlock']}\n")
-            game_file.write(
-                "Completed Levels: "
-                + (", ".join(player["completed_levels"]) or "None") + "\n"
-            )
+            game_file.write(f"Next Goal: {current_objective_text()}\n")
+            game_file.write("Rooms Cleared: "
+                            + (", ".join(tier for tier in LEVEL_ORDER
+                                         if is_level_complete(tier)) or "None") + "\n")
+            game_file.write("Clear Rewards Earned: "
+                            + (", ".join(player["completed_levels"]) or "None") + "\n")
 
             game_file.write("\nINVENTORY\n")
 
@@ -6610,7 +6569,7 @@ def write_game_snapshot(content_only=False):
 
             game_file.write("\nENEMY INFORMATION\n")
 
-            # We include the status and HP of every enemy in the game snapshot.
+            # Includes the status and HP of every enemy in the game snapshot.
             for mob in mob_list:
                 game_file.write(
                     f"{mob['id']} | {mob['name']} | "
@@ -6623,7 +6582,7 @@ def write_game_snapshot(content_only=False):
             game_file.write("\nDUNGEON ENCOUNTER QUEUE (FRONT TO REAR)\n")
 
             if encounter_lineup:
-                # We save the enemy IDs currently waiting in the encounter Queue.
+                # Saves the enemy IDs currently waiting in the encounter Queue.
                 for enemy_id in encounter_lineup:
                     mob = get_enemy_by_id(enemy_id)
                     game_file.write(
@@ -6644,7 +6603,7 @@ def write_game_snapshot(content_only=False):
             game_file.write("\nUNDO STACK (TOP TO BOTTOM)\n")
 
             if undo_stack:
-                # We write each available Undo snapshot starting from the TOP.
+                # Writes each available Undo snapshot starting from the TOP.
                 for snap in reversed(undo_stack):
                     game_file.write(f"Before: {snap['label']}\n")
             else:
@@ -6673,10 +6632,12 @@ def write_game_snapshot(content_only=False):
 
 # Brings a previously defeated or retreated player into a valid active state.
 def restore_player_for_new_transaction():
-    # We prepare the player when entering the dungeon
-    # We prepare saved progress before opening a new player transaction.
+    if player["status"] == "Victorious":
+        return
+    # Prepares the player when entering the dungeon
+    # Prepares saved progress before opening a new player transaction.
     if player["hp"] <= 0:
-        # We revive the player at the configured share of Max HP, with at least one HP.
+        # Revives the player at the configured share of Max HP, with at least one HP.
         player["hp"] = max(1, player["max_hp"] * DEFEAT_REVIVE_PERCENT // 100)
 
     if player["status"] in ("Defeated", "Retreated", "Escaped") or (
@@ -6686,47 +6647,53 @@ def restore_player_for_new_transaction():
     save_current_player_account()
 
 
-# We choose the next objective from the player's actual location and quota progress.
+# The objective always follows the first room not yet completely cleared.
+# Queue/stack remain visible separately, so the goal stays brief and direct.
 def current_objective_text():
-    # We explain the next useful goal based on the player's current difficulty.
+    """Return one concise goal based on the live enemy count per room."""
     if player["status"] == "Victorious":
-        return "Journey complete - you escaped Dreadveil."
+        return "Journey complete. You escaped Dreadveil."
+
     here = current_room_id()
-    if here == EXIT_ROOM_ID:
-        return f"Step through {room_name(EXIT_ROOM_ID)} to finish the adventure."
-    enemies = get_room_enemies(here)
-    if enemies:
-        remaining = [m for m in enemies if not m["defeated"]]
-        tier = next((name for name, rid in ROOM_FOR_DIFFICULTY.items()
-                     if rid == here), None)
-        if tier and tier != "Boss":
-            # We count wins for this specific tier; extra weaker enemies cannot skip the next tier.
-            defeated = defeated_count_for_difficulty(tier)
-            if defeated >= 3:
-                if remaining:
-                    return (f"{tier} requirement COMPLETE (3/3). Next room open. "
-                            f"{len(remaining)} optional enemy/enemies remain here; "
-                            "you may return to fight them anytime.")
-                if here in TREASURES and here not in player["treasures"]:
-                    return "Room fully cleared. Open the chest or travel onward."
-            else:
-                return (f"Defeat {3 - defeated} more {tier} enemy/enemies "
-                        f"to unlock the next room ({defeated}/3).")
-        if tier == "Boss" and remaining:
-            return "Defeat the Boss to open the Last Gate."
-        if here in TREASURES and here not in player["treasures"]:
-            return "Room fully cleared. Open the chest or travel onward."
-    index = ROOM_ORDER.index(here)
-    if index + 1 < len(ROOM_ORDER):
-        destination = ROOM_ORDER[index + 1]
-        return f"Travel to {room_name(destination)} when the passage is open."
-    return "Explore the dungeon."
+    defeated_ids = set(player.get("defeated_ids", []))
+    needed_tier = next((tier for tier in ("Weak", "Intermediate", "Strong")
+                        if not is_level_complete(tier)), None)
+    if needed_tier is None and not all_bosses_defeated(defeated_ids):
+        needed_tier = "Boss"
+
+    if needed_tier is None:
+        if here == EXIT_ROOM_ID:
+            return f"Escape through {room_name(EXIT_ROOM_ID)} to finish the adventure."
+        return f"Travel to {room_name(EXIT_ROOM_ID)} and escape the dungeon."
+
+    target_room = ROOM_FOR_DIFFICULTY[needed_tier]
+    if needed_tier == "Boss":
+        waiting = [mob for mob in get_room_enemies(target_room)
+                   if mob["id"] not in defeated_ids]
+        if len(waiting) == 1:
+            name = waiting[0]["name"].split(",", 1)[0]
+            if here == target_room:
+                return f"Defeat {name} to unlock {room_name(EXIT_ROOM_ID)}."
+            return f"Travel to {room_name(target_room)} and defeat {name}."
+        count = len(waiting)
+        noun = "boss" if count == 1 else "bosses"
+        if here == target_room:
+            return f"Defeat {count} remaining {noun} to unlock {room_name(EXIT_ROOM_ID)}."
+        return f"Travel to {room_name(target_room)} and defeat {count} {noun}."
+
+    beaten, total = room_enemy_progress(needed_tier)
+    remaining = max(0, total - beaten)
+    noun = "enemy" if remaining == 1 else "enemies"
+    if here == target_room:
+        return (f"Defeat {remaining} more {needed_tier} {noun} "
+                f"to unlock the next room ({beaten}/{total}).")
+    return (f"Travel to {room_name(target_room)} and defeat "
+            f"{remaining} {needed_tier} {noun} ({beaten}/{total}).")
 
 
-# We display the current stats, room, Queue, and top Undo action at camp.
 def show_live_panel():
     # Live view of the player, the queue and the top of the stack
-    # We display current HP, Gold, rank, room, and the next progression objective.
+    # Displays current HP, Gold, rank, room, and the next progression objective.
     mob = get_current_enemy()
     rank = get_player_rank_info()["rank"]
     player_bar = color(hp_bar(player["hp"], player["max_hp"]),
@@ -6779,13 +6746,13 @@ def show_live_panel():
     print(f"  AUTOSAVE:  {session_save_mode}")
 
 
-# We display battle choices and repeats until the fight is finished or abandoned.
+# Displays battle choices and repeats until the fight is finished or abandoned.
 def battle_menu():
     # Actions available while fighting the enemy at the queue front
-    # We show only the battle commands relevant to the ongoing fight.
+    # Shows only the battle commands relevant to the ongoing fight.
     notice = ""
 
-    # We repeat battle commands while there is an active enemy.
+    # Repeats battle commands while there is an active enemy.
     while current_enemy_id is not None:
         clear_screen()
         header(f"Battle: {get_current_enemy()['name']}")
@@ -6812,7 +6779,7 @@ def battle_menu():
             print(f"\n{notice}")
             notice = ""
 
-        choice = input("\nEnter choice [1-10]: ").strip()
+        choice = read_menu_choice("\nEnter choice [1-10]: ", 1, 10)
 
         if choice == "1":
             attack_current_enemy()
@@ -6838,16 +6805,20 @@ def battle_menu():
             notice = INVALID_CHOICE_TEXT
 
 
-# We handle the player camp and exploration controls between battles.
+# Handles the player camp and exploration controls between battles.
 def dungeon_menu():
+    if player["status"] == "Victorious":
+        print("Journey complete. Only saved records are available.")
+        pause()
+        return
     # Camp menu between battles. Battles open the battle menu.
-    # We connect exploration, shopping, Queue, Stack, travel, and saving in one menu.
+    # Main game menu for exploring, shopping, traveling, and viewing Queue/Stack.
     global intro_shown
 
     restore_player_for_new_transaction()
     notice = ""
 
-    # We show the opening scene once at the start of the adventure
+    # Shows the opening scene once at the start of the adventure
     if not intro_shown and player["wins"] == 0 \
             and current_room_id() == ENTRANCE_ROOM_ID:
         story_panel("Dreadveil: The Last Gate", STORY_INTRO, "magenta")
@@ -6856,12 +6827,17 @@ def dungeon_menu():
 
     intro_shown = True
 
-    # We check if a battle is already active before allowing this action.
+    # Checks for an active battle before continuing.
     if current_enemy_id is not None:
         battle_menu()
 
-    # We repeat this menu or action until the player gives a valid choice or leaves.
+
     while True:
+        # Undoing a victory/defeat can restore an unfinished battle.
+        # Return to battle controls instead of showing the camp menu.
+        if current_enemy_id is not None:
+            battle_menu()
+            continue
         clear_screen()
         header("Dreadveil - Expedition Camp")
         show_live_panel()
@@ -6886,8 +6862,12 @@ def dungeon_menu():
             print(f"\n{notice}")
             notice = ""
 
-        choice = input("\nEnter choice [1-16]: ").strip()
+        choice = read_menu_choice("\nEnter choice [1-16]: ", 1, 16)
 
+        if (player["status"] == "Victorious" and
+                choice in ("1", "2", "5", "6", "7", "8", "9", "16")):
+            notice = "Journey complete. Gameplay is locked."
+            continue
         if choice == "1":
             start_battle_with_next_enemy()
             battle_menu()
@@ -6919,8 +6899,8 @@ def dungeon_menu():
         elif choice == "14":
             undo_latest_action()
         elif choice == "15":
-            # We save the encounter Queue together with the player's account progress.
-            # We cancel or reverse the change when the player record cannot be saved.
+            # Saves the encounter Queue together with the player's account progress.
+            # Restores the earlier values when saving fails.
             if not save_current_player_account():
                 print("\nSave failed. Check access to the game files before exiting.")
                 pause()
@@ -6938,10 +6918,10 @@ def dungeon_menu():
 # ADMIN: DASHBOARD
 # ---------------------------------------------------------------
 
-# We return the profiles that belong to players rather than admin accounts.
+# Returns the profiles that belong to players rather than admin accounts.
 def player_accounts():
-    # Only player accounts (admins are excluded from game reports)
-    # We filter out admins so game statistics only count real player profiles.
+    # Only player accounts are included in game reports.
+    # Filters out admins so game statistics only count real player profiles.
     return {
         username: data
         for username, data in account_records.items()
@@ -6949,9 +6929,9 @@ def player_accounts():
     }
 
 
-# We build live admin totals using current accounts and enemy/room information.
+# Builds live admin totals using current accounts and enemy/room information.
 def admin_dashboard():
-    # We calculate record totals and game activity from the latest saved records.
+    # Calculates record totals and game activity from the latest saved records.
     header("Administrator Dashboard")
 
     players = player_accounts()
@@ -7002,14 +6982,15 @@ def admin_dashboard():
 # ADMIN: PROFILING (FILE MAINTENANCE / CRUD)
 # ---------------------------------------------------------------
 
-# We run the common Add, View, Search, Update, and Delete menu layout.
+# Runs the common Add, View, Search, Update, and Delete menu layout.
 def crud_menu(title, actions, extra=None):
-    # We show the standard CRUD options for one type of record
-    # We reuse the same Add, View, Search, Update, and Delete layout for admin records.
+    # Shows the standard CRUD options for one type of record
+    # Reuses the same Add, View, Search, Update, and Delete layout for admin records.
     extra = extra or []
 
-    # We repeat this menu or action until the player gives a valid choice or leaves.
+
     while True:
+        clear_screen()
         header(title)
 
         print("[1] Add Record")
@@ -7024,7 +7005,7 @@ def crud_menu(title, actions, extra=None):
         max_option = 5 + len(extra)
         print("\n[0] Back")
 
-        choice = input(f"\nEnter choice [0-{max_option}]: ").strip()
+        choice = read_menu_choice(f"\nEnter choice [0-{max_option}]: ", 0, max_option)
 
         if choice in ("1", "2", "3", "4", "5"):
             actions[int(choice) - 1]()
@@ -7036,11 +7017,12 @@ def crud_menu(title, actions, extra=None):
             invalid_choice()
 
 
-# We group room editing, passage connections, and map viewing for the admin.
+# Groups room editing, passage connections, and map viewing for the admin.
 def room_maintenance_menu():
-    # We keep room editing, passage changes, and map viewing in one admin menu.
-    # We repeat this menu or action until the player gives a valid choice or leaves.
+    # Keeps room editing, passage changes, and map viewing in one admin menu.
+
     while True:
+        clear_screen()
         header("Room and Passage Maintenance")
         print("[1] View All Rooms")
         print("[2] Search Room")
@@ -7049,7 +7031,7 @@ def room_maintenance_menu():
         print("[5] Remove Passage")
         print("[6] View Dungeon Map")
         print("\n[0] Back")
-        choice = input("\nEnter choice [0-6]: ").strip()
+        choice = read_menu_choice("\nEnter choice [0-6]: ", 0, 6)
         if choice == "1":
             view_room_records()
         elif choice == "2":
@@ -7068,11 +7050,12 @@ def room_maintenance_menu():
             invalid_choice()
 
 
-# We open the maintenance screens for the records used by game transactions.
+# Opens the maintenance screens for the records used by game transactions.
 def profiling_menu():
-    # We let the admin choose which type of player, enemy, item, equipment, room, or question record to maintain.
-    # We repeat this menu or action until the player gives a valid choice or leaves.
+    # Allows the admin choose which type of player, enemy, item, equipment, room, or question record to maintain.
+
     while True:
+        clear_screen()
         header("Profiling (File Maintenance)")
 
         print("[1] Player Account Maintenance")
@@ -7083,7 +7066,7 @@ def profiling_menu():
         print("[6] Question and Challenge Maintenance")
         print("\n[0] Back")
 
-        choice = input("\nEnter choice [0-6]: ").strip()
+        choice = read_menu_choice("\nEnter choice [0-6]: ", 0, 6)
 
         if choice == "1":
             crud_menu("Player Account Maintenance", [
@@ -7123,10 +7106,10 @@ def profiling_menu():
 
 # ----- Player accounts -----
 
-# We show account fields in a table so changes can be checked after editing.
+# Shows account fields in a table so changes can be checked after editing.
 def print_account_table(accounts):
     # accounts is a list of (username, data) pairs
-    # We format player and admin account fields for the records screen.
+    # Formats player and admin account fields for the records screen.
     print_table(
         ["ID", "Username", "Role", "HP", "ATK", "Gold", "Score", "W/L",
          "Status"],
@@ -7141,9 +7124,9 @@ def print_account_table(accounts):
     )
 
 
-# We look up a player or admin account from the entered value.
+# Looks up a player or admin account from the entered value.
 def find_account(prompt="Enter Username, Player ID, or number: ", show_list=True):
-    # We find a saved account by username or account ID.
+    # Finds a saved account by username or account ID.
     accounts = list(account_records.items())
     if show_list:
         print("EXISTING ACCOUNTS")
@@ -7162,9 +7145,9 @@ def find_account(prompt="Enter Username, Player ID, or number: ", show_list=True
     return None
 
 
-# We use the validated account-creation flow so new IDs stay unique.
+# Uses the validated account-creation flow so new IDs stay unique.
 def add_account_record():
-    # We validate a new account before assigning a unique permanent ID.
+    # Validates a new account before assigning a unique permanent ID.
     header("Add Account")
 
     username = ask_text("Username: ", banned="|,")
@@ -7186,9 +7169,9 @@ def add_account_record():
     pause()
 
 
-# We display all account records currently saved in memory.
+# Displays all account records currently saved in memory.
 def view_account_records():
-    # We display all saved profiles in a table.
+    # Displays all saved profiles in a table.
     header("All Accounts")
 
     print_account_table(account_records.items())
@@ -7197,9 +7180,9 @@ def view_account_records():
     pause()
 
 
-# We filter accounts by the entered name or identifying details.
+# Filters accounts by the entered name or identifying details.
 def search_account_record():
-    # We look for accounts matching the entered username or ID.
+    # Looks for accounts matching the entered username or ID.
     header("Search Account")
 
     key = ask_text("Enter part of a username or Player ID: ").lower()
@@ -7242,7 +7225,7 @@ def search_account_record():
 
 # Changes allowed account details while keeping the record ID and role valid.
 def update_account_record():
-    # We change allowed account fields and save them without losing other records.
+    # Edits allowed account fields and saves them without losing other records.
     header("Update Account")
 
     username = find_account()
@@ -7252,7 +7235,7 @@ def update_account_record():
         return
 
     data = account_records[username]
-    # We copy nested data so changing the new state will not also change our backup.
+    # Copies nested values so changes do not affect the rollback copy.
     prior_data = copy.deepcopy(data)
 
     if username == player.get("name") and data["role"] == "Admin":
@@ -7263,7 +7246,9 @@ def update_account_record():
     data["password"] = ask_text(f"Password [{data['password']}]: ",
                                 data["password"])
 
-    if data["role"] == "Player":
+    if data["role"] == "Player" and data["status"] == "Victorious":
+        print("Completed journey: only the account password can be updated.")
+    elif data["role"] == "Player":
         data["max_hp"] = ask_int(f"Max HP [{data['max_hp']}]: ", 1,
                                  default=data["max_hp"])
         data["hp"] = ask_int(f"HP [{min(data['hp'], data['max_hp'])}]: ",
@@ -7282,7 +7267,7 @@ def update_account_record():
         data["status"] = ask_option("Status:", PLAYER_STATUSES,
                                     data["status"])
 
-    # We keep the existing accounts if the save cannot finish.
+    # Keeps the existing accounts if the save cannot finish.
     if not save_all_accounts():
         account_records[username] = prior_data
         print("Account was not updated because saving failed.")
@@ -7294,7 +7279,7 @@ def update_account_record():
 
 # Deletes the selected account after confirmation, without reusing its ID.
 def delete_account_record():
-    # We check whether removing an account is allowed before deleting it.
+    # Checks whether removing an account is allowed before deleting it.
     header("Delete Account")
 
     username = find_account()
@@ -7310,27 +7295,27 @@ def delete_account_record():
 
     print_account_table([(username, account_records[username])])
 
-    # We leave the current values unchanged if the player does not confirm.
+    # Cancelling leaves the saved values unchanged.
     if not ask_yes_no("\nDelete this account permanently? (Y/N): "):
         print("\nNothing was deleted.")
         pause()
         return
 
-    # We copy nested data so changing the new state will not also change our backup.
+    # Copies nested values so changes do not affect the rollback copy.
     prior_account = copy.deepcopy(account_records[username])
     prior_session = copy.deepcopy(session_archive["players"].get(username))
     del account_records[username]
     session_archive["players"].pop(username, None)
     updates = {
         ACCOUNT_FILE: save_all_accounts(content_only=True),
-        # We turn the session archive into JSON while keeping its nested battle data.
+        # Converts the session archive into JSON without losing nested state.
         BATTLE_SESSION_FILE: json.dumps(session_archive, ensure_ascii=False, indent=2)
     }
-    # We save the linked records as one group so partial changes do not get left behind.
+    # Saves related records together to avoid partially saved results.
     if not atomic_record_updates(updates):
         account_records[username] = prior_account
         if prior_session is not None:
-            # We store each player's session separately so accounts do not share histories.
+            # Each account keeps its own queue, battle session, and Undo history.
             session_archive["players"][username] = prior_session
         print("Account was not deleted because saving failed.")
         pause()
@@ -7343,16 +7328,16 @@ def delete_account_record():
 # ----- Enemies -----
 # Each enemy lives in the one room that belongs to its difficulty.
 
-# We check whether an enemy is still used in an active queue, battle, or undo snapshot.
+# Checks whether an enemy is still used in an active queue, battle, or undo snapshot.
 def enemy_has_active_player_state(mob):
     """Avoid resetting enemy HP or difficulty during a saved encounter."""
-    # We check if this enemy appears in an active or saved Queue, battle, or Undo.
+    # Checks if this enemy appears in an active or saved Queue, battle, or Undo.
     enemy_id = mob["id"]
     if any(enemy_id in data.get("lineup", [])
            or enemy_id in data.get("wounds", {})
            for data in account_records.values()):
         return True
-    # We check whether this enemy is active in any saved battle session.
+    # Checks whether this enemy is active in any saved battle session.
     for saved in session_archive.get("players", {}).values():
         if not isinstance(saved, dict):
             continue
@@ -7365,10 +7350,10 @@ def enemy_has_active_player_state(mob):
     return False
 
 
-# We check existing saved data before letting the admin remove an enemy.
+# Checks existing saved data before letting the admin remove an enemy.
 def enemy_record_is_referenced(mob):
     """Protect a player's saved progress and immutable battle history."""
-    # We check saved records that still refer to an enemy before removing it.
+    # Checks saved records that still refer to an enemy before removing it.
     enemy_id = mob["id"]
     if any(enemy_id in data.get("defeated_ids", [])
            or enemy_id in data.get("lineup", [])
@@ -7378,7 +7363,7 @@ def enemy_record_is_referenced(mob):
     if any(row[3] == enemy_id for row in read_record_rows(BATTLE_HISTORY_FILE)
            if len(row) >= 4):
         return True
-    # We check saved sessions before allowing deletion of an enemy profile.
+    # Checks saved sessions before allowing deletion of an enemy profile.
     for saved in session_archive.get("players", {}).values():
         if not isinstance(saved, dict):
             continue
@@ -7392,10 +7377,10 @@ def enemy_record_is_referenced(mob):
     return False
 
 
-# Prevents enemy changes that would leave fewer than three required enemies in a tier.
+# Prevents changes that would leave a difficulty room with no enemies.
 def enemy_change_block_reason(mob, new_difficulty=None):
     """Reject deletes/moves that break rank unlocks or corrupt player saves."""
-    # We stop an admin edit that could break the minimum enemies needed for progression.
+    # Checks that at least one enemy remains in each difficulty room.
     old_difficulty = mob["type"]
     minimum = MIN_ENEMIES_PER_DIFFICULTY[old_difficulty]
     remaining = sum(m["type"] == old_difficulty for m in mob_list) - 1
@@ -7410,9 +7395,9 @@ def enemy_change_block_reason(mob, new_difficulty=None):
     return None
 
 
-# We format enemy profiles for the admin view and search screens.
+# Formats enemy profiles for the admin view and search screens.
 def print_enemy_table(mobs):
-    # We display enemy stats, difficulty, rewards, and room in columns.
+    # Displays enemy stats, difficulty, rewards, and room in columns.
     print_table(
         ["ID", "Name", "Difficulty", "HP", "ATK", "Gold", "Score", "Room"],
         [
@@ -7425,9 +7410,9 @@ def print_enemy_table(mobs):
     )
 
 
-# We look for the enemy ID entered by the admin.
+# Looks for the enemy ID entered by the admin.
 def find_enemy_record(show_list=True):
-    # We locate the enemy record that the admin selected.
+    # Locates the enemy record that the admin selected.
     if show_list:
         print("EXISTING ENEMIES")
         print_enemy_table(mob_list)
@@ -7436,15 +7421,15 @@ def find_enemy_record(show_list=True):
     if key.isdigit() and 1 <= int(key) <= len(mob_list):
         return mob_list[int(key)-1]
     mob = get_enemy_by_id(key)
-    # We stop here if the enemy ID does not match an existing enemy.
+    # Stops if the chosen enemy ID is not found.
     if mob is None:
         print("\nEnemy record not found.")
     return mob
 
 
-# We add an enemy to the selected difficulty and its assigned room.
+# Adds an enemy to the selected difficulty and its assigned room.
 def add_enemy_record():
-    # We create an enemy in the room for its difficulty using a new ID.
+    # Creates an enemy in the room for its difficulty using a new ID.
     header("Add Enemy")
 
     enemy_id = next_record_id("ENM", [m["id"] for m in mob_list])
@@ -7460,7 +7445,7 @@ def add_enemy_record():
 
     mob_list.append(make_enemy(enemy_id, name, enemy_type, max_hp, atk,
                                gold, score, room))
-    # We restore the enemy records if a profile update cannot be written.
+    # Restores the enemy records if a profile update cannot be written.
     if not save_enemies():
         mob_list.pop()
         print("The enemy could not be saved. No record was added.")
@@ -7472,9 +7457,9 @@ def add_enemy_record():
     pause()
 
 
-# We list the available enemy profiles and their saved stats.
+# Lists the available enemy profiles and their saved stats.
 def view_enemy_record_table():
-    # We show every current enemy profile, including optional extras.
+    # Shows every current enemy profile, including optional extras.
     header("All Enemies")
 
     print_enemy_table(mob_list)
@@ -7483,9 +7468,9 @@ def view_enemy_record_table():
     pause()
 
 
-# We search enemy IDs, names, and difficulties without changing records.
+# Searches enemy IDs, names, and difficulties without changing records.
 def search_enemy_record():
-    # We search enemies by ID, name, or difficulty.
+    # Searches enemies by ID, name, or difficulty.
     header("Search Enemy")
 
     key = ask_text("Enter part of an Enemy ID, name or difficulty: ").lower()
@@ -7504,19 +7489,19 @@ def search_enemy_record():
     pause()
 
 
-# We edit enemy stats only when a saved encounter is not depending on them.
+# Edits enemy stats only when a saved encounter is not depending on them.
 def update_enemy_record():
-    # We validate new enemy values and restore the original record if saving fails.
+    # Checks enemy stats and restores the earlier record if saving fails.
     header("Update Enemy")
 
     mob = find_enemy_record()
 
-    # We stop here if the enemy ID does not match an existing enemy.
+    # Stops if the chosen enemy ID is not found.
     if mob is None:
         pause()
         return
 
-    # We block changing an enemy profile if it would corrupt saved battles.
+    # Blocks changing an enemy profile if it would corrupt saved battles.
     if enemy_has_active_player_state(mob):
         print("This enemy is in a saved queue, battle or undo state. "
               "Finish the encounter before editing its stats or difficulty.")
@@ -7524,7 +7509,7 @@ def update_enemy_record():
         return
 
     print("Press Enter to keep the current value.\n")
-    # We copy nested data so changing the new state will not also change our backup.
+    # Copies nested values so changes do not affect the rollback copy.
     prior_mob = copy.deepcopy(mob)
 
     mob["name"] = ask_text(f"Name [{mob['name']}]: ", mob["name"])
@@ -7545,10 +7530,10 @@ def update_enemy_record():
     mob["score_reward"] = ask_int(f"Score Reward [{mob['score_reward']}]: ",
                                   0, default=mob["score_reward"])
     mob["room"] = ROOM_FOR_DIFFICULTY[mob["type"]]
-    # We restore this enemy to its full HP so a future attempt starts fairly.
+    # The enemy returns with full HP for the next attempt.
     mob["hp"] = mob["max_hp"]
 
-    # We keep the old enemy records if writing the update failed.
+    # Preserves the earlier enemy records if writing the update failed.
     if not save_enemies():
         mob.clear()
         mob.update(prior_mob)
@@ -7562,12 +7547,12 @@ def update_enemy_record():
 
 # Blocks deletion when a required enemy or saved reference still needs the record.
 def delete_enemy_record():
-    # We prevent deleting required or referenced enemies that would break current game data.
+    # Prevents deleting required or referenced enemies that would break current game data.
     header("Delete Enemy")
 
     mob = find_enemy_record()
 
-    # We stop here if the enemy ID does not match an existing enemy.
+    # Stops if the chosen enemy ID is not found.
     if mob is None:
         pause()
         return
@@ -7581,19 +7566,19 @@ def delete_enemy_record():
         pause()
         return
 
-    # We leave the current values unchanged if the player does not confirm.
+    # Cancelling leaves the saved values unchanged.
     if not ask_yes_no("\nDelete this enemy permanently? (Y/N): "):
         print("\nNothing was deleted.")
         pause()
         return
 
-    # We keep a copy of the profile before removing it from our saved records.
+    # Keeps a copy of the profile before removing it from the saved records.
     prior_accounts = copy.deepcopy(account_records)
     mob_index = mob_list.index(mob)
     mob_list.remove(mob)
 
-    # We remove the enemy from every saved queue
-    # We remove the deleted enemy ID from each stored player Queue.
+    # Removes the enemy from every saved queue
+    # Removes the deleted enemy ID from each stored player Queue.
     for data in account_records.values():
         data["lineup"] = [e for e in data["lineup"] if e != mob["id"]]
 
@@ -7601,7 +7586,7 @@ def delete_enemy_record():
         ENEMY_FILE: save_enemies(content_only=True),
         ACCOUNT_FILE: save_all_accounts(content_only=True)
     }
-    # We save the linked records as one group so partial changes do not get left behind.
+    # Saves related records together to avoid partially saved results.
     if not atomic_record_updates(updates):
         mob_list.insert(mob_index, mob)
         account_records.clear()
@@ -7616,9 +7601,9 @@ def delete_enemy_record():
 
 # ----- Items -----
 
-# We print consumable-item stats and purchase limits.
+# Prints consumable-item stats and purchase limits.
 def print_item_table(items):
-    # We format the saved item attributes into a readable table.
+    # Formats the saved item attributes into a readable table.
     print_table(
         ["ID", "Name", "Effect", "Power", "Price", "Carry", "Description"],
         [
@@ -7631,9 +7616,9 @@ def print_item_table(items):
     )
 
 
-# We select the item that will be viewed or edited.
+# Selects the item that will be viewed or edited.
 def find_item_record():
-    # We locate the selected item by its record ID.
+    # Locates the selected item by its record ID.
     print("EXISTING ITEMS")
     items = list(item_records.values())
     print_item_table(items)
@@ -7647,16 +7632,16 @@ def find_item_record():
     return item
 
 
-# We show the instruction for keeping a saved value during editing.
+# Shows the instruction for keeping a saved value during editing.
 def keep_hint(value):
-    # We show the current value in update prompts, e.g. "Name [Potion]: "
-    # We tell the admin that Enter keeps the existing field value.
+    # Shows the current value in update prompts, e.g. "Name [Potion]: "
+    # Tells the admin that Enter keeps the existing field value.
     return f" [{value}]" if value is not None else ""
 
 
-# We collect and validates the item effect, power, price, and carry limit.
+# Collects and validates the item effect, power, price, and carry limit.
 def ask_item_fields(item=None):
-    # We collect an item's name, effect, power, cost, and carrying limit.
+    # Collects an item's name, effect, power, cost, and carrying limit.
     item = item or {}
 
     name = ask_text(f"Name{keep_hint(item.get('name'))}: ", item.get("name"))
@@ -7688,9 +7673,9 @@ def ask_item_fields(item=None):
             "max_carry": carry, "description": description}
 
 
-# We create a usable item profile and saves it with a new item ID.
+# Creates a usable item profile and saves it with a new item ID.
 def add_item_record():
-    # We create an item and save it after validating the new fields.
+    # Creates a new item after validating its details and saves it.
     header("Add Item")
 
     item_id = next_record_id("ITM", list(item_records))
@@ -7708,9 +7693,9 @@ def add_item_record():
     pause()
 
 
-# We list the items that can be used by the game and shops.
+# Lists the items that can be used by the game and shops.
 def view_item_records():
-    # We list all currently available consumable items.
+    # Lists all currently available consumable items.
     header("All Items")
 
     print_item_table(item_records.values())
@@ -7719,9 +7704,9 @@ def view_item_records():
     pause()
 
 
-# We filter consumable records based on the entered keyword.
+# Filters consumable records based on the entered keyword.
 def search_item_record():
-    # We find items by their ID, name, or effect.
+    # Finds items by their ID, name, or effect.
     header("Search Item")
 
     key = ask_text("Enter part of an Item ID, name or effect: ").lower()
@@ -7740,9 +7725,9 @@ def search_item_record():
     pause()
 
 
-# We edit an existing item without changing unrelated inventory entries.
+# Edits an existing item without changing unrelated inventory entries.
 def update_item_record():
-    # We restore the item profile if its edited values cannot be saved.
+    # Restores the item profile if its edited values cannot be saved.
     header("Update Item")
 
     item = find_item_record()
@@ -7752,13 +7737,13 @@ def update_item_record():
         return
 
     print("Press Enter to keep the current value.\n")
-    # We copy nested data so changing the new state will not also change our backup.
+    # Copies nested values so changes do not affect the rollback copy.
     prior_item = copy.deepcopy(item)
     prior_accounts = copy.deepcopy(account_records)
     item.update(ask_item_fields(item))
 
     # Adjust stored item quantities to the allowed carrying limit
-    # We clamp saved player quantities to the newly chosen carry maximum.
+    # Clamps saved player quantities to the newly chosen carry maximum.
     for data in account_records.values():
         if data["inventory"].get(item["id"], 0) > item["max_carry"]:
             data["inventory"][item["id"]] = item["max_carry"]
@@ -7778,9 +7763,9 @@ def update_item_record():
     pause()
 
 
-# We check whether an item can be safely removed from the item catalog.
+# Checks whether an item can be safely removed from the item catalog.
 def delete_item_record():
-    # We check whether a saved inventory still uses an item before removal.
+    # Checks whether a saved inventory still uses an item before removal.
     header("Delete Item")
 
     item = find_item_record()
@@ -7791,18 +7776,18 @@ def delete_item_record():
 
     print_item_table([item])
 
-    # We leave the current values unchanged if the player does not confirm.
+    # Cancelling leaves the saved values unchanged.
     if not ask_yes_no("\nDelete this item? It is removed from every "
                       "inventory. (Y/N): "):
         print("\nNothing was deleted.")
         pause()
         return
 
-    # We copy nested data so changing the new state will not also change our backup.
+    # Copies nested values so changes do not affect the rollback copy.
     prior_accounts = copy.deepcopy(account_records)
     del item_records[item["id"]]
 
-    # We remove a deleted item from every player inventory.
+    # Removes a deleted item from every player inventory.
     for data in account_records.values():
         data["inventory"].pop(item["id"], None)
 
@@ -7822,9 +7807,9 @@ def delete_item_record():
 
 # ----- Equipment -----
 
-# We format equipment records for the admin list.
+# Formats equipment records for the admin list.
 def print_equipment_table(items):
-    # We show the equipment slot, tier, bonus, price, and speed.
+    # Shows the equipment slot, tier, bonus, price, and speed.
     print_table(
         ["ID", "Name", "Slot", "Tier", "Effect", "Price", "Description"],
         [
@@ -7837,9 +7822,9 @@ def print_equipment_table(items):
     )
 
 
-# We get the selected piece of equipment by ID.
+# Gets the selected piece of equipment by ID.
 def find_equipment_record():
-    # We look up the equipment ID selected by the admin.
+    # Looks up the equipment ID selected by the admin.
     print("EXISTING EQUIPMENT")
     items = ordered_equipment_records(equipment_records.values())
     print_equipment_table(items)
@@ -7853,9 +7838,9 @@ def find_equipment_record():
     return eq
 
 
-# We ask for equipment stats while validating slot, tier, and price.
+# Asks for equipment stats while validating slot, tier, and price.
 def ask_equipment_fields(eq=None):
-    # We collect the required equipment attributes and validate them.
+    # Collects and validates the equipment details.
     eq = eq or {}
 
     name = ask_text(f"Name{keep_hint(eq.get('name'))}: ", eq.get("name"))
@@ -7878,9 +7863,9 @@ def ask_equipment_fields(eq=None):
             "price": price, "description": description, "speed": speed}
 
 
-# We create a new equipment entry using the selected slot and tier.
+# Creates a new equipment entry using the selected slot and tier.
 def add_equipment_record():
-    # We assign the next unused Equipment ID when adding a shop upgrade.
+    # Assigns the next unused Equipment ID when adding a shop upgrade.
     header("Add Equipment")
 
     eid = next_record_id("EQP", list(equipment_records))
@@ -7898,9 +7883,9 @@ def add_equipment_record():
     pause()
 
 
-# We display current equipment profiles from saved data.
+# Displays current equipment profiles from saved data.
 def view_equipment_records():
-    # We list the saved swords, shields, and armor choices.
+    # Lists the saved swords, shields, and armor choices.
     header("All Equipment")
 
     print_equipment_table(equipment_records.values())
@@ -7909,9 +7894,9 @@ def view_equipment_records():
     pause()
 
 
-# We find equipment by its ID, name, or assigned category.
+# Finds equipment by its ID, name, or assigned category.
 def search_equipment_record():
-    # We find matching gear by its ID, name, slot, or tier.
+    # Finds matching gear by its ID, name, slot, or tier.
     header("Search Equipment")
 
     key = ask_text("Enter part of an ID, name, slot or tier: ").lower()
@@ -7929,9 +7914,9 @@ def search_equipment_record():
     pause()
 
 
-# We validate equipment edits against player-owned and equipped references.
+# Validates equipment edits against player-owned and equipped references.
 def update_equipment_record():
-    # We save equipment edits while protecting currently owned references.
+    # Saves equipment edits while protecting currently owned references.
     header("Update Equipment")
 
     eq = find_equipment_record()
@@ -7941,7 +7926,7 @@ def update_equipment_record():
         return
 
     print("Press Enter to keep the current value.\n")
-    # We copy nested data so changing the new state will not also change our backup.
+    # Copies nested values so changes do not affect the rollback copy.
     prior_eq = copy.deepcopy(eq)
     prior_accounts = copy.deepcopy(account_records)
     old_slot = eq["slot"]
@@ -7949,7 +7934,7 @@ def update_equipment_record():
 
     # A changed slot would break equipped pieces, so they are unequipped
     if eq["slot"] != old_slot:
-        # We drop invalid equipped references so standard gear is worn instead.
+        # Drops invalid equipped references so standard gear is worn instead.
         for data in account_records.values():
             data["equipped"] = {
                 s: e for s, e in data["equipped"].items() if e != eq["id"]
@@ -7970,9 +7955,9 @@ def update_equipment_record():
     pause()
 
 
-# We stop Equipment deletion when a saved player still depends on that ID.
+# Stops Equipment deletion when a saved player still depends on that ID.
 def delete_equipment_record():
-    # We protect account references before deleting any Equipment profile.
+    # Protects account references before deleting any Equipment profile.
     header("Delete Equipment")
 
     eq = find_equipment_record()
@@ -7983,18 +7968,18 @@ def delete_equipment_record():
 
     print_equipment_table([eq])
 
-    # We leave the current values unchanged if the player does not confirm.
+    # Cancelling leaves the saved values unchanged.
     if not ask_yes_no("\nDelete this equipment? It is removed from every "
                       "player. (Y/N): "):
         print("\nNothing was deleted.")
         pause()
         return
 
-    # We copy nested data so changing the new state will not also change our backup.
+    # Copies nested values so changes do not affect the rollback copy.
     prior_accounts = copy.deepcopy(account_records)
     del equipment_records[eq["id"]]
 
-    # We remove the deleted Equipment ID from all saved account references.
+    # Removes the deleted Equipment ID from all saved account references.
     for data in account_records.values():
         data["owned_equipment"] = [
             e for e in data["owned_equipment"] if e != eq["id"]
@@ -8019,14 +8004,14 @@ def delete_equipment_record():
 
 # ----- Rooms and passages -----
 
-# We display each room vertex with its current saved name and description.
+# Displays each room vertex with its current saved name and description.
 def print_room_table(rooms):
-    # We format saved room names and descriptions for the admin.
+    # Formats saved room names and descriptions for the admin.
     rows = []
 
     for room in rooms:
         enemies = "\n".join(m["name"] for m in get_room_enemies(room["id"]))
-        # We read neighbors from stored passages rather than assuming every room is connected.
+        # Uses saved passage connections to find adjacent rooms.
         links = "\n".join(n for n, _ in get_neighbors(room["id"]))
         rows.append([room["id"], room["name"], room["description"],
                      enemies or "None", links or "None"])
@@ -8035,9 +8020,9 @@ def print_room_table(rooms):
                 rows, numbered=True)
 
 
-# We get an existing room by ID before changing its details.
+# Gets an existing room by ID before changing its details.
 def find_room_record():
-    # We locate the selected room by its fixed room ID.
+    # Locates the selected room by its fixed room ID.
     print("EXISTING ROOMS")
     print_room_table(room_records.values())
     print()
@@ -8047,9 +8032,9 @@ def find_room_record():
 
 
 
-# We display the six required room records.
+# Displays the six required room records.
 def view_room_records():
-    # We display all six dungeon rooms from their saved records.
+    # Displays all six dungeon rooms from their saved records.
     header("All Rooms")
 
     print_room_table(room_records.values())
@@ -8058,9 +8043,8 @@ def view_room_records():
     pause()
 
 
-# We search room IDs, names, and descriptions.
+# Searches room IDs, names, and descriptions.
 def search_room_record():
-    # We search rooms by ID, name, or description.
     header("Search Room")
 
     key = ask_text("Enter part of a Room ID or name: ").lower()
@@ -8080,7 +8064,7 @@ def search_room_record():
 
 # Changes a room's text without changing its fixed ID or route position.
 def update_room_record():
-    # We allow room-name edits while keeping each room ID fixed.
+    # Allows room-name edits while keeping each room ID fixed.
     header("Update Room")
 
     room = find_room_record()
@@ -8090,7 +8074,7 @@ def update_room_record():
         return
 
     print("Press Enter to keep the current value.\n")
-    # We copy nested data so changing the new state will not also change our backup.
+    # Copies nested values so changes do not affect the rollback copy.
     prior_room = copy.deepcopy(room)
     room["name"] = ask_text(f"Name [{room['name']}]: ", room["name"])
     room["description"] = ask_text(
@@ -8109,9 +8093,9 @@ def update_room_record():
 
 
 
-# We reject invalid room IDs, duplicate passages, and disallowed graph links.
+# Rejects invalid room IDs, duplicate passages, and disallowed graph links.
 def validate_connection(room_a, room_b):
-    # We make sure a proposed graph passage joins permitted existing rooms.
+    # Makes sure a proposed graph passage joins permitted existing rooms.
     if room_a not in room_records or room_b not in room_records:
         return "Room record not found."
     if room_a == room_b:
@@ -8121,9 +8105,9 @@ def validate_connection(room_a, room_b):
     return None
 
 
-# We create a labeled passage only when the graph rules allow it.
+# Creates a labeled passage only when the graph rules allow it.
 def add_connection_record():
-    # We add a passage only when both room IDs make a valid graph connection.
+    # Adds a passage only when both room IDs make a valid graph connection.
     header("Add Passage")
     print_table(["Room ID", "Name"],
                 [[room_id, room_name(room_id)] for room_id in room_records],
@@ -8154,9 +8138,9 @@ def add_connection_record():
     pause()
 
 
-# We check connectivity and progression before deleting a passage.
+# Checks connectivity and progression before deleting a passage.
 def remove_connection_record():
-    # We refuse passage removal when it would break required dungeon progression.
+    # Refuses passage removal when it would break required dungeon progression.
     header("Remove Passage")
     if not room_connections:
         print("There are no passages.")
@@ -8169,23 +8153,23 @@ def remove_connection_record():
     number = ask_int(f"\nPassage to remove [1-{len(room_connections)}]: ",
                      1, len(room_connections))
     link = room_connections[number - 1]
-    # We leave the current values unchanged if the player does not confirm.
+    # Cancelling leaves the saved values unchanged.
     if not ask_yes_no(f"Remove the {link['label']}? (Y/N): "):
         print("\nNothing was removed.")
         pause()
         return
     room_connections.pop(number - 1)
     unreachable = [r for r in room_records
-                   # We visit rooms in DFS order using saved connections.
+                   # Traverses rooms using depth-first search (DFS) and saved passages.
                    if r not in depth_first_traversal(ENTRANCE_ROOM_ID)]
     for target in ROOM_ORDER[1:]:
         allowed = set(ROOM_ORDER[:ROOM_ORDER.index(target) + 1])
         reached = {ENTRANCE_ROOM_ID}
         pending = [ENTRANCE_ROOM_ID]
-        # We inspect connected rooms until our passage search is complete.
+        # Inspects connected rooms until the passage search is complete.
         while pending:
             room_id = pending.pop(0)
-            # We read neighbors from stored passages rather than assuming every room is connected.
+            # Uses saved passage connections to find adjacent rooms.
             for neighbor, _ in get_neighbors(room_id):
                 if neighbor in allowed and neighbor not in reached:
                     reached.add(neighbor)
@@ -8204,9 +8188,9 @@ def remove_connection_record():
     pause()
 
 
-# We show the same graph information used by the player, with admin details.
+# Shows the same graph information used by the player, with admin details.
 def admin_view_map():
-    # We let the admin inspect the same live graph the player uses.
+    # Allows the admin to inspect the same map graph used by the player.
     header("Dungeon Map (Graph)")
 
     for line in dungeon_drawing_lines([]):
@@ -8222,9 +8206,9 @@ def admin_view_map():
 
 # ----- Questions -----
 
-# We format the challenge question profiles.
+# Formats the challenge question profiles.
 def print_question_table(questions):
-    # We format challenge questions and answer details for maintenance.
+    # Formats challenge questions and answer details for maintenance.
     rows = []
     for question in questions:
         choices = "\n".join(
@@ -8239,14 +8223,14 @@ def print_question_table(questions):
 
 # Locates an existing question by ID before an admin action.
 def find_question_record():
-    # We locate the saved question selected by the admin.
+    # Locates the saved question selected by the admin.
     print("EXISTING QUESTIONS")
     print_question_table(question_records)
     print()
     key = input("Enter Question ID or number: ").strip().upper()
     if key.isdigit() and 1 <= int(key) <= len(question_records):
         return question_records[int(key)-1]
-    # We match the question ID against the stored question records.
+    # Matches the question ID against the stored question records.
     for question in question_records:
         if question["id"] == key:
             return question
@@ -8254,9 +8238,9 @@ def find_question_record():
     return None
 
 
-# We validate the question choices, answer number, enemy link, and bonus.
+# Validates the question choices, answer number, enemy link, and bonus.
 def ask_question_fields(question=None, difficulty=None):
-    # We collect the question, choices, answer number, and bonus value.
+    # Collects the question, choices, answer number, and bonus value.
     question = question or {"choices": []}
     old_choices = question["choices"] + [None] * (4 - len(question["choices"]))
     level = (difficulty if difficulty is not None else
@@ -8276,9 +8260,9 @@ def ask_question_fields(question=None, difficulty=None):
             "bonus": bonus, "difficulty": level}
 
 
-# We check a new challenge question's difficulty and answer before saving.
+# Checks a new challenge question's difficulty and answer before saving.
 def add_question_record():
-    # We save a question under the correct difficulty group for battle selection.
+    # Saves a question under the correct difficulty group for battle selection.
     header("Add Question")
     qid = next_record_id("QST", [q["id"] for q in question_records])
     print(f"New Question ID: {qid}")
@@ -8292,9 +8276,9 @@ def add_question_record():
     pause()
 
 
-# We list all challenge questions available in the game.
+# Lists all challenge questions available in the game.
 def view_question_records():
-    # We display all quiz challenges for review.
+    # Displays all quiz challenges for review.
     header("All Questions")
 
     print_question_table(question_records)
@@ -8303,9 +8287,9 @@ def view_question_records():
     pause()
 
 
-# We search questions by ID or question text.
+# Searches questions by ID or question text.
 def search_question_record():
-    # We find question records by their IDs or content.
+    # Finds question records by their IDs or content.
     header("Search Question")
 
     key = ask_text("Enter part of a Question ID or text: ").lower()
@@ -8323,9 +8307,9 @@ def search_question_record():
     pause()
 
 
-# We validate and save edited questions without breaking the question pool.
+# Validates and saves edited questions while keeping the question pool usable.
 def update_question_record():
-    # We update a question and restore it if writing the file fails.
+    # Updates a question and restores its earlier text if saving fails.
     header("Update Question")
 
     question = find_question_record()
@@ -8360,9 +8344,9 @@ def update_question_record():
     pause()
 
 
-# We check whether the selected question can be removed safely.
+# Checks whether the selected question can be removed safely.
 def delete_question_record():
-    # We check dependencies before removing a question used in combat.
+    # Checks dependencies before removing a question used in combat.
     header("Delete Question")
     question = find_question_record()
     if question is None:
@@ -8377,7 +8361,7 @@ def delete_question_record():
         pause()
         return
     print_question_table([question])
-    # We leave the current values unchanged if the player does not confirm.
+    # Cancelling leaves the saved values unchanged.
     if not ask_yes_no("\nDelete this question? (Y/N): "):
         print("\nNothing was deleted.")
         pause()
@@ -8397,9 +8381,9 @@ def delete_question_record():
 # ADMIN: TRANSACTIONS (GAME SETUP AND MANAGEMENT)
 # ---------------------------------------------------------------
 
-# We let the admin select a saved player for transactions and inspection.
+# Allows the admin select a saved player for transactions and inspection.
 def choose_player_account():
-    # We select a valid player profile for an admin transaction.
+    # Selects a valid player profile for an admin transaction.
     accounts = list(player_accounts().items())
     print_account_table(accounts)
     key = input("\nEnter Username, Player ID, or No.: ").strip()
@@ -8412,9 +8396,9 @@ def choose_player_account():
     return None
 
 
-# We show the player's progress using real wins, rank, and completed levels.
+# Shows the player's progress using real wins, rank, and completed levels.
 def view_player_progress():
-    # We show a selected player's saved rank, enemies, Gold, and unlocked rooms.
+    # Shows a selected player's saved rank, enemies, Gold, and unlocked rooms.
     header("View Player Progress")
 
     username = choose_player_account()
@@ -8424,14 +8408,17 @@ def view_player_progress():
         return
 
     data = account_records[username]
-    # We check the tier-specific victory counts to decide the currently unlocked difficulty.
+    # The current enemy list decides which difficulty is unlocked.
     rank = get_rank_info(data["wins"], data["defeated_ids"])
 
     print()
     print_account_table([(username, data)])
     print(f"Rank            : {rank['rank']} ({rank['next_unlock']})")
     print(f"Location        : {room_name(data['location'])}")
-    print(f"Completed Levels: {', '.join(data['completed_levels']) or 'None'}")
+    print("Rooms Cleared   : " + (", ".join(
+        tier for tier in LEVEL_ORDER if is_level_complete(tier, data['defeated_ids'])
+    ) or "None"))
+    print(f"Rewards Earned  : {', '.join(data['completed_levels']) or 'None'}")
     print(f"Defeated Enemies: {len(data['defeated_ids'])}/{len(mob_list)}")
     print(f"Saved Queue     : {', '.join(data['lineup']) or 'Empty'}")
     print("Equipment       : " + (", ".join(
@@ -8451,9 +8438,9 @@ def view_player_progress():
     pause()
 
 
-# We reset the selected player's game progress after confirmation.
+# Resets the selected player's game progress after confirmation.
 def reset_player_game_data():
-    # We reset chosen game progress while keeping the account itself.
+    # Resets chosen game progress while keeping the account itself.
     header("Reset Player Game Data")
 
     username = choose_player_account()
@@ -8462,14 +8449,18 @@ def reset_player_game_data():
         pause()
         return
 
-    # We leave the current values unchanged if the player does not confirm.
+    if account_records[username]["status"] == "Victorious":
+        print("Journey complete. This story is locked and cannot be reset.")
+        pause()
+        return
+    # Cancelling leaves the saved values unchanged.
     if not ask_yes_no(f"\nReset all progress of {username}? (Y/N): "):
         print("\nNothing was changed.")
         pause()
         return
 
     data = account_records[username]
-    # We copy nested data so changing the new state will not also change our backup.
+    # Copies nested values so changes do not affect the rollback copy.
     prior_account = copy.deepcopy(data)
     prior_session = copy.deepcopy(session_archive["players"].get(username))
     fresh = new_account_data(data["id"], data["password"])
@@ -8477,11 +8468,11 @@ def reset_player_game_data():
     session_archive["players"].pop(username, None)
     if not atomic_record_updates({
             ACCOUNT_FILE: save_all_accounts(content_only=True),
-            # We turn the session archive into JSON while keeping its nested battle data.
+            # Converts the session archive into JSON without losing nested state.
             BATTLE_SESSION_FILE: json.dumps(session_archive, ensure_ascii=False, indent=2)}):
         account_records[username] = prior_account
         if prior_session is not None:
-            # We store each player's session separately so accounts do not share histories.
+            # Each account keeps its own queue, battle session, and Undo history.
             session_archive["players"][username] = prior_session
         print("Player progress was not reset because saving failed.")
         pause()
@@ -8491,9 +8482,9 @@ def reset_player_game_data():
     pause()
 
 
-# We update the starter supplies for the chosen player account.
+# Updates the starter supplies for the chosen player account.
 def assign_starting_items():
-    # We give eligible starting supplies to the chosen player and save the updated inventory.
+    # Gives the selected player eligible supplies and saves the inventory.
     header("Assign Items to Player")
 
     username = choose_player_account()
@@ -8503,6 +8494,10 @@ def assign_starting_items():
         return
 
     data = account_records[username]
+    if data["status"] == "Victorious":
+        print("Journey complete. Final records cannot be changed.")
+        pause()
+        return
     items = list(item_records.values())
 
     print()
@@ -8518,14 +8513,14 @@ def assign_starting_items():
     qty = ask_int(f"New quantity for {item['name']} "
                   f"[0-{item['max_carry']}]: ", 0, item["max_carry"])
 
-    # We copy nested data so changing the new state will not also change our backup.
+    # Copies nested values so changes do not affect the rollback copy.
     prior_inventory = copy.deepcopy(data["inventory"])
     if qty > 0:
         data["inventory"][item["id"]] = qty
     else:
         data["inventory"].pop(item["id"], None)
 
-    # We keep the existing accounts if the save cannot finish.
+    # Keeps the existing accounts if the save cannot finish.
     if not save_all_accounts():
         data["inventory"] = prior_inventory
         print("Items were not assigned because saving failed.")
@@ -8537,7 +8532,7 @@ def assign_starting_items():
 
 # Changes enemy difficulty only if the new record still follows dungeon rules.
 def set_enemy_difficulty():
-    # We validate enemy-difficulty edits against progression and existing battles.
+    # Validates enemy-difficulty edits against progression and existing battles.
     header("Set Enemy Difficulty")
 
     print_enemy_table(mob_list)
@@ -8545,7 +8540,7 @@ def set_enemy_difficulty():
     print()
     mob = find_enemy_record(show_list=False)
 
-    # We stop here if the enemy ID does not match an existing enemy.
+    # Stops if the chosen enemy ID is not found.
     if mob is None:
         pause()
         return
@@ -8556,7 +8551,7 @@ def set_enemy_difficulty():
         pause()
         return
 
-    # We copy nested data so changing the new state will not also change our backup.
+    # Copies nested values so changes do not affect the rollback copy.
     prior_mob = copy.deepcopy(mob)
     allowed = ["Boss"] if mob["id"] == "BS-001" else ["Weak", "Intermediate", "Strong"]
     chosen_type = ask_option("New difficulty:", allowed, mob["type"])
@@ -8573,10 +8568,10 @@ def set_enemy_difficulty():
 
     mob["max_hp"] = max(1, mob["max_hp"] * percent // 100)
     mob["atk"] = max(1, mob["atk"] * percent // 100)
-    # We restore this enemy to its full HP so a future attempt starts fairly.
+    # The enemy returns with full HP for the next attempt.
     mob["hp"] = mob["max_hp"]
 
-    # We keep the old enemy records if writing the update failed.
+    # Preserves the earlier enemy records if writing the update failed.
     if not save_enemies():
         mob.clear()
         mob.update(prior_mob)
@@ -8589,14 +8584,14 @@ def set_enemy_difficulty():
     pause()
 
 
-# We turn saved battle history entries into readable report rows.
+# Converts saved battle history entries into readable report rows.
 def battle_history_lines(username=None):
-    # We format battle results so administrators can review what happened in each encounter.
+    # Formats battle results so administrators can review what happened in each encounter.
     results = load_battle_results()
 
     if username:
         # A recreated username has a different permanent ID and must not
-        # We do not transfer completed battle history to a different player account.
+        # Does not transfer completed battle history to a different player account.
         if username in account_records:
             account_id = account_records[username]["id"]
             results = [r for r in results if r["player_id"] == account_id]
@@ -8619,25 +8614,25 @@ def battle_history_lines(username=None):
     return lines
 
 
-# We display fight results recorded for the players.
+# Displays fight results recorded for the players.
 def view_battle_history():
-    # We display completed battle records from the saved history file.
+    # Displays completed battle records from the saved history file.
     header("View Battle History")
 
     username = input("Filter by username (Enter for all): ").strip()
 
     print()
 
-    # We display completed battle results for the selected player filter.
+    # Displays completed battle results for the selected player filter.
     for line in battle_history_lines(username or None):
         print(line)
 
     pause()
 
 
-# We load permanent action history separately from the current Undo Stack.
+# Loads permanent action history separately from the current Undo Stack.
 def read_full_activity_log(username=None):
-    # We load the full activity text with its permanent action IDs.
+    # Loads the full activity text with its permanent action IDs.
     owners = {data["id"]: name for name, data in account_records.items()}
     entries = []
     for parts in read_record_rows(BATTLE_LOG_FILE):
@@ -8656,14 +8651,14 @@ def read_full_activity_log(username=None):
     return entries
 
 
-# We let the admin inspect detailed actions from the saved activity records.
+# Allows the admin inspect detailed actions from the saved activity records.
 def admin_view_full_activity_history():
-    # We filter saved player actions for Admin review without changing them.
+    # Filters saved player actions for Admin review without changing them.
     header("Complete Player Activity History")
     print("[1] All Players")
     print("[2] Select Player")
     print("[0] Back")
-    choice = input("\nEnter choice [0-2]: ").strip()
+    choice = read_menu_choice("\nEnter choice [0-2]: ", 0, 2)
     if choice == "0":
         return
     if choice == "1":
@@ -8678,8 +8673,9 @@ def admin_view_full_activity_history():
         return
     entries = read_full_activity_log(selected)
     offset = 0
-    # We repeat this menu or action until the player gives a valid choice or leaves.
+
     while True:
+        clear_screen()
         header("Complete Player Activity History")
         print(f"Player: {selected or 'All'} | Total recorded events: {len(entries)}")
         if not entries:
@@ -8699,7 +8695,8 @@ def admin_view_full_activity_history():
         if newer:
             print("[2] Newer Events")
         print("[0] Back")
-        choice = input("\nEnter choice: ").strip()
+        choice = read_menu_choice("\nEnter choice: ", allowed=(
+            {"0"} | ({"1"} if older else set()) | ({"2"} if newer else set())))
         if choice == "0":
             return
         if choice == "1" and older:
@@ -8710,18 +8707,22 @@ def admin_view_full_activity_history():
             invalid_choice()
 
 
-# We restore all currently eligible snapshots for a selected player.
+# Restores all currently eligible snapshots for a selected player.
 def admin_undo_all_pending():
-    # We safely apply all currently eligible Undo snapshots for a selected player.
-    # We only restore the snapshots that are still safe to undo for the selected player.
+    # Applies the available Undo snapshots for the selected player.
+    # Only restores snapshots allowed for the selected player.
     header("Undo All Available Player Actions")
     username = choose_player_account()
     if username is None:
         pause()
         return False
+    record = account_records[username]
+    if record["status"] == "Victorious":
+        print("Journey complete. Final escape cannot be undone.")
+        pause()
+        return False
     saved = session_archive['players'].get(username, {})
     states = saved.get('undo', [])
-    record = account_records[username]
     if not states:
         print("Undo Stack is EMPTY. There are no actions to restore.")
         pause()
@@ -8730,7 +8731,7 @@ def admin_undo_all_pending():
     in_battle = record['status'] == 'In Battle'
     if in_battle:
         mob = get_enemy_by_id(active_enemy) if active_enemy else None
-        # We stop here if the enemy ID does not match an existing enemy.
+        # Stops if the chosen enemy ID is not found.
         if (mob is None or active_enemy in record['defeated_ids']
                 or not record['lineup'] or record['lineup'][0] != active_enemy
                 or mob['room'] != record['location']
@@ -8769,13 +8770,13 @@ def admin_undo_all_pending():
     if in_battle:
         print(f"Enemy HP will return to {oldest['enemy_hp']}/{mob['max_hp']}.")
     print("Completed battles and permanent rewards are NOT part of this Undo.")
-    # We leave the current values unchanged if the player does not confirm.
+    # Cancelling leaves the saved values unchanged.
     if not ask_yes_no("Undo all available actions? (Y/N): "):
         print("Nothing was changed.")
         pause()
         return False
     import copy
-    # We copy nested data so changing the new state will not also change our backup.
+    # Copies nested values so changes do not affect the rollback copy.
     previous_record = copy.deepcopy(record)
     previous_session = copy.deepcopy(saved)
     for key in ('hp', 'gold', 'score', 'inventory', 'owned_equipment',
@@ -8799,7 +8800,7 @@ def admin_undo_all_pending():
              "player_hp_after": record['hp'], "enemy_hp_before": None,
              "enemy_hp_after": None}
     saved.setdefault('history', []).append(event)
-    # We preserve the current audit log before recording an Admin Undo.
+    # Preserves the current audit log before recording an Admin Undo.
     try:
         prior_log = Path(BATTLE_LOG_FILE).read_text(encoding="utf-8") if Path(BATTLE_LOG_FILE).exists() else ""
     except OSError as error:
@@ -8817,11 +8818,11 @@ def admin_undo_all_pending():
                  f"Enemy HP: None -> None\n")
     updates = {
         ACCOUNT_FILE: save_all_accounts(content_only=True),
-        # We turn the session archive into JSON while keeping its nested battle data.
+        # Converts the session archive into JSON without losing nested state.
         BATTLE_SESSION_FILE: json.dumps(session_archive, ensure_ascii=False, indent=2),
         BATTLE_LOG_FILE: prior_log + log_entry
     }
-    # We save the linked records as one group so partial changes do not get left behind.
+    # Saves related records together to avoid partially saved results.
     if not atomic_record_updates(updates):
         account_records[username] = previous_record
         session_archive['players'][username] = previous_session
@@ -8835,11 +8836,12 @@ def admin_undo_all_pending():
     return True
 
 
-# We group admin game-management actions that use the saved player records.
+# Groups admin game-management actions that use the saved player records.
 def game_setup_menu():
-    # We group the admin's player progress and battle-management transactions.
-    # We repeat this menu or action until the player gives a valid choice or leaves.
+    # Groups the admin's player progress and battle-management transactions.
+
     while True:
+        clear_screen()
         header("Transactions (Game Setup and Management)")
         print("[1] View Player Progress")
         print("[2] Reset Player Game Data")
@@ -8849,7 +8851,7 @@ def game_setup_menu():
         print("[6] View Complete Activity History")
         print("[7] Undo All Available Player Actions")
         print("\n[0] Back")
-        choice = input("\nEnter choice [0-7]: ").strip()
+        choice = read_menu_choice("\nEnter choice [0-7]: ", 0, 7)
         if choice == "1":
             view_player_progress()
         elif choice == "2":
@@ -8876,15 +8878,15 @@ def game_setup_menu():
 # exported to a text file inside the reports folder.
 # ---------------------------------------------------------------
 
-# We generate current player statistics from account records.
+# Generates current player statistics from account records.
 def report_player_statistics():
-    # We build the player statistics report from current saved accounts.
+    # Builds the player statistics report from current saved accounts.
     lines = table_lines(
         ["ID", "Username", "HP", "ATK", "Gold", "Score", "Rank", "Room",
          "Status"],
         [
             [d["id"], username, f"{d['hp']}/{d['max_hp']}", d["atk"],
-             # We check the tier-specific victory counts to decide the currently unlocked difficulty.
+             # The current enemy list decides which difficulty is unlocked.
              d["gold"], d["score"], get_rank_info(d["wins"], d["defeated_ids"])["rank"],
              room_name(d["location"]), d["status"]]
             for username, d in player_accounts().items()
@@ -8895,22 +8897,22 @@ def report_player_statistics():
     return lines
 
 
-# We count battle outcomes from the saved battle records, not menu visits.
+# Counts battle outcomes from the saved battle records, not menu visits.
 def report_wins_losses():
     """Count every recorded battle attempt, including retreats.
 
     This is an all-time report from battle history. Current account W/L
     counters may differ after an admin explicitly resets player progress.
     """
-    # We read permanent battle history so totals remain correct after reloading.
-    # We calculate victory, defeat, and retreat totals from actual battle results.
+    # Reads permanent battle history so totals remain correct after reloading.
+    # Calculates victory, defeat, and retreat totals from actual battle results.
     records = load_battle_results()
     counts = {}
     for entry in records:
         outcome = entry["result"]
-        # We count only encounters that have a completed outcome.
+        # Counts only encounters that have a completed outcome.
         if outcome not in ("Victory", "Defeat", "Retreated"):
-            continue  # We do not count reaching the dungeon exit as a battle attempt.
+            continue  # Does not count reaching the dungeon exit as a battle attempt.
         stats = counts.setdefault(entry["player_id"],
                                   {"Victory": 0, "Defeat": 0, "Retreated": 0})
         stats[outcome] += 1
@@ -8942,13 +8944,13 @@ def report_wins_losses():
     return lines
 
 
-# We count defeated enemies from each player's recorded progress.
+# Counts defeated enemies from each player's recorded progress.
 def report_enemies_defeated():
-    # We list defeated enemies using recorded player progress.
+    # Lists defeated enemies using recorded player progress.
     players = player_accounts()
     rows = []
 
-    # We count how many player accounts defeated each enemy.
+    # Counts how many player accounts defeated each enemy.
     for mob in mob_list:
         who = [u for u, d in players.items() if mob["id"] in d["defeated_ids"]]
         rows.append([mob["id"], mob["name"], mob["type"], len(who),
@@ -8969,9 +8971,9 @@ def report_enemies_defeated():
     return lines
 
 
-# We sort players by their actual scores to build the ranking.
+# Sorts players by their actual scores to build the ranking.
 def report_score_ranking():
-    # We sort player scores to find the current ranking.
+    # Sorts player scores to find the current ranking.
     ranked = sorted(player_accounts().items(),
                     key=lambda pair: pair[1]["score"], reverse=True)
 
@@ -8979,7 +8981,7 @@ def report_score_ranking():
         ["Place", "Username", "Score", "Wins", "Rank"],
         [
             [place, username, d["score"], d["wins"],
-             # We check the tier-specific victory counts to decide the currently unlocked difficulty.
+             # The current enemy list decides which difficulty is unlocked.
              get_rank_info(d["wins"], d["defeated_ids"])["rank"]]
             for place, (username, d) in enumerate(ranked, 1)
         ]
@@ -8988,7 +8990,7 @@ def report_score_ranking():
 
 # Reports whether each player has completed the boss requirement.
 def report_boss_status():
-    # We report who has defeated the final boss and who still has not.
+    # Reports who has defeated the final boss and who still has not.
     bosses = [m for m in mob_list if m["type"] == "Boss"]
     lines = ["Bosses: " + (", ".join(m["name"] for m in bosses) or "None"), ""]
 
@@ -9004,12 +9006,12 @@ def report_boss_status():
     return lines
 
 
-# We list item stock and item details from the saved item catalog.
+# Lists item stock and item details from the saved item catalog.
 def report_available_items():
-    # We list current item records with their prices and effects.
+    # Lists current item records with their prices and effects.
     rows = []
 
-    # We total the owned quantity of each item across player accounts.
+    # Totals the owned quantity of each item across player accounts.
     for item in item_records.values():
         owned = sum(
             d["inventory"].get(item["id"], 0)
@@ -9027,10 +9029,10 @@ def report_available_items():
 
 # Reports the owned/equipped gear from the actual equipment records.
 def report_equipment():
-    # We show owned or available equipment using the actual saved gear records.
+    # Shows owned or available equipment using the actual saved gear records.
     rows = []
 
-    # We find which players own each Equipment ID for the report.
+    # Finds which players own each Equipment ID for the report.
     for eq in equipment_records.values():
         owners = [
             u for u, d in player_accounts().items()
@@ -9064,12 +9066,12 @@ def report_equipment():
     return lines
 
 
-# We show Gold earned and spent using the recorded game transactions.
+# Shows Gold earned and spent using the recorded game transactions.
 def report_gold_economy():
-    # We use challenge answers for extra attack damage, not extra Gold.
+    # Uses challenge answers for extra attack damage, not extra Gold.
     # This report includes only the game's real Gold sources.
-    # We calculate Gold activity from recorded battle rewards and penalties.
-    # We add recorded rewards and deductions to explain where Gold was earned or lost.
+    # Calculates Gold activity from recorded battle rewards and penalties.
+    # Adds recorded rewards and deductions to explain where Gold was earned or lost.
     shop_cost = {
         tier: sum(e["price"] for e in equipment_records.values()
                   if e["tier"] == tier)
@@ -9098,7 +9100,7 @@ def report_gold_economy():
                      stage, running])
 
     lines = [
-        "GOLD INCOME BY LEVEL (including optional enemies and chests)",
+        "GOLD INCOME BY LEVEL (all room enemies and chests)",
         f"Starting Gold: {STARTING_STATS['gold']} | "
         "Challenge questions grant bonus attack damage, not Gold."
     ]
@@ -9157,9 +9159,9 @@ def report_gold_economy():
     return lines
 
 
-# We group enemy records by difficulty for the admin report.
+# Groups enemy records by difficulty for the admin report.
 def report_enemy_difficulty():
-    # We group recorded enemies by their saved difficulty.
+    # Groups recorded enemies by their saved difficulty.
     lines = []
 
     for tier in LEVEL_ORDER:
@@ -9186,9 +9188,8 @@ def report_enemy_difficulty():
     return lines
 
 
-# We build a graph report from the current rooms and passage connections.
+# Builds a graph report from the current rooms and passage connections.
 def report_dungeon_map():
-    # We generate a graph report using the current rooms and passages.
     lines = ["MAP DRAWING"]
     lines += dungeon_drawing_lines([])
     lines.append("")
@@ -9197,7 +9198,7 @@ def report_dungeon_map():
     lines.append("")
     lines.append("EXPLORATION ORDER FROM THE ENTRANCE (DFS)")
     lines += [f"  {n}. {room_name(r)}" for n, r in
-              # We visit rooms in DFS order using saved connections.
+              # Traverses rooms using depth-first search (DFS) and saved passages.
               enumerate(depth_first_traversal(ENTRANCE_ROOM_ID), 1)]
     return lines
 
@@ -9217,9 +9218,9 @@ REPORTS = [
 ]
 
 
-# We display a generated report and offers to save its text output.
+# Displays a generated report and offers to save its text output.
 def show_report(title, lines):
-    # We print a generated report and optionally export its exact text.
+    # Prints a generated report and optionally export its exact text.
     header(title)
     print(f"Generated: {now_text()}\n")
 
@@ -9227,13 +9228,13 @@ def show_report(title, lines):
         print(line)
 
     if ask_yes_no("\nExport this report to a text file? (Y/N): "):
-        # We create the reports folder and write the selected report as a TXT file.
+        # Creates the reports folder and writes the report to a TXT file.
         try:
             Path(REPORT_FOLDER).mkdir(exist_ok=True)
             file_name = title.lower().replace(" ", "_") + ".txt"
             path = Path(REPORT_FOLDER) / file_name
 
-            # We write the exported report and include its generation timestamp.
+            # Writes the exported report and includes its creation time.
             with open(path, "w", encoding="utf-8") as file:
                 file.write(f"{title.upper()}\nGenerated: {now_text()}\n\n")
                 file.write("\n".join(lines) + "\n")
@@ -9245,11 +9246,12 @@ def show_report(title, lines):
     pause()
 
 
-# We open the available reports without using hard-coded result tables.
+# Opens the available reports without using hard-coded result tables.
 def report_menu():
-    # We let the admin choose which current report to generate.
-    # We repeat this menu or action until the player gives a valid choice or leaves.
+    # Allows the admin choose which current report to generate.
+
     while True:
+        clear_screen()
         header("Report Generation")
 
         for number, (title, _) in enumerate(REPORTS, 1):
@@ -9257,7 +9259,7 @@ def report_menu():
 
         print("\n[0] Back")
 
-        choice = input(f"\nEnter choice [0-{len(REPORTS)}]: ").strip()
+        choice = read_menu_choice(f"\nEnter choice [0-{len(REPORTS)}]: ", 0, len(REPORTS))
 
         if choice.isdigit() and 1 <= int(choice) <= len(REPORTS):
             title, builder = REPORTS[int(choice) - 1]
@@ -9268,12 +9270,13 @@ def report_menu():
             invalid_choice()
 
 
-# We open the four required admin sections and handles menu navigation.
+# Opens the four required admin sections and handles menu navigation.
 def admin_menu():
     # Main menu for administrators
-    # We give admins four main sections: Dashboard, Profiling, Transactions, and Reports.
-    # We repeat this menu or action until the player gives a valid choice or leaves.
+    # Gives admins four main sections: Dashboard, Profiling, Transactions, and Reports.
+
     while True:
+        clear_screen()
         header("Admin Menu")
 
         print(f"Logged in as: {player['name']} | Role: Admin")
@@ -9284,7 +9287,7 @@ def admin_menu():
         print("[4] Report Generation")
         print("\n[0] Logout")
 
-        choice = input("\nEnter choice [0-4]: ").strip()
+        choice = read_menu_choice("\nEnter choice [0-4]: ", 0, 4)
 
         if choice == "1":
             admin_dashboard()

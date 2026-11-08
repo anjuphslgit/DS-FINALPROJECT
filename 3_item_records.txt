@@ -1,7 +1,0 @@
-# DREADVEIL: THE LAST GATE ITEM RECORDS
-# item_id | name           | effect | power | price | max_carry | description
-  ITM-001 | Health Potion  | heal   | 35    | 30    | 10        | A bitter red brew that closes wounds.
-  ITM-002 | Strength Tonic | boost  | 50    | 70    | 5         | Fills your arms with burning strength.
-  ITM-003 | Paralysis Bomb | stun   | 2     | 110   | 5         | Releases a numbing cloud of spores.
-  ITM-004 | Poison Dagger  | damage | 35    | 120   | 5         | A throwing blade coated in venom.
-  ITM-005 | Dice of Fate   | fate   | 6     | 100   | 5         | A cursed die with six outcomes, from danger to powerful blessings.

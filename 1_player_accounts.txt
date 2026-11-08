@@ -1,0 +1,4 @@
+# DREADVEIL: THE LAST GATE PLAYER ACCOUNTS
+# username | player_id | password  | role   | hp  | max_hp | atk | gold | score | wins | losses | status | defeated_enemy_ids | completed_levels | inventory | encounter_queue | wounded_enemy_hp | owned_equipment | equipped | current_room | treasures_opened
+  admin    | ADM-001   | admin123  | Admin  | 0   | 0      | 0   | 0    | 0     | 0    | 0      | Active |                    |                  |           |                 |                  |                 |          | ROOM-000     |
+  player   | PLY-001   | player123 | Player | 100 | 100    | 14  | 60   | 0     | 0    | 0      | Active |                    |                  | ITM-001:1 |                 |                  |                 |          | ROOM-000     |

@@ -1,31 +1,32 @@
 # DREADVEIL: THE LAST GATE
 
 **Program Guide**  
-**Main file:** `DS_FinalProject_MercadoRBanaybanayJBariteJDomingoJGonzalesA.py`
+**Main program:** `DS_FinalProject_MercadoRBanaybanayJBariteJDomingoJGonzalesA.py`  
+**Language:** Python 3  
+**Type:** Menu-driven dungeon adventure
 
 ## 1. About the Program
 
-**Dreadveil: The Last Gate** is a menu-driven dungeon adventure. Players explore connected rooms, battle enemies, manage equipment and supplies, earn rewards, and progress toward defeating **Vharok, the World Eater**. To complete the game, the player must defeat the boss, reach **The Last Gate**, and choose **Escape Dungeon**.
+**Dreadveil: The Last Gate** is a console-based dungeon adventure where players explore connected rooms, defeat enemies, earn rewards, and face **Vharok, the World Eater**. The goal is to clear every enemy room, reach **The Last Gate**, and escape the dungeon.
 
-We use three data structures as part of the game's actual operations:
+The program uses three data structures during gameplay:
 
-- **Queue (FIFO):** Controls the order in which waiting enemies enter battle.
-- **Stack (LIFO):** Stores snapshots of actions that the player can undo.
-- **Graph:** Connects dungeon rooms and supports routes, traversal, and travel checks.
+- **Queue (FIFO):** Holds enemies selected by the player. The first enemy added is the first enemy fought.
+- **Stack (LIFO):** Stores game-state snapshots so the most recent action can be undone first.
+- **Graph:** Represents the dungeon rooms and passages used for travel and route searches.
 
-The program also includes player accounts, administrator record maintenance, combat transactions, reports, and TXT/JSON file storage.
+Player accounts, administrator tools, battle history, progress records, and reports are stored in TXT and JSON files.
 
-
-### Demonstration accounts
+### Demo accounts
 
 | Role | Username | Password |
 |---|---|---|
 | Administrator | `admin` | `admin123` |
 | Player | `player` | `player123` |
 
-These are local demonstration credentials. Passwords are stored in the account TXT file, so do not reuse personal passwords.
+These accounts are for local demonstration. The program stores account passwords in a TXT file, so personal passwords should not be used.
 
-## 2. Project Files and Their Purposes
+## 2. Project Files
 
 ```text
 DS-FINALPROJECT/
@@ -45,41 +46,39 @@ DS-FINALPROJECT/
 └── 12_battle_session_records.json
 ```
 
-| File | What it contains |
+| File | Purpose |
 |---|---|
-| `1_player_accounts.txt` | Login information, role, base stats, Gold, wins/losses, inventory, equipped items, defeated enemies, queue, and room location. |
-| `2_enemy_records.txt` | Enemy IDs, names, difficulty levels, HP, ATK, rewards, and assigned rooms. |
-| `3_item_records.txt` | Item IDs, effects, power, Gold prices, maximum carrying quantities, and descriptions. |
-| `4_equipment_records.txt` | Sword, Shield, and Armor profiles, equipment levels, bonuses, speed, and prices. |
-| `5_room_records.txt` | Room IDs, names, and descriptions (Graph vertices). |
-| `6_room_connections.txt` | Connections between rooms and passage names (Graph edges). |
-| `7_question_records.txt` | Challenge questions, choices, correct answers, attack bonuses, and difficulty levels. |
-| `8_battle_history_records.txt` | Completed battle results such as Victory, Defeat, and Retreat. |
-| `9_battle_activity_log.txt` | Chronological game actions identified by unique action IDs. |
-| `10_dungeon_game_records.txt` | A readable snapshot of the current player's game state. |
-| `11_reports/` | TXT reports exported by an administrator. |
-| `12_battle_session_records.json` | Saved Undo snapshots, active battle state, temporary combat effects, and record counters. |
+| `1_player_accounts.txt` | Accounts, player statistics, inventory, queue, room location, and progress. |
+| `2_enemy_records.txt` | Enemies, difficulty, HP, ATK, rewards, and assigned rooms. |
+| `3_item_records.txt` | Consumable items, effects, prices, and carrying limits. |
+| `4_equipment_records.txt` | Swords, shields, armor, bonuses, and prices. |
+| `5_room_records.txt` | Room names and descriptions (graph vertices). |
+| `6_room_connections.txt` | Connected rooms and passage names (graph edges). |
+| `7_question_records.txt` | Challenge questions, answers, and damage bonuses. |
+| `8_battle_history_records.txt` | Saved battle results and the final escape record. |
+| `9_battle_activity_log.txt` | Recorded player and battle actions. |
+| `10_dungeon_game_records.txt` | Readable game progress snapshot. |
+| `11_reports/` | Administrator-generated TXT reports. |
+| `12_battle_session_records.json` | Active battle details, queue-related session data, Undo snapshots, and counters. |
 
-The reports folder and some history/session files are created when the related feature is used. Temporary and recovery files may also appear during safe-saving operations. They are part of the file-handling process and should not be deleted while the game is running.
+The game creates supported record files and the reports folder as needed. Keep the TXT and JSON records together with the program when continuing saved progress.
 
-## 3. Starting the Game
+## 3. Player Menus
 
-At the login screen, choose **Login**, **Create New Account**, or **Exit Game**. After signing in, the program opens the appropriate Player or Administrator menu.
+### Main player menu
 
-### Player menu
-
-| Option | Action |
+| Choice | Action |
 |---|---|
-| `[1]` | Enter Dungeon / View Completed Journey |
+| `[1]` | Enter Dungeon |
 | `[2]` | View Player Statistics |
 | `[3]` | Dungeon Map and Routes |
 | `[4]` | Enemy Information |
 | `[5]` | How to Play |
 | `[0]` | Logout |
 
-### Expedition Camp menu
+### Expedition Camp
 
-| Option | Action | Option | Action |
+| Choice | Action | Choice | Action |
 |---|---|---|---|
 | `[1]` | Start Battle | `[2]` | Add Enemy to Queue |
 | `[3]` | View Queue | `[4]` | View Next Enemy |
@@ -92,7 +91,7 @@ At the login screen, choose **Login**, **Create New Account**, or **Exit Game**.
 
 ### Battle menu
 
-| Option | Action | Option | Action |
+| Choice | Action | Choice | Action |
 |---|---|---|---|
 | `[1]` | Attack | `[2]` | Defend |
 | `[3]` | Health Potion | `[4]` | Other Item |
@@ -100,183 +99,177 @@ At the login screen, choose **Login**, **Create New Account**, or **Exit Game**.
 | `[7]` | View Queue | `[8]` | Player Action Stack |
 | `[9]` | Undo Action | `[10]` | Retreat |
 
-Battle options are available only while an enemy is being fought. Shopping, resting, and changing equipment are handled at camp.
+The **How to Play** screen inside the game shows a short guide. The **OBJECTIVE** in the player status panel shows the current room goal and updates with enemy progress.
 
-## 4. Dungeon Map and Progression
+## 4. Dungeon Map and Room Progression
 
-The dungeon has six connected rooms:
-
-```text
-ROOM-000  Dreadveil Entrance
-    |
-    | Rusted Grate
-    v
-ROOM-001  Rotting Sewers       (Weak)
-    |
-    | Crimson Gate
-    v
-ROOM-002  Bloodstone Hall      (Intermediate)
-    |
-    | Iron Drawbridge
-    v
-ROOM-003  War-Torn Catacombs   (Strong)
-    |
-    | Throne Gate
-    v
-ROOM-004  Throne of Ruin       (Boss)
-    |
-    | Sealed Exit Door
-    v
-ROOM-005  The Last Gate        (Exit)
-```
-
-The passages are stored as **two-way Graph connections**. The arrows show the main route through the story; players can return to an accessible earlier room.
-
-To unlock each stage, defeat **three different enemies** of the current difficulty:
-
-| Completed victories | Rank | Next difficulty |
-|---|---|---|
-| Fewer than 3 Weak | Beginner | Weak |
-| 3 Weak | Adventurer | Intermediate |
-| 3 Weak and 3 Intermediate | Elite | Strong |
-| 3 Weak, 3 Intermediate, and 3 Strong | Master | Boss |
-
-Completing a regular difficulty grants **+5 Base ATK**, **+20 Max HP**, and a one-time Gold bonus: Weak **40**, Intermediate **80**, or Strong **150**. Each newly unlocked equipment tier also provides free standard gear. Extra enemies can be fought for rewards, but they do not replace victories required in the next difficulty.
-
-Treasure chests become available after **all enemies in the applicable room** have been defeated. To win the game, defeat Vharok, travel to The Last Gate, and select **Escape Dungeon**. Completing the escape adds **500 Score**.
-
-## 5. Combat, Items, and Equipment
-
-A new player starts with **100/100 HP**, **14 Base ATK**, **60 Gold**, and **one Health Potion**.
-
-- **Attack:** Deals damage using the player's attack power, equipment, random damage variation, hit chance, and critical-hit chance.
-- **Defend:** Reduces incoming damage and prepares a counterattack bonus.
-- **Challenge:** Answers a difficulty-matched question for bonus attack damage when correct.
-- **Rest:** Costs **40 Gold** and restores up to **50% of Max HP**, without exceeding the HP limit.
-
-**Displayed ATK includes the worn Sword bonus.** The account TXT stores Base ATK; for example, 14 Base ATK plus 2 from a standard Rusty Sword displays as 16 Total ATK.
-
-### Consumable items
-
-| Item ID | Item | Price | Max carry | Effect |
-|---|---|---:|---:|---|
-| `ITM-001` | Health Potion | 30 | 10 | Restores 35% of Max HP. |
-| `ITM-002` | Strength Tonic | 70 | 5 | Adds 50% damage for the next three attacks. |
-| `ITM-003` | Paralysis Bomb | 110 | 5 | Has a 75% chance to paralyze the enemy for two turns. |
-| `ITM-004` | Poison Dagger | 120 | 5 | Deals immediate direct damage, based on a power of 35. |
-| `ITM-005` | Dice of Fate | 100 | 5 | Rolls one of six possible combat effects. |
-
-**Dice of Fate outcomes:**
-
-| Roll | Name | Effect |
-|---|---|---|
-| 1 | Cursed Roll | Lose up to 15 HP; this roll cannot reduce HP below 1. |
-| 2 | Dark Shield | Block up to 30 damage from the next enemy hit. |
-| 3 | Life Blessing | Recover up to 25 HP. |
-| 4 | Soul Surge | Add 30% damage to the next sword attack. |
-| 5 | Shadow Shield | Negate the next enemy hit. |
-| 6 | Jackpot | Add 100% damage to the next sword attack. |
-
-To use Dice of Fate, purchase it from **Dungeon Shop → Supplies**, enter battle, and choose **Other Item**. A use consumes one die and a combat turn. The program saves pending Fate shields and attack bonuses, including when a battle is resumed. Another die cannot be rolled while its prior shield or attack bonus is still pending.
-
-### Equipment
-
-Players wear **one Sword, one Shield, and one Armor**. They may switch between available gear, including the free standard gear for their unlocked tier, but cannot leave an equipment slot empty. Purchased equipment remains associated with the player's account.
-
-Equipment is grouped into **Weak, Intermediate, Strong, and Boss** tiers. Each tier has two purchasable choices for each equipment type (**24 equipment records** in total). Equipment IDs run from `EQP-001` to `EQP-024`.
-
-## 6. Queue, Stack, and Graph in the Code
-
-### Encounter Queue — FIFO
-
-We store waiting enemy IDs in the `encounter_lineup` list.
-
-- **Enqueue:** Add an eligible enemy to the rear using `append()`.
-- **Front / Peek:** View the next enemy without removing it.
-- **Dequeue:** Remove the front enemy with `pop(0)` when the applicable operation is performed.
-- **Display:** Show the enemy order with FRONT and REAR labels.
-
-If the player selects **Start Battle** with no queued enemies, the game queues the first eligible enemy in the current room. If none remain, it prevents the battle from starting. Queue operations also check for invalid and unavailable enemy records.
-
-### Player Action Stack — LIFO
-
-We use `undo_stack` to keep game-state snapshots before eligible actions. The newest snapshot is the TOP of the stack.
+The dungeon contains six rooms connected in this order:
 
 ```text
-PLAYER ACTION STACK
-[1] View Player Actions (Undoable)
-[2] View Latest Undoable Action
-[3] Undo Latest Action
-[0] Back
+Dreadveil Entrance (ROOM-000)
+        |
+        v
+Rotting Sewers (ROOM-001)        - Weak
+        |
+        v
+Bloodstone Hall (ROOM-002)       - Intermediate
+        |
+        v
+War-Torn Catacombs (ROOM-003)    - Strong
+        |
+        v
+Throne of Ruin (ROOM-004)        - Boss
+        |
+        v
+The Last Gate (ROOM-005)         - Exit
 ```
 
-- **Push:** Save a snapshot before a reversible action.
-- **Peek:** Display the most recent undoable action.
-- **Pop / Undo:** Restore the latest snapshot and remove it from the Stack.
-- **Empty handling:** Display feedback when no Undo actions remain.
+Passages connect rooms in both directions, so players may revisit reachable rooms. Entry into a later room depends on clearing the required rooms.
 
-Completed Victory, Defeat, Retreat, and Final Escape results are permanent and cannot be undone through this menu. The separate activity log records completed and in-progress actions for administrator review.
+**All enemies currently assigned to a room must be defeated before the next room unlocks.** The requirement is based on the saved enemy records, including enemies created by an administrator.
 
-### Dungeon Graph
+| Room completed | Rank reached | Unlocked stage |
+|---|---|---|
+| Rotting Sewers (all Weak enemies) | Adventurer | Intermediate |
+| Bloodstone Hall (all Intermediate enemies) | Elite | Strong |
+| War-Torn Catacombs (all Strong enemies) | Master | Boss |
+| Throne of Ruin (all bosses) | Master | The Last Gate |
 
-We store rooms as vertices in `room_records` and named passages as edges in `room_connections`. The program can display the connected dungeon, validate a player's next room, find a route using **Breadth-First Search (BFS)**, and show exploration order using **Depth-First Search (DFS)**. Travel is allowed only when a passage exists and progression rules permit entry.
+For example, if a room has four enemies and three are defeated, progress is **3/4**. The remaining enemy must also be defeated to clear the room. If the administrator adds new enemy, the progress total updates and forward access follows the current clearance requirement. Rewards already earned from a room are not granted twice.
 
-## 7. Battle Results and Saved Progress
+The on-screen objective changes depending on the player's location, such as:
 
-| Outcome | What happens |
+```text
+Defeat 1 more Intermediate enemy to unlock the next room (2/3).
+Travel to Bloodstone Hall and defeat 1 Intermediate enemy (2/3).
+```
+
+Clearing a regular room grants a one-time **+5 Base ATK**, **+20 Max HP**, and Gold bonus: **40** for Weak, **80** for Intermediate, and **150** for Strong. Free standard equipment becomes available with the corresponding tier. A cleared fighting room also has a one-time treasure chest that can be opened while in that room.
+
+## 5. Encounter Queue (FIFO)
+
+The **Encounter Queue** is a player-controlled list of enemies waiting for battle. It uses **First In, First Out (FIFO)**.
+
+1. Travel to an accessible enemy room.
+2. Select **`[2] Add Enemy to Queue`** and choose an available enemy.
+3. Select **`[1] Start Battle`** to fight the enemy at the **FRONT**.
+4. After victory, that enemy is removed from the front. Other queued enemies keep their order.
+
+**Start Battle does not automatically add an enemy.** If the queue is empty, the game asks the player to add one first. An enemy must be undefeated, accessible, and eligible for the room where it is selected. The same enemy cannot be queued twice.
+
+The queue is saved when the player **travels, retreats, loses a battle, saves, or logs back in**. If the front enemy is in another room, the player must return to that room before fighting it. **View Queue** shows each enemy's position and room. Outside battle, the player may also choose **Dequeue Front Enemy**, which removes the first queued enemy without fighting.
+
+## 6. Player Action Stack (LIFO)
+
+The **Undo Stack** saves snapshots of reversible actions using **Last In, First Out (LIFO)**:
+
+- **Push:** Store a snapshot before an action.
+- **Peek:** View the latest action that can be undone.
+- **Pop / Undo:** Restore the most recent snapshot first.
+
+Undo can restore battle actions, queue changes, travel, equipment and item changes, and battle outcomes such as **victory, defeat, or retreat**. Restoring a snapshot can also restore HP, Gold, Score, inventory, enemy states, earned rewards, room progress, and room unlocks. An undone victory may return the player to the active battle.
+
+The **Player Action Stack** menu lets players view undoable actions, inspect the latest action, or undo it. The activity history is saved separately from the Undo Stack.
+
+**Final Escape cannot be undone.** Once the player confirms the ending and it is saved successfully, gameplay and the Undo Stack are permanently locked for that character.
+
+## 7. Combat, Camp, and Rewards
+
+A newly registered player starts with **100 HP**, **100 Max HP**, **14 Base ATK**, **60 Gold**, and **one Health Potion**.
+
+- **Attack:** Uses attack power, equipped sword, hit chance, critical chance, and damage variation.
+- **Defend:** Reduces damage and prepares a stronger next attack.
+- **Items:** Restore HP, boost damage, stun enemies, deal damage, or trigger Dice of Fate effects.
+- **Challenge:** A correct answer gives an attack bonus; a wrong answer uses the turn.
+- **Retreat:** Ends the encounter; the enemy heals and stays in the queue.
+- **Defeat:** Deducts **25% of current Gold**, revives the player with **50% of Max HP**, and returns them to Dreadveil Entrance. The queue and completed victories remain saved.
+- **Rest:** Costs **40 Gold** and heals **50% of Max HP**, without exceeding the HP limit.
+
+Players equip **one Sword, one Shield, and one Armor**. The shop offers consumables and optional upgrades for accessible equipment tiers. The displayed attack value includes the equipped sword's bonus.
+
+### Saved battle results
+
+| Result | Saved effect |
 |---|---|
-| **Victory** | The player receives the enemy's Gold and Score, gains a win, and the defeated enemy is removed from the front of the Queue. |
-| **Retreat** | The battle ends without victory rewards; the enemy remains available for a later fight. |
-| **Defeat** | The player loses 25% of current Gold, returns to Dreadveil Entrance at 50% Max HP, and keeps previously earned progression. |
-| **Final Escape** | The player's completed adventure and final bonus are saved. |
+| Victory | Defeated enemy recorded; Gold and Score added; enemy removed from the queue. |
+| Retreat | Battle ends; enemy returns to full HP; queue order remains. |
+| Defeat | Gold penalty and revival recorded; enemy heals; queue and prior progress remain. |
+| Escape | Final score bonus recorded; the completed journey becomes read-only. |
 
-The program saves changes to the appropriate account, battle-history, activity-log, session, and snapshot files. Undo snapshots and temporary battle effects are stored in the session JSON. The readable game snapshot reflects the current player rather than replacing every player's account record.
+## 8. Final Escape and Completed Journey
 
-**Save & Exit** saves the player's progress and leaves the dungeon menu. Keep backups of TXT/JSON records before moving or replacing project files. File saving includes failure checks, but local files do not provide the same crash recovery guarantees as a transactional database.
+The player must clear the fighting rooms, defeat **Vharok**, and travel to **The Last Gate**. Selecting **Escape Dungeon** opens a final confirmation:
 
-## 8. Administrator Controls
+- **No:** Cancel the escape and continue playing.
+- **Yes:** Save the completed story, earn **+500 Score**, clear the Undo Stack, and permanently lock gameplay.
 
-The Admin menu has four sections:
+The completed state remains locked after logout and login. The player can view these records:
 
-1. **Dashboard:** View live summaries of accounts, enemies, progression, battles, and scores.
-2. **Profiling (File Maintenance):** Add, view, search, update, and delete supported Player, Enemy, Item, Equipment, and Question records; maintain rooms and passages.
-3. **Transactions (Game Setup and Management):** View player progress, reset game data, assign starting items, set enemy difficulty, inspect battle history and full activity history, or undo a player's available pending actions.
-4. **Report Generation:** Generate reports using the stored game records and optionally export them as TXT files.
+```text
+JOURNEY COMPLETE - RECORDS
 
-The available reports are: Player Statistics, Battle Wins and Losses, Enemies Defeated, Player Score Ranking, Boss Defeat Status, Battle History, Available Items, Equipment, Gold Economy, Enemy Difficulty, and Dungeon Map.
+[1] Player Statistics
+[2] Battle History
+[3] Activity History
+[4] Dungeon Map and Routes
+[5] Inventory and Equipment
 
-The six core room IDs are fixed; the Admin can update room details and manage permitted connections. Admin Undo All applies only to available reversible states, not permanent completed battle outcomes.
+[0] Logout
+```
 
-## 9. Main Python Functions
+These options are **read-only**. Enemies cannot be queued or fought, rooms cannot be explored, and the final escape cannot be reversed. **Enemy Records is not an option in the completed-journey menu.**
 
-The program is organized into functions for file handling, account and record maintenance, game logic, data structures, combat, and reports.
+## 9. Graph and Administrator Features
+
+### Graph operations
+
+Dungeon rooms are stored as vertices in `room_records`, and the passages are stored as edges in `room_connections`. The map supports:
+
+- Displaying room connections and passage information.
+- Checking whether travel between connected rooms is allowed.
+- Finding a route with **Breadth-First Search (BFS)**.
+- Showing exploration order with **Depth-First Search (DFS)**.
+
+### Administrator menu
+
+| Option | Section | Purpose |
+|---|---|---|
+| `[1]` | Dashboard | Display player, battle, enemy, and progress summaries. |
+| `[2]` | Profiling (File Maintenance) | Maintain players, enemies, items, equipment, questions, rooms, and connections. |
+| `[3]` | Transactions (Game Setup and Management) | View progress, reset player data, assign items, inspect history, and manage undoable actions. |
+| `[4]` | Report Generation | Display and export reports based on saved game data. |
+| `[0]` | Logout | Exit the administrator menu. |
+
+Reports include player statistics, wins and losses, defeated enemies, score rankings, boss status, battle history, available items, equipment, Gold economy, enemy difficulty, and dungeon map.
+
+Administrator enemy changes affect room-clear requirements. A room becomes complete only when every enemy currently assigned to that room has been defeated. A completed final escape remains locked.
+
+## 10. Main Python Functions
 
 | Area | Main functions | Purpose |
 |---|---|---|
-| Startup | `load_all_records()`, `login_screen()` | Load stored records and open account access. |
-| Accounts | `register_new_account()`, `save_all_accounts()` | Create accounts and save account data. |
-| Player state | `save_current_player_account()`, `restore_battle_state()` | Save and restore progress and active battles. |
-| Items | `load_items()`, `supplies_shop()`, `apply_item_effect()` | Load item definitions, sell supplies, and apply combat effects. |
-| Equipment | `load_equipment()`, `equipment_menu()` | Load and switch available worn gear. |
-| Queue | `add_enemy_to_lineup()`, `dequeue_front_from_menu()`, `display_encounter_lineup()` | Maintain and display waiting enemies in FIFO order. |
-| Stack | `push_undo()`, `undo_latest_action()`, `battle_log_menu()` | Maintain saved reversible states and let players undo eligible actions. |
-| Combat | `start_battle_with_next_enemy()`, `calculate_player_attack()`, `resolve_enemy_victory()`, `resolve_player_defeat()` | Handle battles, damage, and battle outcomes. |
-| Graph | `get_neighbors()`, `find_route()`, `depth_first_traversal()`, `travel_to_room()` | Read connections, search routes, and control travel. |
-| File storage | `atomic_record_updates()`, `save_session_archive()` | Coordinate record writing and session saving. |
-| Admin | `profiling_menu()`, `game_setup_menu()`, `report_menu()` | Open maintenance, transactions, and reports. |
+| Startup | `load_all_records()`, `login_screen()` | Load saved records and handle logins. |
+| Player menus | `open_adventure_menu()`, `dungeon_menu()`, `show_instructions()` | Display player options, camp actions, and instructions. |
+| Accounts | `register_new_account()`, `save_all_accounts()` | Create and store account records. |
+| Queue | `add_enemy_to_lineup()`, `display_encounter_lineup()`, `dequeue_front_from_menu()` | Manage enemy order using FIFO. |
+| Stack | `push_undo()`, `undo_latest_action()`, `battle_log_menu()` | Save and restore actions using LIFO. |
+| Progression | `room_enemy_progress()`, `is_level_complete()`, `current_objective_text()` | Calculate live room goals and unlock conditions. |
+| Combat | `start_battle_with_next_enemy()`, `resolve_enemy_victory()`, `resolve_player_defeat()` | Start battles and process results. |
+| Map | `get_neighbors()`, `find_route()`, `depth_first_traversal()`, `travel_to_room()` | Work with graph connections and navigation. |
+| Ending | `escape_dungeon()` | Confirm and save the final escape. |
+| Storage | `atomic_record_updates()`, `save_session_archive()` | Save related records and session details. |
+| Admin | `profiling_menu()`, `game_setup_menu()`, `report_menu()` | Maintain records and generate reports. |
 
-These functions use the same saved records that appear in the TXT/JSON files. Tables and menus present the current program data rather than relying on fixed demonstration results.
+## 11. Troubleshooting
 
-## 10. Troubleshooting
+**The game cannot find saved data.** Run the program in the folder that contains its TXT and JSON records. Check that the filenames are correct.
 
-**The game cannot find saved records.** Run the Python file from the directory containing the TXT and JSON files. Confirm that the filenames match those used in the code.
+**Start Battle cannot begin.** Add an enemy to the queue first. The enemy at the front must be in the player's current room, and that room must be accessible.
 
-**An item or equipment record does not appear.** Check that the row has the required fields, its ID is unique, and the effect or equipment slot is valid.
+**The next room is locked.** Check the objective and defeat every remaining enemy in the required room. The total includes enemies assigned by the administrator.
 
-**A player cannot start a battle.** Confirm the current room has an eligible undefeated enemy and that the room is accessible.
+**Undo is empty or unavailable.** Check whether a reversible snapshot exists. Undo cannot be used after final escape.
 
-**Undo is unavailable.** The player can undo only actions with an active saved snapshot. Permanent completed outcomes cannot be reversed.
+**The terminal displays overlapping screens.** Run the game in a terminal that supports ANSI clearing and use a wide enough terminal for tables.
 
-**Changes are not saved.** Check folder permissions, available disk space, and whether another program is locking the records. Review the error shown by the program before continuing.
-
-**The console layout looks crowded.** Use a wider terminal window so tables and the game HUD can be displayed properly.
+**Changes are not saved.** Confirm that the project folder is writable and there is enough available storage. Avoid editing record files while the game is running.

@@ -1,0 +1,53 @@
+# DREADVEIL: THE LAST GATE BATTLE HISTORY
+# date_time           | player_id | username | enemy_id | enemy_name              | result          | turns | gold | score
+  2026-11-09 22:12:29 | PLY-002   | ada      | ENM-001  | Gravefang Rat           | Victory         | 3     | 25   | 40
+  2026-11-09 22:17:07 | PLY-002   | ada      | ENM-002  | Hollowbone Goblin       | Victory         | 5     | 30   | 60
+  2026-11-09 22:17:39 | PLY-002   | ada      | ENM-003  | Ashen Ghoul             | Victory         | 6     | 75   | 80
+  2026-11-09 22:19:24 | PLY-002   | ada      | ENM-004  | Ironjaw Reaver          | Victory         | 4     | 50   | 100
+  2026-11-09 22:28:50 | PLY-002   | ada      | ENM-005  | Boneguard Executioner   | Victory         | 5     | 60   | 120
+  2026-11-09 22:29:32 | PLY-002   | ada      | ENM-006  | Hellchain Marauder      | Victory         | 5     | 150  | 140
+  2026-11-09 22:41:11 | PLY-003   | angel    | ENM-001  | Gravefang Rat           | Victory         | 5     | 25   | 40
+  2026-11-09 22:41:27 | PLY-003   | angel    | ENM-002  | Hollowbone Goblin       | Victory         | 4     | 30   | 60
+  2026-11-09 22:41:53 | PLY-003   | angel    | ENM-003  | Ashen Ghoul             | Victory         | 7     | 75   | 80
+  2026-11-09 22:42:33 | PLY-003   | angel    | ENM-004  | Ironjaw Reaver          | Victory         | 4     | 50   | 100
+  2026-11-09 22:42:57 | PLY-003   | angel    | ENM-005  | Boneguard Executioner   | Victory         | 5     | 60   | 120
+  2026-11-09 22:43:19 | PLY-003   | angel    | ENM-006  | Hellchain Marauder      | Defeat          | 3     | -65  | 0
+  2026-11-09 22:44:54 | PLY-004   | drei     | ENM-001  | Gravefang Rat           | Victory         | 3     | 25   | 40
+  2026-11-09 22:45:21 | PLY-004   | drei     | ENM-002  | Hollowbone Goblin       | Victory         | 5     | 30   | 60
+  2026-11-09 22:45:45 | PLY-004   | drei     | ENM-003  | Ashen Ghoul             | Victory         | 6     | 75   | 80
+  2026-11-09 22:46:39 | PLY-004   | drei     | ENM-004  | Ironjaw Reaver          | Victory         | 6     | 50   | 100
+  2026-11-09 22:47:05 | PLY-004   | drei     | ENM-005  | Boneguard Executioner   | Victory         | 5     | 60   | 120
+  2026-11-09 22:47:34 | PLY-004   | drei     | ENM-006  | Hellchain Marauder      | Victory         | 6     | 150  | 140
+  2026-11-09 22:48:26 | PLY-004   | drei     | ENM-007  | Dreadfang Berserker     | Victory         | 4     | 85   | 180
+  2026-11-09 22:48:54 | PLY-004   | drei     | ENM-008  | Abyssal Death Knight    | Defeat          | 3     | -48  | 0
+  2026-11-09 22:49:28 | PLY-004   | drei     | ENM-008  | Abyssal Death Knight    | Victory         | 5     | 95   | 200
+  2026-11-09 22:50:02 | PLY-004   | drei     | ENM-009  | Soulreaper Wraith       | Victory         | 5     | 260  | 220
+  2026-11-09 22:51:10 | PLY-004   | drei     | BS-001   | Vharok, the World Eater | Victory         | 7     | 300  | 600
+  2026-11-09 22:51:28 | PLY-004   | drei     | N/A      | The Last Gate           | Escaped Dungeon | 0     | 0    | 500
+  2026-11-09 22:53:14 | PLY-006   | anjie    | ENM-001  | Gravefang Rat           | Victory         | 3     | 25   | 40
+  2026-11-09 22:53:26 | PLY-006   | anjie    | ENM-002  | Hollowbone Goblin       | Victory         | 4     | 30   | 60
+  2026-11-09 22:53:39 | PLY-006   | anjie    | ENM-003  | Ashen Ghoul             | Victory         | 4     | 75   | 80
+  2026-11-09 23:00:23 | PLY-008   | ms_eliza | ENM-001  | Gravefang Rat           | Victory         | 4     | 25   | 40
+  2026-11-09 23:00:33 | PLY-008   | ms_eliza | ENM-002  | Hollowbone Goblin       | Victory         | 3     | 30   | 60
+  2026-11-09 23:01:00 | PLY-008   | ms_eliza | ENM-003  | Ashen Ghoul             | Victory         | 7     | 75   | 80
+  2026-11-09 23:04:04 | PLY-008   | ms_eliza | ENM-004  | Ironjaw Reaver          | Victory         | 4     | 50   | 100
+  2026-11-09 23:04:37 | PLY-008   | ms_eliza | ENM-005  | Boneguard Executioner   | Victory         | 5     | 60   | 120
+  2026-11-09 23:04:56 | PLY-008   | ms_eliza | ENM-006  | Hellchain Marauder      | Victory         | 6     | 150  | 140
+  2026-11-09 23:05:36 | PLY-008   | ms_eliza | ENM-007  | Dreadfang Berserker     | Victory         | 5     | 85   | 180
+  2026-11-09 23:05:43 | PLY-008   | ms_eliza | ENM-008  | Abyssal Death Knight    | Defeat          | 1     | -113 | 0
+  2026-11-09 23:06:21 | PLY-008   | ms_eliza | ENM-008  | Abyssal Death Knight    | Victory         | 4     | 95   | 200
+  2026-11-09 23:06:47 | PLY-008   | ms_eliza | ENM-009  | Soulreaper Wraith       | Victory         | 5     | 260  | 220
+  2026-11-09 23:07:26 | PLY-008   | ms_eliza | BS-001   | Vharok, the World Eater | Victory         | 7     | 300  | 600
+  2026-11-09 23:08:48 | PLY-008   | ms_eliza | N/A      | The Last Gate           | Escaped Dungeon | 0     | 0    | 500
+  2026-11-09 23:09:42 | PLY-007   | impakto  | ENM-001  | Gravefang Rat           | Victory         | 5     | 25   | 40
+  2026-11-09 23:10:20 | PLY-007   | impakto  | ENM-002  | Hollowbone Goblin       | Victory         | 5     | 30   | 60
+  2026-11-09 23:11:05 | PLY-007   | impakto  | ENM-003  | Ashen Ghoul             | Victory         | 6     | 75   | 80
+  2026-11-09 23:12:24 | PLY-009   | test     | ENM-001  | Gravefang Rat           | Victory         | 4     | 25   | 40
+  2026-11-09 23:12:52 | PLY-009   | test     | ENM-002  | Hollowbone Goblin       | Victory         | 6     | 30   | 60
+  2026-11-09 23:13:10 | PLY-009   | test     | ENM-003  | Ashen Ghoul             | Victory         | 6     | 75   | 80
+  2026-11-09 23:13:51 | PLY-009   | test     | ENM-004  | Ironjaw Reaver          | Victory         | 5     | 50   | 100
+  2026-11-09 23:14:07 | PLY-009   | test     | ENM-005  | Boneguard Executioner   | Victory         | 5     | 60   | 120
+  2026-11-09 23:15:18 | PLY-009   | test     | ENM-006  | Hellchain Marauder      | Victory         | 6     | 150  | 140
+  2026-11-09 23:16:42 | PLY-010   | lex      | ENM-001  | Gravefang Rat           | Victory         | 3     | 25   | 40
+  2026-11-09 23:17:00 | PLY-010   | lex      | ENM-002  | Hollowbone Goblin       | Victory         | 6     | 30   | 60
+  2026-11-09 23:17:49 | PLY-010   | lex      | ENM-003  | Ashen Ghoul             | Defeat          | 5     | -11  | 0

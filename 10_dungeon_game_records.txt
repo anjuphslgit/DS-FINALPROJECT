@@ -1,0 +1,112 @@
+DREADVEIL: THE LAST GATE - SAVED GAME
+Saved At: 2026-11-09 23:17:49
+
+PLAYER INFORMATION
+id: PLY-010
+name: lex
+role: Player
+hp: 50
+max_hp: 100
+atk: 14
+gold: 34
+score: 100
+wins: 2
+losses: 1
+status: Active
+defeated_ids: ['ENM-001', 'ENM-002']
+completed_levels: []
+inventory: {'ITM-001': 1, 'ITM-002': 1}
+wounds: {}
+owned_equipment: []
+equipped: {}
+location: ROOM-000
+treasures: []
+Current Room: Dreadveil Entrance
+
+PROGRESSION
+Rank: Beginner
+Unlocked Difficulties: Weak
+Next Goal: Travel to Rotting Sewers and defeat 1 Weak enemy (2/3).
+Rooms Cleared: None
+Clear Rewards Earned: None
+
+INVENTORY
+ITM-001 | Health Potion | 1
+ITM-002 | Strength Tonic | 1
+
+EQUIPMENT
+Worn sword: Rusty Sword | ATK: +2 | SPD: +0% | Free Weak Gear
+Worn shield: Wooden Shield | BLOCK: 4% | Free Weak Gear
+Worn armor: Cloth Armor | DEF: -1 per hit | Free Weak Gear
+
+ENEMY INFORMATION
+ENM-001 | Gravefang Rat | HP: 0/55 | ATK: 7 | Difficulty: Weak | Status: Defeated | Gold: 25 | Score: 40 | Room: Rotting Sewers
+ENM-002 | Hollowbone Goblin | HP: 0/70 | ATK: 9 | Difficulty: Weak | Status: Defeated | Gold: 30 | Score: 60 | Room: Rotting Sewers
+ENM-003 | Ashen Ghoul | HP: 85/85 | ATK: 11 | Difficulty: Weak | Status: Active | Gold: 35 | Score: 80 | Room: Rotting Sewers
+ENM-004 | Ironjaw Reaver | HP: 105/105 | ATK: 12 | Difficulty: Intermediate | Status: Active | Gold: 50 | Score: 100 | Room: Bloodstone Hall
+ENM-005 | Boneguard Executioner | HP: 120/120 | ATK: 13 | Difficulty: Intermediate | Status: Active | Gold: 60 | Score: 120 | Room: Bloodstone Hall
+ENM-006 | Hellchain Marauder | HP: 135/135 | ATK: 14 | Difficulty: Intermediate | Status: Active | Gold: 70 | Score: 140 | Room: Bloodstone Hall
+ENM-007 | Dreadfang Berserker | HP: 150/150 | ATK: 16 | Difficulty: Strong | Status: Active | Gold: 85 | Score: 180 | Room: War-Torn Catacombs
+ENM-008 | Abyssal Death Knight | HP: 165/165 | ATK: 17 | Difficulty: Strong | Status: Active | Gold: 95 | Score: 200 | Room: War-Torn Catacombs
+ENM-009 | Soulreaper Wraith | HP: 180/180 | ATK: 18 | Difficulty: Strong | Status: Active | Gold: 110 | Score: 220 | Room: War-Torn Catacombs
+BS-001 | Vharok, the World Eater | HP: 320/320 | ATK: 22 | Difficulty: Boss | Status: Active | Gold: 300 | Score: 600 | Room: Throne of Ruin
+
+DUNGEON ENCOUNTER QUEUE (FRONT TO REAR)
+ENM-003 | Ashen Ghoul | HP: 85/85
+
+CURRENT BATTLE
+NO ACTIVE BATTLE
+
+UNDO STACK (TOP TO BOTTOM)
+Before: Attack on Ashen Ghoul
+Before: Attack on Ashen Ghoul
+Before: Attack on Ashen Ghoul
+Before: Attack on Ashen Ghoul
+Before: Attack on Ashen Ghoul
+Before: Start battle with Ashen Ghoul
+Before: Enqueue Ashen Ghoul
+Before: Buy 1 Strength Tonic
+Before: Attack on Hollowbone Goblin
+Before: Attack on Hollowbone Goblin
+Before: Attack on Hollowbone Goblin
+Before: Attack on Hollowbone Goblin
+Before: Attack on Hollowbone Goblin
+Before: Attack on Hollowbone Goblin
+Before: Start battle with Hollowbone Goblin
+Before: Attack on Gravefang Rat
+Before: Attack on Gravefang Rat
+Before: Attack on Gravefang Rat
+Before: Start battle with Gravefang Rat
+Before: Enqueue Hollowbone Goblin
+Before: Enqueue Gravefang Rat
+Before: Travel to Rotting Sewers
+
+DUNGEON MAP
+Legend: [E] Entrance  [O] Open  [C] Cleared all  [L] Locked
+
+[E] ROOM-000 Dreadveil Entrance (Entrance)
+      Link  : <-> ROOM-001 Rotting Sewers via Rusted Grate
+[O] ROOM-001 Rotting Sewers (Open)
+      Enemy : ENM-001 Gravefang Rat (Weak, Defeated)
+      Enemy : ENM-002 Hollowbone Goblin (Weak, Defeated)
+      Enemy : ENM-003 Ashen Ghoul (Weak, In Queue)
+      Link  : <-> ROOM-000 Dreadveil Entrance via Rusted Grate
+      Link  : <-> ROOM-002 Bloodstone Hall via Crimson Gate
+[L] ROOM-002 Bloodstone Hall (Locked)
+      Enemy : ENM-004 Ironjaw Reaver (Intermediate, Active)
+      Enemy : ENM-005 Boneguard Executioner (Intermediate, Active)
+      Enemy : ENM-006 Hellchain Marauder (Intermediate, Active)
+      Link  : <-> ROOM-001 Rotting Sewers via Crimson Gate
+      Link  : <-> ROOM-003 War-Torn Catacombs via Iron Drawbridge
+[L] ROOM-003 War-Torn Catacombs (Locked)
+      Enemy : ENM-007 Dreadfang Berserker (Strong, Active)
+      Enemy : ENM-008 Abyssal Death Knight (Strong, Active)
+      Enemy : ENM-009 Soulreaper Wraith (Strong, Active)
+      Link  : <-> ROOM-002 Bloodstone Hall via Iron Drawbridge
+      Link  : <-> ROOM-004 Throne of Ruin via Throne Gate
+[L] ROOM-004 Throne of Ruin (Locked)
+      Enemy : BS-001 Vharok, the World Eater (Boss, Active)
+      Link  : <-> ROOM-003 War-Torn Catacombs via Throne Gate
+      Link  : <-> ROOM-005 The Last Gate via Sealed Exit Door
+[L] ROOM-005 The Last Gate (Locked)
+      Link  : <-> ROOM-004 Throne of Ruin via Sealed Exit Door
